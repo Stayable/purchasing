@@ -21,7 +21,7 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 ### Email Integration
 
-- [ ] 🔲 **[P1]** Connect Jefferson's personal mailbox (`jefferson@rentstayable.com`) via IMAP/OAuth
+- [x] ✅ **[P1]** Connect Jefferson's personal mailbox (`jefferson@rentstayable.com`) via IMAP/OAuth — done 05/20/26
   - Setup → Channels → Email → IMAP Configuration
 - [ ] 🔲 **[P1]** Add `purchasing@rentstayable.com` as Organization Email (shared mailbox)
   - Setup → Channels → Email → Organization Emails
