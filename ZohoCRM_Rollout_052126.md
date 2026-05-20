@@ -171,7 +171,7 @@ For internal reference — Zoho's module names don't always match how we'd natur
 1. **2FA confirmation** — Is two-factor authentication active on both admin@ and Jefferson's accounts? Recovery codes stored where?
 2. **Vendor source list** — Is there an existing list of current Alibaba/overseas vendors (spreadsheet, Ramp transaction history, past emails) for bulk import? If not, Jefferson builds it organically as orders happen.
 3. **Active orders in flight** — Are there Alibaba orders currently in progress that should be the first test Deals logged? Recommended to enter 1–2 real orders in week 1 to validate the structure before scaling.
-4. **Day 90 checkpoint date** — Target review date for monthly-to-annual billing decision. Default: 08/21/26.
+4. **Day 90 checkpoint date** — Target review date for monthly-to-annual billing decision. Default: 08/19/26 (90 days from 05/21/26).
 5. **Phase 2 trigger** — What event signals readiness to add Bea and Crystal? Recommended: Phase 1 must be stable for 30 days with Jefferson actively logging Deals daily.
 
 ---
@@ -189,6 +189,9 @@ For internal reference — Zoho's module names don't always match how we'd natur
 | 05/21/26 | Jefferson as Administrator (not Standard user) | Backup admin coverage from day one |
 | 05/21/26 | purchasing@ as Organization Email, not a user seat | Shared mailboxes never burn licenses; principle applied across the deployment |
 | 05/21/26 | Phased rollout — Procurement first, Non-Profit + Special Projects later | Procurement has the most concrete pain point (Alibaba tracking); fastest ROI validation |
+| 05/21/26 | Each Todo item tagged with P1/P2/P3 priority within its phase | P1 = critical/blocker, P2 = important after P1s clear, P3 = defer-able. Prevents working low-priority items (e.g., Alibaba Profile URL field) before security/email gates are closed. |
+| 05/21/26 | Day 90 review date corrected from 08/21/26 to 08/19/26 | 90 days from 05/21/26 project start |
+| 05/21/26 | Monthly CRM data export to OneDrive added as recurring maintenance | Backup hygiene; insurance against vendor lock-in or repeat abandonment. Zoho native backup is paid add-on. |
 
 ---
 
@@ -202,6 +205,6 @@ Examples:
 - `ZohoCRM_Rollout_052126.md` (this file)
 - `ZohoCRM_Todo_052126.md` (companion task list)
 - `ZohoCRM_VendorImport_052126.xlsx` (when vendor list is prepared)
-- `ZohoCRM_Day90Review_082126.md` (target review document)
+- `ZohoCRM_Day90Review_081926.md` (target review document)
 
 Track this rollout in the Claude Code repository so the history, decision log, and progress are versioned over time.
