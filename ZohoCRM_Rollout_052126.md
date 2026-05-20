@@ -192,6 +192,7 @@ For internal reference — Zoho's module names don't always match how we'd natur
 | 05/21/26 | Each Todo item tagged with P1/P2/P3 priority within its phase | P1 = critical/blocker, P2 = important after P1s clear, P3 = defer-able. Prevents working low-priority items (e.g., Alibaba Profile URL field) before security/email gates are closed. |
 | 05/21/26 | Day 90 review date corrected from 08/21/26 to 08/19/26 | 90 days from 05/21/26 project start |
 | 05/21/26 | Monthly CRM data export to OneDrive added as recurring maintenance | Backup hygiene; insurance against vendor lock-in or repeat abandonment. Zoho native backup is paid add-on. |
+| 05/20/26 | 2FA enablement on `admin@` and Jefferson placed on hold per Rob | Reason not specified. Risk acknowledged: Super Admin without 2FA is a single point of failure. Revisit before Phase 2 seat expansion. |
 
 ---
 

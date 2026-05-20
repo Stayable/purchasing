@@ -14,9 +14,9 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 ### Security & Governance (do these FIRST)
 
 - [ ] 🔲 **[P1]** Confirm `admin@rentstayable.com` is a real Microsoft 365 mailbox (not a forwarding alias)
-- [ ] 🔲 **[P1]** Enable 2FA on `admin@rentstayable.com` Super Admin account
-- [ ] 🔲 **[P1]** Enable 2FA on Jefferson's account (`jefferson@rentstayable.com`)
-- [ ] 🔲 **[P1]** Generate and store recovery codes for both accounts in RISE8 password manager
+- [ ] ⚠️ **[P1]** Enable 2FA on `admin@rentstayable.com` Super Admin account — **ON HOLD per Rob 05/20/26**
+- [ ] ⚠️ **[P1]** Enable 2FA on Jefferson's account (`jefferson@rentstayable.com`) — **ON HOLD per Rob 05/20/26**
+- [ ] ⚠️ **[P1]** Generate and store recovery codes for both accounts in RISE8 password manager — **ON HOLD per Rob 05/20/26**
 - [ ] 🔲 **[P2]** Document Super Admin recovery procedure in case Rob's account is locked
 
 ### Email Integration
