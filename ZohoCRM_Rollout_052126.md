@@ -198,6 +198,8 @@ For internal reference — Zoho's module names don't always match how we'd natur
 | 05/26/26 | Vendor list will be split into TWO Zoho import files (Accounts + Contacts), not one | Native Vendors module stays disabled. Companies → Accounts (Vendor Type=Overseas Manufacturer). Sales rep emails → Contacts linked to Account. Accounts must be imported before Contacts to prevent orphan records. |
 | 05/26/26 | Jefferson revised vendor list to 19 rows (`For_upload_in_Zoho_1.xlsx`); 3 of 5 flagged issues resolved by source | Dropped: duplicate Hangzhou DE & E Smart Home row, Walrus Floors / kimayfloors ambiguity. Mesa collapsed to one row, two emails. Remaining 2 issues (GP Batteries classification, trailing whitespace) handled on import-format side without further Jefferson input. Target output: 19 Accounts, 20 Contacts. |
 | 05/26/26 | Zoho import files produced: `Accounts_RISE8_052626.xlsx` (19 rows) + `Contacts_RISE8_052626.xlsx` (20 rows) | Saved to `/outputs`. Last Name field uses company-name placeholders where actual surnames unknown — flagged in Description column for post-import cleanup. GP Batteries set to Vendor Type = Other / Billing Country = United States pending classification confirmation. Accounts must be uploaded BEFORE Contacts to satisfy lookup. |
+| 05/26/26 | Vendor Type custom field (Pick List) created on Accounts layout | Values: Overseas Manufacturer, US Distributor, Freight Forwarder, Inspection Service, Other. Created during import to enable mapping of Vendor Type column. |
+| 05/26/26 | Both import files uploaded successfully; Account ↔ Contact lookup confirmed | Jefferson spot-checked: clicking Account Name on a Contact opens the matching Account record. Phase 1 vendor master data is now live in Zoho. |
 
 ---
 

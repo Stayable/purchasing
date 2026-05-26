@@ -76,11 +76,12 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
   - Split Mesa row into 1 Account + 2 Contacts (Jessica + sales@).
 - [x] ✅ **[P2]** Format vendor list to Zoho **Accounts** import template — produced `outputs/Accounts_RISE8_052626.xlsx` (19 Accounts)
 - [x] ✅ **[P2]** Format contacts to Zoho **Contacts** import template — produced `outputs/Contacts_RISE8_052626.xlsx` (20 Contacts; Mesa split into 2)
-- [ ] 🔲 **[P1]** Pre-import: confirm Accounts custom field **Vendor Type** is created in Zoho (Setup → Modules → Accounts → Layout). If not created yet, Vendor Type column will fail to map — either create the field first or skip that column on import.
-- [ ] 🔲 **[P1]** Upload `Accounts_RISE8_052626.xlsx` FIRST via Setup → Data Administration → Import → Accounts. Map: Account Name → Account Name; Account Type → Account Type; Vendor Type → Vendor Type (custom); Industry → Industry; Billing Country → Billing Country; Description → Description. Set dedupe key = Account Name.
-- [ ] 🔲 **[P1]** Then upload `Contacts_RISE8_052626.xlsx` via Setup → Data Administration → Import → Contacts. Map: First Name, Last Name, Email, Account Name (lookup → Accounts), Title, Description. Set dedupe key = Email.
+- [x] ✅ **[P1]** Pre-import: Vendor Type custom field created in Zoho (Pick List on Accounts layout) — done 05/26/26
+- [x] ✅ **[P1]** Uploaded `Accounts_RISE8_052626.xlsx` (19 Accounts) — done 05/26/26
+- [x] ✅ **[P1]** Uploaded `Contacts_RISE8_052626.xlsx` (20 Contacts) — done 05/26/26. Account Name lookup confirmed working (clicking from Contact → opens Account record).
 - [ ] 🔲 **[P2]** Post-import cleanup: replace placeholder Last Names with actual surnames as Jefferson confirms them with each vendor.
 - [ ] 🔲 **[P2]** Post-import: reclassify GP Batteries Vendor Type from "Other" to correct value (likely US Distributor) once confirmed.
+- [ ] 🔲 **[P2]** Re-check Jefferson IMAP Mail tab — now that Accounts + Contacts exist, vendor emails should start auto-associating to records.
 - [ ] 🔲 **[P2]** Log 1–2 active in-flight Alibaba orders as test Deals to validate structure
 
 ### Workflow Rules (automation — set up AFTER data is in)
