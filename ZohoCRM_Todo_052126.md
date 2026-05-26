@@ -64,16 +64,19 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 ### Data Import
 
-- [x] ✅ **[P2]** Source current Alibaba vendor list — received 05/26/26 from Jefferson (`For_upload_in_Zoho.xlsx`, 22 rows, columns: Vendor + Email)
-- [ ] ⏳ **[P2]** Resolve data quality issues in source file BEFORE upload (cannot import as-is):
-  - Row 23 "Hangzhou DE & E Smart Home" has `angie@reboncabinets.com` — duplicate of Row 13 Rebon Cabinets. Likely copy-paste error. Confirm correct email with Jefferson.
-  - Rows 9 + 17 — both reference "Walrus" but Row 17 email is `@kimayfloors.com`. Same Account or two Accounts? Confirm.
-  - Rows 14 + 15 — Zhejiang Mesa Sanitary: 1 Account, 2 Contacts (correct structure, but dedupe Account on import).
-  - Row 18 "GP BATTERIES INC" — personal Yahoo email, American-sounding name. Verify if overseas manufacturer or US distributor; set Vendor Type accordingly.
-  - Trim trailing whitespace on rows 6 + 18.
-- [ ] 🔲 **[P2]** Format vendor list to Zoho **Accounts** import template (Account Name, Vendor Type=Overseas Manufacturer, Industry=Manufacturing) — produce `Accounts_RISE8_MMDDYY.xlsx`
-- [ ] 🔲 **[P2]** Format contacts to Zoho **Contacts** import template (Email, First Name from local-part, Last Name placeholder, Account Name link) — produce `Contacts_RISE8_MMDDYY.xlsx`
-- [ ] 🔲 **[P2]** Import order: Accounts FIRST, then Contacts (else orphan records, manual relink of 22 rows)
+- [x] ✅ **[P2]** Source current Alibaba vendor list — received 05/26/26 from Jefferson, **revised 05/26/26** (`For_upload_in_Zoho_1.xlsx`, 19 rows after dedupe)
+- [x] ✅ **[P2]** Resolve major data quality issues with Jefferson:
+  - ✅ Row 13/23 duplicate — Hangzhou DE & E Smart Home dropped (was the bad row).
+  - ✅ Walrus ambiguity — "Walrus Floors" / `@kimayfloors.com` dropped. Zhejiang Walrus retained.
+  - ✅ Mesa — collapsed to 1 vendor row with 2 emails separated by `;` (will split into 1 Account + 2 Contacts on import).
+- [ ] 🔲 **[P2]** Remaining cleanup on import side (no further Jefferson input needed):
+  - GP Batteries kept by Jefferson → set `Vendor Type = Other` (personal Yahoo, American name, not overseas manufacturer pattern); Rob/Jefferson can reclassify post-import.
+  - Trim trailing whitespace on rows 5 + 15.
+  - Drop the unlabeled leading index column (1–19) — header is misaligned in revised file.
+  - Split Mesa row into 1 Account + 2 Contacts (Jessica + sales@).
+- [ ] 🔲 **[P2]** Format vendor list to Zoho **Accounts** import template (Account Name, Vendor Type=Overseas Manufacturer, Industry=Manufacturing) — produce `Accounts_RISE8_MMDDYY.xlsx` (target: 19 Accounts)
+- [ ] 🔲 **[P2]** Format contacts to Zoho **Contacts** import template (Email, First Name from local-part, Last Name placeholder, Account Name link) — produce `Contacts_RISE8_MMDDYY.xlsx` (target: 20 Contacts)
+- [ ] 🔲 **[P2]** Import order: Accounts FIRST, then Contacts (else orphan records, manual relink of ~20 rows)
 - [ ] 🔲 **[P2]** Identify primary Contact for each vendor (sales rep) and link
 - [ ] 🔲 **[P2]** Log 1–2 active in-flight Alibaba orders as test Deals to validate structure
 

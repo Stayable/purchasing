@@ -196,6 +196,7 @@ For internal reference — Zoho's module names don't always match how we'd natur
 | 05/26/26 | Jefferson IMAP "empty mail" diagnosed as expected — not a connection failure | Configuration Status = Working, Sync Status = Completed. Root cause: no Accounts/Contacts imported yet → no records for emails to associate against. Reconnecting would lose sync state and not fix the symptom. Re-verify after vendor import lands. |
 | 05/26/26 | Vendor source list received from Jefferson (22 rows, name + email only) | File: `For_upload_in_Zoho.xlsx`. Flagged 5 data quality issues (duplicate email row 13/23, Walrus ambiguity row 9/17, Mesa dedupe row 14/15, GP Batteries classification, trailing whitespace). Must be resolved with Jefferson before Zoho import — no fabrication. |
 | 05/26/26 | Vendor list will be split into TWO Zoho import files (Accounts + Contacts), not one | Native Vendors module stays disabled. Companies → Accounts (Vendor Type=Overseas Manufacturer). Sales rep emails → Contacts linked to Account. Accounts must be imported before Contacts to prevent orphan records. |
+| 05/26/26 | Jefferson revised vendor list to 19 rows (`For_upload_in_Zoho_1.xlsx`); 3 of 5 flagged issues resolved by source | Dropped: duplicate Hangzhou DE & E Smart Home row, Walrus Floors / kimayfloors ambiguity. Mesa collapsed to one row, two emails. Remaining 2 issues (GP Batteries classification, trailing whitespace) handled on import-format side without further Jefferson input. Target output: 19 Accounts, 20 Contacts. |
 
 ---
 
