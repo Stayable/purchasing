@@ -74,10 +74,13 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
   - Trim trailing whitespace on rows 5 + 15.
   - Drop the unlabeled leading index column (1–19) — header is misaligned in revised file.
   - Split Mesa row into 1 Account + 2 Contacts (Jessica + sales@).
-- [ ] 🔲 **[P2]** Format vendor list to Zoho **Accounts** import template (Account Name, Vendor Type=Overseas Manufacturer, Industry=Manufacturing) — produce `Accounts_RISE8_MMDDYY.xlsx` (target: 19 Accounts)
-- [ ] 🔲 **[P2]** Format contacts to Zoho **Contacts** import template (Email, First Name from local-part, Last Name placeholder, Account Name link) — produce `Contacts_RISE8_MMDDYY.xlsx` (target: 20 Contacts)
-- [ ] 🔲 **[P2]** Import order: Accounts FIRST, then Contacts (else orphan records, manual relink of ~20 rows)
-- [ ] 🔲 **[P2]** Identify primary Contact for each vendor (sales rep) and link
+- [x] ✅ **[P2]** Format vendor list to Zoho **Accounts** import template — produced `outputs/Accounts_RISE8_052626.xlsx` (19 Accounts)
+- [x] ✅ **[P2]** Format contacts to Zoho **Contacts** import template — produced `outputs/Contacts_RISE8_052626.xlsx` (20 Contacts; Mesa split into 2)
+- [ ] 🔲 **[P1]** Pre-import: confirm Accounts custom field **Vendor Type** is created in Zoho (Setup → Modules → Accounts → Layout). If not created yet, Vendor Type column will fail to map — either create the field first or skip that column on import.
+- [ ] 🔲 **[P1]** Upload `Accounts_RISE8_052626.xlsx` FIRST via Setup → Data Administration → Import → Accounts. Map: Account Name → Account Name; Account Type → Account Type; Vendor Type → Vendor Type (custom); Industry → Industry; Billing Country → Billing Country; Description → Description. Set dedupe key = Account Name.
+- [ ] 🔲 **[P1]** Then upload `Contacts_RISE8_052626.xlsx` via Setup → Data Administration → Import → Contacts. Map: First Name, Last Name, Email, Account Name (lookup → Accounts), Title, Description. Set dedupe key = Email.
+- [ ] 🔲 **[P2]** Post-import cleanup: replace placeholder Last Names with actual surnames as Jefferson confirms them with each vendor.
+- [ ] 🔲 **[P2]** Post-import: reclassify GP Batteries Vendor Type from "Other" to correct value (likely US Distributor) once confirmed.
 - [ ] 🔲 **[P2]** Log 1–2 active in-flight Alibaba orders as test Deals to validate structure
 
 ### Workflow Rules (automation — set up AFTER data is in)
