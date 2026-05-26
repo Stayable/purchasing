@@ -3,7 +3,7 @@
 **Owner:** Rob Beyer
 **Project Start:** 05/21/26
 **Status:** In Progress — Phase 1 (Procurement)
-**Last Updated:** 05/21/26
+**Last Updated:** 05/26/26
 
 ---
 
@@ -193,6 +193,9 @@ For internal reference — Zoho's module names don't always match how we'd natur
 | 05/21/26 | Day 90 review date corrected from 08/21/26 to 08/19/26 | 90 days from 05/21/26 project start |
 | 05/21/26 | Monthly CRM data export to OneDrive added as recurring maintenance | Backup hygiene; insurance against vendor lock-in or repeat abandonment. Zoho native backup is paid add-on. |
 | 05/20/26 | 2FA enablement on `admin@` and Jefferson placed on hold per Rob | Reason not specified. Risk acknowledged: Super Admin without 2FA is a single point of failure. Revisit before Phase 2 seat expansion. |
+| 05/26/26 | Jefferson IMAP "empty mail" diagnosed as expected — not a connection failure | Configuration Status = Working, Sync Status = Completed. Root cause: no Accounts/Contacts imported yet → no records for emails to associate against. Reconnecting would lose sync state and not fix the symptom. Re-verify after vendor import lands. |
+| 05/26/26 | Vendor source list received from Jefferson (22 rows, name + email only) | File: `For_upload_in_Zoho.xlsx`. Flagged 5 data quality issues (duplicate email row 13/23, Walrus ambiguity row 9/17, Mesa dedupe row 14/15, GP Batteries classification, trailing whitespace). Must be resolved with Jefferson before Zoho import — no fabrication. |
+| 05/26/26 | Vendor list will be split into TWO Zoho import files (Accounts + Contacts), not one | Native Vendors module stays disabled. Companies → Accounts (Vendor Type=Overseas Manufacturer). Sales rep emails → Contacts linked to Account. Accounts must be imported before Contacts to prevent orphan records. |
 
 ---
 

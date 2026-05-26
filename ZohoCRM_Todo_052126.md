@@ -2,7 +2,7 @@
 
 **Owner:** Rob Beyer
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 05/21/26
+**Last Updated:** 05/26/26
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -23,6 +23,7 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 - [x] ✅ **[P1]** Connect Jefferson's personal mailbox (`jefferson@rentstayable.com`) via IMAP/OAuth — done 05/20/26
   - Setup → Channels → Email → IMAP Configuration
+  - **05/26/26 status check:** Configuration Status = Working, Sync Status = Completed. Mail tab appears empty — diagnosed as expected behavior at this stage: no Accounts/Contacts imported yet, so emails do not auto-associate to records. Do NOT reconnect. Once vendor Accounts + Contacts are imported, re-verify. Secondary check: open Email Sync Preferences accordion and confirm date range / folder selection (default IMAP often syncs only forward-from-now, INBOX only).
 - [ ] 🔲 **[P1]** Add `purchasing@rentstayable.com` as Organization Email (shared mailbox)
   - Setup → Channels → Email → Organization Emails
 - [ ] 🔲 **[P1]** Grant Jefferson read + send access to `purchasing@`
@@ -63,9 +64,16 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 ### Data Import
 
-- [ ] 🔲 **[P2]** Source current Alibaba vendor list (check Ramp transactions, past emails, Jefferson's records)
-- [ ] 🔲 **[P2]** Format vendor list to Zoho Accounts import template
-- [ ] 🔲 **[P2]** Import vendors as Accounts with Vendor Type = "Overseas Manufacturer"
+- [x] ✅ **[P2]** Source current Alibaba vendor list — received 05/26/26 from Jefferson (`For_upload_in_Zoho.xlsx`, 22 rows, columns: Vendor + Email)
+- [ ] ⏳ **[P2]** Resolve data quality issues in source file BEFORE upload (cannot import as-is):
+  - Row 23 "Hangzhou DE & E Smart Home" has `angie@reboncabinets.com` — duplicate of Row 13 Rebon Cabinets. Likely copy-paste error. Confirm correct email with Jefferson.
+  - Rows 9 + 17 — both reference "Walrus" but Row 17 email is `@kimayfloors.com`. Same Account or two Accounts? Confirm.
+  - Rows 14 + 15 — Zhejiang Mesa Sanitary: 1 Account, 2 Contacts (correct structure, but dedupe Account on import).
+  - Row 18 "GP BATTERIES INC" — personal Yahoo email, American-sounding name. Verify if overseas manufacturer or US distributor; set Vendor Type accordingly.
+  - Trim trailing whitespace on rows 6 + 18.
+- [ ] 🔲 **[P2]** Format vendor list to Zoho **Accounts** import template (Account Name, Vendor Type=Overseas Manufacturer, Industry=Manufacturing) — produce `Accounts_RISE8_MMDDYY.xlsx`
+- [ ] 🔲 **[P2]** Format contacts to Zoho **Contacts** import template (Email, First Name from local-part, Last Name placeholder, Account Name link) — produce `Contacts_RISE8_MMDDYY.xlsx`
+- [ ] 🔲 **[P2]** Import order: Accounts FIRST, then Contacts (else orphan records, manual relink of 22 rows)
 - [ ] 🔲 **[P2]** Identify primary Contact for each vendor (sales rep) and link
 - [ ] 🔲 **[P2]** Log 1–2 active in-flight Alibaba orders as test Deals to validate structure
 
