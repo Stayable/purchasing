@@ -11,18 +11,18 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 ---
 
-## Top Priorities — Active Sprint (05/27/26)
+## Top Priorities — Active Sprint (refreshed 05/27/26 post-MCP setup)
 
 Ordered. Do them in this order. Each item links to the detailed task below.
 
-1. **[P1]** Phase 0 — Set up Zoho MCP server (unblocks Tasks 2–4). Owner: Kyle, before next session.
+1. **[P1]** ⏳ Phase 0 — Authenticate the 3 Zoho MCP servers in `/mcp` after session restart (servers registered, "Needs authentication"). Owner: Kyle. **Was #1 — now partially done.**
 2. **[P1]** Phase 0 — Link this repo to Vercel project (preps deployment pipeline; no live URL until Task 9 lands). Owner: Kyle.
-3. **[P1]** Task 2 — Create `Procurement_Items` custom module shell in Zoho (runs as soon as MCP is live). Owner: Kyle (executes via MCP).
-4. **[P1]** Task 3 — Deploy 19 custom fields + 7 picklists via `createFields` batch. Owner: Kyle.
-5. **[P2]** Task 4 — Layout sections, permissions, 5 workflow rules. Owner: Kyle.
+3. **[P1]** Task 2 — Create `Procurement_Items` custom module shell **manually in Zoho Settings UI** (no prebuilt MCP covers module creation). Owner: Kyle. ~10 min.
+4. **[P1]** Task 3 — Create 19 fields + 7 picklists **manually in Zoho Settings UI** using `ZohoModuleSpec_ProcurementItems_052626.md` as source of truth (no prebuilt MCP covers field creation). Owner: Kyle. ~30 min.
+5. **[P2]** Task 4 — Layout sections + permissions **manual UI**; 5 workflow rules **via `zoho-crm-workflows` MCP**. Owner: Kyle.
 6. **[P2]** Task 9 — Repoint `ZohoProcurementTracker_052626.html` Deals → Procurement_Items. Owner: Kyle. **Gates the Vercel deploy.**
 7. **[P2]** Phase 0 — Deploy repointed tracker to Vercel and share URL with Rob + Jefferson. Owner: Kyle.
-8. **[P2]** Task 5 — Test 5 procurement items end-to-end in Zoho.
+8. **[P2]** Task 5 — Test 5 procurement items end-to-end in Zoho **via `zoho-crm-data` MCP**.
 9. **[P2]** Task 7 — Rewrite `OverseasProcSOP_RISE8` (Smartsheet → Zoho).
 10. **[P1]** Phase 1 Security gates: re-open 2FA decision (`admin@`, `jefferson@`) — currently on hold per Rob.
 
@@ -36,8 +36,16 @@ Added 05/27/26. Captures the build-systems work that gates everything downstream
 
 ### Zoho MCP
 
-- [ ] 🔲 **[P1]** Configure Zoho MCP server in Claude Code settings (`~/.claude/settings.json` or project `.claude/settings.local.json`). Owner: Kyle, before next session. Needs Zoho OAuth client ID/secret from Zoho API Console (super admin access required). When done, `/mcp` in a new session should list a Zoho server with `createModule`, `createFields`, `getFields`, `createRecords` tools available. **Unblocks:** Tasks 2, 3, 5, 6, 9 execution paths.
-- [ ] 🔲 **[P2]** Document the MCP setup steps in a new `ZohoMCP_Setup_052726.md` so the install is reproducible (re-auth on token expiry, second machine, etc.). Owner: Kyle. Status: optional — do after MCP is verified working.
+- [x] ✅ **[P1]** Register 3 Zoho-native MCP servers at user scope — **done 05/27/26.** Servers in `C:\Users\Kyle Estocapio\.claude.json` (NOT in repo settings; URLs contain embedded API keys):
+  - `zoho-crm-data` — CRM Data & Metadata Operations (record CRUD + metadata read)
+  - `zoho-crm-workflows` — CRM Automation & Workflows (workflow rules, field updates, email notifications)
+  - `zoho-crm-activities` — CRM Activities & Engagement (tasks, notes, comms)
+  - Created in Zoho MCP Console (zoho.com/mcp) under `admin@rentstayable.com`, Authorization mode = **Authorization via Connections** (org-level).
+- [ ] ⏳ **[P1]** Authenticate the 3 servers in `/mcp` after session restart. Owner: Kyle. They currently show "Needs authentication." Expected: one OAuth handshake per server using the existing super-admin connection. **Unblocks:** Task 4 workflow rules, Tasks 5/6 record creation, Task 9 repoint validation.
+- [ ] 🔲 **[P2]** Do NOT authenticate the `claude.ai Zoho CRM` MCP visible in `/mcp list` — it's a separate generic Zoho integration hosted through claude.ai that overlaps with the 3 Zoho-native servers. Keep the surface area scoped.
+- [ ] 🔲 **[P2]** Document the MCP setup steps in a new `ZohoMCP_Setup_052726.md` so the install is reproducible (re-auth on token expiry, second machine, etc.). Owner: Kyle. Status: optional — do after MCP auth is verified working.
+
+**Important scope correction (05/27/26 PM):** None of Zoho's 10 prebuilt MCP servers covers *creating* custom modules or *creating* fields. Those operations remain admin-UI only. Tasks 2 and 3 below are reclassified as manual Zoho Settings work, not MCP work. MCP coverage applies to workflow rules, records, and activities only.
 
 ### Vercel hosting
 
@@ -61,11 +69,11 @@ Reverses the original "Deals pipeline" approach. See `ZohoTaskUpdate_RISE8_05272
 - [x] ✅ **[P1]** Task 1 — Subscription upgrade — **N/A**, account is already on Professional with 3 seats (admin@, jefferson@, rb@rise8companies.com)
 - [x] ✅ **[P1]** Activate 3rd seat: rb@rise8companies.com — done 05/27/26 (pulled forward from Phase 3)
 - [x] ✅ **[P1]** Restore the 4 source artifacts to this repo — done 05/27/26 (pulled from `claude/zoho-crm-reintroduction-CSKYu` where Rob uploaded them)
-- [ ] ⚠️ **[P1]** Task 2 — Create `Procurement_Items` custom module shell — **GATED on Phase 0 Zoho MCP setup.** Spec is in `ZohoModuleSpec_ProcurementItems_052626.md`. Owner: Kyle. Runs in the next session once MCP is live. Fallback path: write a click-by-click Zoho Settings walkthrough for Jefferson to execute manually.
-- [ ] ⚠️ **[P1]** Task 3 — Deploy 19 custom fields + 7 picklists via `createFields` API batch — **GATED on Task 2.** Owner: Kyle. Field labels already shortened to 25-char Zoho cap; API names preserved from spec.
-- [ ] ⚠️ **[P2]** Task 4 — Layout sections, permissions, 5 workflow rules — **GATED on Task 3.** Owner: Kyle. Permissions: Admin full, Procurement team R/W, others read-only. Add 3 related lists (Linked Vendors, Activities, Attachments).
-- [ ] ⚠️ **[P2]** Task 5 — Test 5 procurement items (PTAC9000BTU, PressureWasher4400PSI, MiniSplit23000BTU, ArcWelderAC225S, ExtensionLadder40FT) — **GATED on Task 4** + the 197-item filtered purchase report. Owner: Kyle. Action: Kyle to surface the filtered purchase report file location before this can run.
-- [ ] ⚠️ **[P3]** Task 6 — Push remaining 192 items — **GATED on Task 5.** Owner: Kyle.
+- [ ] 🔲 **[P1]** Task 2 — Create `Procurement_Items` custom module shell **manually in Zoho Settings UI** (Settings → Modules and Fields → Create New Module). Owner: Kyle. ~10 min. Singular label "Procurement Item", plural "Procurement Items", primary field `Item_Name`. Spec: `ZohoModuleSpec_ProcurementItems_052626.md`. **Reclassified 05/27/26:** no prebuilt MCP covers module creation.
+- [ ] 🔲 **[P1]** Task 3 — Create 19 custom fields + 7 picklists **manually in Zoho Settings UI** on the new Procurement_Items module. Owner: Kyle. ~30 min. Use the spec doc as the field-by-field source of truth. Field labels already shortened to 25-char Zoho cap; API names per spec. **Reclassified 05/27/26:** no prebuilt MCP covers field creation either. Gated on Task 2.
+- [ ] 🔲 **[P2]** Task 4 — Layout sections + permissions **manual UI**; 5 workflow rules **via `zoho-crm-workflows` MCP** once authenticated. Owner: Kyle. Permissions: Admin full, Procurement team R/W, others read-only. Add 3 related lists (Linked Vendors, Activities, Attachments). Gated on Task 3.
+- [ ] ⚠️ **[P2]** Task 5 — Test 5 procurement items (PTAC9000BTU, PressureWasher4400PSI, MiniSplit23000BTU, ArcWelderAC225S, ExtensionLadder40FT) **via `zoho-crm-data` MCP** — **GATED on Task 4** + the 197-item filtered purchase report. Owner: Kyle. Action: Kyle to surface the filtered purchase report file location before this can run.
+- [ ] ⚠️ **[P3]** Task 6 — Push remaining 192 items **via `zoho-crm-data` MCP** — **GATED on Task 5.** Owner: Kyle.
 - [ ] 🔲 **[P2]** Task 7 — Rewrite `OverseasProcSOP_RISE8` doc (Smartsheet → Zoho) — Owner: Kyle. Action: locate the current SOP doc (likely SharePoint / OneDrive) and add it to the repo or reference its canonical location.
 - [ ] 🔲 **[P3]** Task 8 — Resolve 6 vendor-adjacent Smartsheets (Vendor Relationship Tracker, Overseas Vendor Tracking, Overseas Vendor Progress Report, Vendor Matrix, Vendor Masterlist, Preferred Vendor Matrix) — Owner: Kyle to audit; Rob to approve retire/rename decisions. No Smartsheet MCP in this environment — surface the audit findings here, route the decision to Rob.
 - [ ] ⚠️ **[P2]** Task 9 — Repoint `ZohoProcurementTracker_052626.html` artifact references from Deals → Procurement_Items — **GATED on Task 3** (need real field API names from the deployed module). Owner: Kyle. **Critical: Task 9 must ship before the Vercel production deploy** (Phase 0 Vercel section) — current HTML actively misrepresents the architecture.
