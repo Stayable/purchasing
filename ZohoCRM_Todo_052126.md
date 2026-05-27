@@ -51,8 +51,9 @@ Added 05/27/26. Captures the build-systems work that gates everything downstream
 
 - [x] ✅ **[P1]** Create Vercel project linked to `github.com/Stayable/purchasing` — **done 05/28/26** (Kyle). Repo root is the deploy root; static HTML, no build step. Production deploy of `ZohoProcurementTracker_052626.html` remains gated on Task 9.
 - [ ] 🔲 **[P2]** Configure Vercel project settings: production branch = `main`, deploy previews on PRs disabled (single-branch workflow per `CLAUDE.md`), set custom domain only if Rob approves a subdomain on `rentstayable.com`. Owner: Kyle.
-- [ ] ⚠️ **[P2]** **GATED ON TASK 9** — Deploy repointed `ZohoProcurementTracker_052626.html` to Vercel production. Owner: Kyle. Do not deploy before Task 9 ships: the current HTML is wired to the Deals architecture and would actively mislead Jefferson. Once Task 9 lands and is committed to `main`, the Vercel build auto-promotes.
-- [ ] 🔲 **[P3]** Share Vercel production URL with Rob + Jefferson; add it to `CLAUDE.md` reference list. Owner: Kyle, post-deploy.
+- [x] ✅ **[P1]** Static portal (Option A) deployed to `procurement.rentstayable.com` — **done 05/28/26.** Custom domain attached, SSL via Vercel. Build = `index.html` + `vercel.json` (no compile step).
+- [ ] ⚠️ **[P2]** **GATED ON TASK 9** — Deploy repointed `ZohoProcurementTracker_052626.html` (subpath of `procurement.rentstayable.com` or replaces root). Owner: Kyle. Do not deploy before Task 9 ships: the current HTML is wired to the Deals architecture and would actively mislead Jefferson. Once Task 9 lands and is committed to `main`, the Vercel build auto-promotes.
+- [ ] 🔲 **[P3]** Share `procurement.rentstayable.com` URL with Rob + Jefferson; add it to `CLAUDE.md` reference list. Owner: Kyle, post-QA.
 - [ ] 🔲 **[P3]** Decide whether `ZohoVendorTracker_Procurement_052626.html` (the v1 vendor tracker, superseded by `ZohoProcurementTracker`) is deployed alongside or removed. Owner: Kyle. Current recommendation: do not deploy v1 — Vercel should serve only the canonical tracker to avoid drift.
 
 ### Repo hygiene (for the Vercel deploy)
@@ -64,7 +65,7 @@ Added 05/27/26. Captures the build-systems work that gates everything downstream
 
 ## Phase 0.5 — Webapp Decision (deferred to 06/21/26 checkpoint)
 
-Added 05/28/26. The `purchasing.rentstayable.com` static portal (Option A) is live. Whether to invest in a custom interactive webapp (Option B) that talks to the Zoho API directly is **deferred to the Phase 1 validation checkpoint (target 06/21/26)** to anchor the decision in real Jefferson workflow data, not speculation.
+Added 05/28/26. The `procurement.rentstayable.com` static portal (Option A) is live. Whether to invest in a custom interactive webapp (Option B) that talks to the Zoho API directly is **deferred to the Phase 1 validation checkpoint (target 06/21/26)** to anchor the decision in real Jefferson workflow data, not speculation.
 
 ### Decision gate
 - **Gate date:** 06/21/26 (Phase 1 Validation Checkpoint)
@@ -79,7 +80,7 @@ Added 05/28/26. The `purchasing.rentstayable.com` static portal (Option A) is li
 
 |  | Option A (current) | Option B |
 |---|---|---|
-| State | ✅ Live (`purchasing.rentstayable.com` once DNS lands) | Not built |
+| State | ✅ Live (`procurement.rentstayable.com` once DNS lands) | Not built |
 | What it is | Static branded portal · Zoho deep-link · `noindex`, internal-only | Interactive webapp with Zoho OAuth + API integration; replaces or augments Zoho native UI for procurement-specific workflows |
 | Dev cost | Shipped | 2–5 days build + 2–5 hr/mo ongoing maintenance |
 | $ cost | $0 ongoing | ~$252–500/yr (Vercel Pro seat + token store + monitoring) |

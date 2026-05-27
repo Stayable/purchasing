@@ -44,7 +44,7 @@ Fields are grouped by layout section. Build in this order.
 |---|---|---|---|---|
 | `Property_Scope` | Property Scope | Picklist | YES | See picklist values below. |
 | `Estimated_Item_Level_Spend` | Estimated Item-Level Spend (USD) | Currency | YES | Drives approval routing. |
-| `US_Baseline_Cost_Unit` | US Baseline Cost / Unit (USD) | Currency | NO | For cost-per-year-of-service comparison at Stage 3 (Level). (Currently flagged Required in deployed layout — recommend unflagging; not always known at Stage = Spec.) |
+| `US_Baseline_Cost_Unit` | US Baseline Cost / Unit (USD) | Currency | NO | For cost-per-year-of-service comparison at Stage 3 (Level). Not always known at Stage = Spec — kept optional intentionally. |
 | `Approver` | Approver | Picklist | YES | See picklist values below. Set manually based on spend tier. |
 | `Target_Decision_Date` | Target Decision Date | Date | NO | When the recommendation should land at the approver's desk. |
 
@@ -73,7 +73,7 @@ Fields are grouped by layout section. Build in this order.
 |---|---|---|---|---|
 | `Sharepoint_Folder_Link` | Sharepoint Folder Link | URL | YES | Link to the 8-subfolder structure. Required at Stage = Bid. |
 | `Description` | Scope Notes | Multi-line textarea (2000) | YES | What the item is, why we're sourcing overseas, Florida overlay considerations, candidate vendors. |
-| `Decision_Notes` | Decision Notes | Multi-line textarea (3000) | NO | Populated at Stage = Recommend with the one-page recommendation summary. Final approval rationale appended at Stage = Approved / Declined. **The decision lives here, never in email.** (Currently flagged Required in deployed layout — **must be unflagged** before Task 5; otherwise no record can be saved at Stage = Spec/Bid since no decision exists yet.) |
+| `Decision_Notes` | Decision Notes | Multi-line textarea (3000) | NO | Populated at Stage = Recommend with the one-page recommendation summary. Final approval rationale appended at Stage = Approved / Declined. **The decision lives here, never in email.** |
 
 ### Related lists (configured on the layout, not as fields)
 
