@@ -1,11 +1,56 @@
 # Zoho CRM Rollout — TODO
 
-**Owner:** Rob Beyer
+**Spearhead:** Kyle Estocapio (`bke@rise8companies.com`) — Vercel admin + Zoho super admin
+**Approver:** Rob Beyer (procurement decisions, architectural shifts)
+**Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
 **Last Updated:** 05/27/26
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
+
+---
+
+## Top Priorities — Active Sprint (05/27/26)
+
+Ordered. Do them in this order. Each item links to the detailed task below.
+
+1. **[P1]** Phase 0 — Set up Zoho MCP server (unblocks Tasks 2–4). Owner: Kyle, before next session.
+2. **[P1]** Phase 0 — Link this repo to Vercel project (preps deployment pipeline; no live URL until Task 9 lands). Owner: Kyle.
+3. **[P1]** Task 2 — Create `Procurement_Items` custom module shell in Zoho (runs as soon as MCP is live). Owner: Kyle (executes via MCP).
+4. **[P1]** Task 3 — Deploy 19 custom fields + 7 picklists via `createFields` batch. Owner: Kyle.
+5. **[P2]** Task 4 — Layout sections, permissions, 5 workflow rules. Owner: Kyle.
+6. **[P2]** Task 9 — Repoint `ZohoProcurementTracker_052626.html` Deals → Procurement_Items. Owner: Kyle. **Gates the Vercel deploy.**
+7. **[P2]** Phase 0 — Deploy repointed tracker to Vercel and share URL with Rob + Jefferson. Owner: Kyle.
+8. **[P2]** Task 5 — Test 5 procurement items end-to-end in Zoho.
+9. **[P2]** Task 7 — Rewrite `OverseasProcSOP_RISE8` (Smartsheet → Zoho).
+10. **[P1]** Phase 1 Security gates: re-open 2FA decision (`admin@`, `jefferson@`) — currently on hold per Rob.
+
+**Out of scope this sprint:** Phase 2 (Non-Profit Sales), Phase 3 (Special Projects), Phase 1 email integration tasks (purchasing@ forwarding setup), and Phase 1 module-cleanup (these were Deals-era cleanups — partially obviated by the Procurement_Items pivot but still needed to disable unused modules).
+
+---
+
+## Phase 0 — Tooling & Infrastructure (NEW — 05/27/26)
+
+Added 05/27/26. Captures the build-systems work that gates everything downstream — MCP for Zoho writes, Vercel for tracker hosting. Owned by Kyle as spearhead.
+
+### Zoho MCP
+
+- [ ] 🔲 **[P1]** Configure Zoho MCP server in Claude Code settings (`~/.claude/settings.json` or project `.claude/settings.local.json`). Owner: Kyle, before next session. Needs Zoho OAuth client ID/secret from Zoho API Console (super admin access required). When done, `/mcp` in a new session should list a Zoho server with `createModule`, `createFields`, `getFields`, `createRecords` tools available. **Unblocks:** Tasks 2, 3, 5, 6, 9 execution paths.
+- [ ] 🔲 **[P2]** Document the MCP setup steps in a new `ZohoMCP_Setup_052726.md` so the install is reproducible (re-auth on token expiry, second machine, etc.). Owner: Kyle. Status: optional — do after MCP is verified working.
+
+### Vercel hosting
+
+- [ ] 🔲 **[P1]** Create Vercel project linked to `github.com/Stayable/purchasing`. Owner: Kyle. Repo root is the deploy root; the two HTML trackers are static. No build step needed. Set framework preset to "Other" / static.
+- [ ] 🔲 **[P2]** Configure Vercel project settings: production branch = `main`, deploy previews on PRs disabled (single-branch workflow per `CLAUDE.md`), set custom domain only if Rob approves a subdomain on `rentstayable.com`. Owner: Kyle.
+- [ ] ⚠️ **[P2]** **GATED ON TASK 9** — Deploy repointed `ZohoProcurementTracker_052626.html` to Vercel production. Owner: Kyle. Do not deploy before Task 9 ships: the current HTML is wired to the Deals architecture and would actively mislead Jefferson. Once Task 9 lands and is committed to `main`, the Vercel build auto-promotes.
+- [ ] 🔲 **[P3]** Share Vercel production URL with Rob + Jefferson; add it to `CLAUDE.md` reference list. Owner: Kyle, post-deploy.
+- [ ] 🔲 **[P3]** Decide whether `ZohoVendorTracker_Procurement_052626.html` (the v1 vendor tracker, superseded by `ZohoProcurementTracker`) is deployed alongside or removed. Owner: Kyle. Current recommendation: do not deploy v1 — Vercel should serve only the canonical tracker to avoid drift.
+
+### Repo hygiene (for the Vercel deploy)
+
+- [ ] 🔲 **[P3]** Add a minimal `index.html` or `vercel.json` to route the Vercel root URL to `ZohoProcurementTracker_052626.html`. Owner: Kyle. Without this, visitors hit a 404 at `/` even though the file is deployed.
+- [ ] 🔲 **[P3]** Confirm no secrets/credentials accidentally embedded in either HTML tracker before deploy. Owner: Kyle. Static deploy = world-readable.
 
 ---
 
@@ -16,14 +61,14 @@ Reverses the original "Deals pipeline" approach. See `ZohoTaskUpdate_RISE8_05272
 - [x] ✅ **[P1]** Task 1 — Subscription upgrade — **N/A**, account is already on Professional with 3 seats (admin@, jefferson@, rb@rise8companies.com)
 - [x] ✅ **[P1]** Activate 3rd seat: rb@rise8companies.com — done 05/27/26 (pulled forward from Phase 3)
 - [x] ✅ **[P1]** Restore the 4 source artifacts to this repo — done 05/27/26 (pulled from `claude/zoho-crm-reintroduction-CSKYu` where Rob uploaded them)
-- [ ] 🔲 **[P1]** Task 2 — Create `Procurement_Items` custom module shell — **READY**. Spec is in `ZohoModuleSpec_ProcurementItems_052626.md`. Execution blocked at tool level: no Zoho MCP in this environment. Two paths: (a) write a Jefferson-executable UI walkthrough doc that maps spec → Zoho Settings clicks, or (b) run from a session with the Zoho MCP server enabled.
-- [ ] 🔲 **[P1]** Task 3 — Deploy 19 custom fields + 7 picklists — **READY**. Same Zoho MCP blocker as Task 2; same two paths.
-- [ ] 🔲 **[P2]** Task 4 — Layout sections, permissions, 5 workflow rules — **READY**. Same Zoho MCP blocker.
-- [ ] 🔲 **[P2]** Task 5 — Test 5 procurement items (PTAC9000BTU, PressureWasher4400PSI, MiniSplit23000BTU, ArcWelderAC225S, ExtensionLadder40FT) — Blocked on Task 4 + the 197-item filtered purchase report (not in repo).
-- [ ] 🔲 **[P3]** Task 6 — Push remaining 192 items — Blocked on Task 5
-- [ ] 🔲 **[P2]** Task 7 — Rewrite OverseasProcSOP_RISE8 doc (Smartsheet → Zoho) — Blocked on current SOP doc location (not in repo)
-- [ ] 🔲 **[P3]** Task 8 — Resolve 6 vendor-adjacent Smartsheets — Blocked on Rob/Operations input; no Smartsheet tool in this environment
-- [ ] 🔲 **[P2]** Task 9 — Repoint `ZohoProcurementTracker_052626.html` artifact references from Deals → Procurement_Items — **READY** as a doc-only change once the module is built. The HTML tracker (`ZohoProcurementTracker_052626.html`) is now in repo.
+- [ ] ⚠️ **[P1]** Task 2 — Create `Procurement_Items` custom module shell — **GATED on Phase 0 Zoho MCP setup.** Spec is in `ZohoModuleSpec_ProcurementItems_052626.md`. Owner: Kyle. Runs in the next session once MCP is live. Fallback path: write a click-by-click Zoho Settings walkthrough for Jefferson to execute manually.
+- [ ] ⚠️ **[P1]** Task 3 — Deploy 19 custom fields + 7 picklists via `createFields` API batch — **GATED on Task 2.** Owner: Kyle. Field labels already shortened to 25-char Zoho cap; API names preserved from spec.
+- [ ] ⚠️ **[P2]** Task 4 — Layout sections, permissions, 5 workflow rules — **GATED on Task 3.** Owner: Kyle. Permissions: Admin full, Procurement team R/W, others read-only. Add 3 related lists (Linked Vendors, Activities, Attachments).
+- [ ] ⚠️ **[P2]** Task 5 — Test 5 procurement items (PTAC9000BTU, PressureWasher4400PSI, MiniSplit23000BTU, ArcWelderAC225S, ExtensionLadder40FT) — **GATED on Task 4** + the 197-item filtered purchase report. Owner: Kyle. Action: Kyle to surface the filtered purchase report file location before this can run.
+- [ ] ⚠️ **[P3]** Task 6 — Push remaining 192 items — **GATED on Task 5.** Owner: Kyle.
+- [ ] 🔲 **[P2]** Task 7 — Rewrite `OverseasProcSOP_RISE8` doc (Smartsheet → Zoho) — Owner: Kyle. Action: locate the current SOP doc (likely SharePoint / OneDrive) and add it to the repo or reference its canonical location.
+- [ ] 🔲 **[P3]** Task 8 — Resolve 6 vendor-adjacent Smartsheets (Vendor Relationship Tracker, Overseas Vendor Tracking, Overseas Vendor Progress Report, Vendor Matrix, Vendor Masterlist, Preferred Vendor Matrix) — Owner: Kyle to audit; Rob to approve retire/rename decisions. No Smartsheet MCP in this environment — surface the audit findings here, route the decision to Rob.
+- [ ] ⚠️ **[P2]** Task 9 — Repoint `ZohoProcurementTracker_052626.html` artifact references from Deals → Procurement_Items — **GATED on Task 3** (need real field API names from the deployed module). Owner: Kyle. **Critical: Task 9 must ship before the Vercel production deploy** (Phase 0 Vercel section) — current HTML actively misrepresents the architecture.
 
 **Note on the 05/26 vendor import:** The 19 Accounts + 20 Contacts imported yesterday remain valid. Under the new architecture they will sit on Procurement_Items records as the "Linked Vendors" related list rather than as Deal parents. No data migration needed.
 

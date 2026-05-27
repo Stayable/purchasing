@@ -1,8 +1,10 @@
 # Zoho CRM — Reintroduction Plan & Progress Log
 
-**Owner:** Rob Beyer
+**Spearhead:** Kyle Estocapio (`bke@rise8companies.com`) — Vercel admin + Zoho super admin (05/27/26→)
+**Approver:** Rob Beyer (procurement decisions, architectural shifts)
+**Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Project Start:** 05/21/26
-**Status:** In Progress — Phase 1 (Procurement)
+**Status:** In Progress — Phase 0 (Tooling) + Phase 1 (Procurement)
 **Last Updated:** 05/27/26
 
 ---
@@ -147,23 +149,32 @@ For internal reference — Zoho's module names don't always match how we'd natur
 
 ---
 
-## 7. Phase 1 Setup Status
+## 7. Phase 1 Setup Status (refreshed 05/27/26)
 
 | Item | Status | Notes |
 |---|---|---|
 | Zoho CRM Professional account created | ✅ Complete | admin@rentstayable.com is Super Admin |
 | Seat 1: Rob Beyer (Super Admin) | ✅ Complete | Login: admin@rentstayable.com |
 | Seat 2: Jefferson Gomez (Administrator) | ✅ Complete | Login: jefferson@rentstayable.com |
-| 2FA enabled on admin@ | ⏳ Pending verification | Critical — must be confirmed before Phase 2 |
-| 2FA enabled on Jefferson | ⏳ Pending verification | Strongly recommended given Administrator profile |
-| Recovery codes stored | ⏳ Pending | Should live in RISE8 password manager |
-| Jefferson personal mailbox connected (IMAP/OAuth) | 🔲 Not started | |
-| purchasing@ connected as Organization Email | 🔲 Not started | |
-| Procurement pipeline stages configured | 🔲 Not started | |
-| Custom fields (Property ID, Vendor Country, etc.) added | 🔲 Not started | |
-| Disabled unused modules (Quotes, Invoices, etc.) | 🔲 Not started | |
-| Existing Alibaba vendors imported as Accounts | 🔲 Not started | Source list TBD |
-| First live Alibaba Deal logged (test record) | 🔲 Not started | |
+| Seat 3: Rob Beyer (working account, rb@rise8companies.com) | ✅ Complete | Activated 05/27/26 — pulled forward from Phase 3 per architecture pivot |
+| 2FA enabled on admin@ | ⚠️ On hold | Held per Rob 05/20/26 — must be re-opened before Phase 2 |
+| 2FA enabled on Jefferson | ⚠️ On hold | Held per Rob 05/20/26 |
+| Recovery codes stored | ⚠️ On hold | Pending 2FA decision |
+| Jefferson personal mailbox connected (IMAP/OAuth) | ✅ Complete | Done 05/20/26; "empty mail" symptom resolved post-vendor-import 05/26/26 |
+| purchasing@ connected as Organization Email | 🔲 Not started | Requires M365 forwarding rule first (Zoho Pro has no true shared inbox) |
+| Vendor source list received + cleaned | ✅ Complete | 05/26/26 — 19 rows post-dedupe |
+| Alibaba vendors imported as Accounts | ✅ Complete | 05/26/26 — 19 Accounts via `Accounts_RISE8_052626.xlsx` |
+| Vendor contacts imported | ✅ Complete | 05/26/26 — 20 Contacts via `Contacts_RISE8_052626.xlsx`; Account ↔ Contact lookup verified |
+| Vendor Type custom field (Accounts) | ✅ Complete | Pick List created 05/26/26 to support import mapping |
+| **Architecture pivot to `Procurement_Items` custom module** | ✅ Decided 05/27/26 | Supersedes "Deals pipeline + custom fields" approach. Spec: `ZohoModuleSpec_ProcurementItems_052626.md` |
+| Procurement_Items module shell created | ⚠️ Gated on Phase 0 MCP setup | Task 2 — Kyle to execute via MCP once configured |
+| 19 custom fields + 7 picklists deployed | ⚠️ Gated on module shell | Task 3 — `createFields` batch via MCP |
+| Layout sections, permissions, 5 workflow rules | ⚠️ Gated on fields | Task 4 |
+| Disabled unused modules (Quotes, Invoices, etc.) | 🔲 Not started | Partially obviated by Procurement_Items pivot but still needed for UI hygiene |
+| Procurement pipeline stages on Deals (legacy 05/21 plan) | ❌ Superseded | Replaced by 10-value Stage picklist on Procurement_Items per spec |
+| First live procurement record logged (test) | ⚠️ Gated on Task 4 | Task 5 — 5 test items: PTAC9000BTU, PressureWasher4400PSI, MiniSplit23000BTU, ArcWelderAC225S, ExtensionLadder40FT |
+| Zoho MCP server configured in Claude Code | 🔲 Not started | **Phase 0 prerequisite** — Owner: Kyle, before next session |
+| Vercel project linked to repo | 🔲 Not started | **Phase 0** — Owner: Kyle. Production deploy gated on Task 9 (HTML repoint) |
 
 ---
 
@@ -207,6 +218,10 @@ For internal reference — Zoho's module names don't always match how we'd natur
 | 05/27/26 | Third seat activated: `rb@rise8companies.com` working account | Pulled forward from Phase 3 deferral. Required because Procurement_Items module needs a real Procurement-team owner separate from `admin@` (which stays institutional-only). 3 seats × $35 = $105/mo monthly billing. |
 | 05/27/26 | Imported 05/27 task update doc was sourced from a different (free-tier) test Zoho account | Confirmed by Rob. Only the architectural goal carries over; the "subscription upgrade" task is N/A on current paid Professional. 4 referenced source files (HTML tracker, project instructions, module spec, vendor tracker) marked on hold pending location. Tasks 2–9 cannot start until the module spec file surfaces. |
 | 05/27/26 | The 19 Alibaba Accounts + 20 Contacts imported 05/26 remain valid under new architecture | Vendors are still vendors. Under the pivot, they become the "Linked Vendors" related list on Procurement_Items records rather than the parent record of a Deal. No re-import needed. |
+| 05/27/26 | **Kyle Estocapio (`bke@rise8companies.com`) assumes project spearhead role** | Kyle holds Zoho super-admin access (via `admin@rentstayable.com`) and Vercel admin. All Phase 0/1 execution tasks default to Kyle as owner unless explicitly reassigned. Rob remains the approval authority on procurement decisions and architectural shifts; Jefferson remains the day-to-day procurement operator inside Zoho. Doc convention updated: "Owner: Kyle" = Kyle executes; decisions still route through Rob before action where flagged. |
+| 05/27/26 | **Phase 0 — Tooling & Infrastructure added to scope** | Captures build-systems work that gates downstream execution: (1) Zoho MCP server configuration so Tasks 2–4 can run programmatically rather than as a Jefferson click-walkthrough, (2) Vercel project setup for hosting the procurement tracker HTML as a live URL. Both owned by Kyle; both are infrastructure, not procurement decisions, so no Rob sign-off required. Phase 0 sits ahead of Phase 1 finish-out in the active sprint. |
+| 05/27/26 | **Vercel hosting added to project scope; deploy sequencing decided** | The repointed `ZohoProcurementTracker_052626.html` will be deployed to Vercel as a static site linked to `github.com/Stayable/purchasing` `main`. Sequencing decision: **Task 9 (repoint Deals → Procurement_Items) must complete before production deploy.** Rationale: the current HTML references Deals-architecture field names that no longer match the architecture-of-record. Deploying as-is would publish a misleading tracker to Rob and Jefferson. Vercel project setup (linking repo, configuring static deploy, framework=Other) can proceed in parallel before Task 9 lands; only the production cut-over waits. v1 tracker `ZohoVendorTracker_Procurement_052626.html` not deployed — superseded artifact, would create drift. |
+| 05/27/26 | **Zoho MCP setup added as Phase 0 prerequisite owned by Kyle** | Tasks 2–4 (module shell, field deploy, layout/workflow rules) require either (a) a Zoho MCP server connected to Claude Code or (b) a Jefferson click-by-click walkthrough doc. Kyle to configure MCP before the next session using Zoho API Console credentials (super admin access required). Once MCP is live, Tasks 2–4 collapse into a single working session. Walkthrough doc is the documented fallback if MCP setup hits a blocker. |
 
 ---
 

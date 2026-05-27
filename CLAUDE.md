@@ -8,6 +8,10 @@ This is **not a code repository.** It is the working knowledge base and document
 
 Stayable is an extended-stay hotel brand with 8 Florida properties (IDs: 4645, 2295, 6802, 812, 5399, 2535, 44199, 8700). The procurement workflow sources FF&E, OS&E, appliances, building materials, and soft goods overseas and brings recommendations to Rob Beyer (CEO) for approval. Zoho CRM is being reintroduced as the system of record after a prior deployment was abandoned due to module sprawl.
 
+## Project ownership
+
+**Kyle Estocapio (`bke@rise8companies.com`)** is the project spearhead as of 05/27/26. Holds Zoho super-admin access (via `admin@rentstayable.com`) and Vercel admin. **All Phase 0/1 tasks default to Kyle as owner** unless explicitly reassigned in the Todo. Rob Beyer remains the approval authority on procurement decisions (vendor selection, PO issuance, architectural shifts); Jefferson Gomez remains the day-to-day procurement operator inside Zoho. When a task says "Owner: Kyle," it means Kyle executes; when it says "Approver: Rob," it means the decision still routes through Rob before action.
+
 ## Single-branch workflow
 
 The remote (`github.com/Stayable/purchasing`) has **only `main`**. There are no feature branches, no PRs by default. Commit and push directly to `main`. The three `claude/*` branches that previously existed were deleted on 05/27/26 — do not recreate that pattern.
