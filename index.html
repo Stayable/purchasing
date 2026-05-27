@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Stayable Procurement</title>
+<style>
+  :root {
+    --ink: #0c1117;
+    --ink-2: #1b232e;
+    --line: #2a3441;
+    --muted: #8a96a5;
+    --text: #e7ecf3;
+    --accent: #c8a96a;
+    --accent-dim: #8a7549;
+    --ok: #4ea36a;
+    --warn: #d49a3a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--ink); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.55; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 56px 32px 96px; }
+  header { border-bottom: 1px solid var(--line); padding-bottom: 32px; margin-bottom: 40px; }
+  .eyebrow { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 12px; }
+  h1 { font-size: 32px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 8px; }
+  .sub { color: var(--muted); font-size: 16px; margin: 0; }
+  section { margin-bottom: 48px; }
+  h2 { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin: 0 0 16px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .cell { background: var(--ink-2); padding: 18px 20px; }
+  .cell .k { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .cell .v { font-size: 15px; color: var(--text); font-variant-numeric: tabular-nums; }
+  .stages { display: flex; gap: 0; border: 1px solid var(--line); }
+  .stage { flex: 1; background: var(--ink-2); padding: 14px 16px; border-right: 1px solid var(--line); }
+  .stage:last-child { border-right: none; }
+  .stage .n { font-size: 10px; letter-spacing: 0.14em; color: var(--muted); }
+  .stage .name { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 4px; }
+  .stage .gate { font-size: 11px; color: var(--accent-dim); margin-top: 6px; }
+  table { width: 100%; border-collapse: collapse; border: 1px solid var(--line); }
+  th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--line); font-size: 14px; }
+  th { background: var(--ink-2); color: var(--muted); font-weight: 600; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+  td { background: var(--ink); }
+  td.id { font-variant-numeric: tabular-nums; color: var(--muted); width: 80px; }
+  .cta { display: inline-block; background: var(--accent); color: var(--ink); padding: 12px 22px; font-weight: 600; text-decoration: none; border-radius: 2px; font-size: 14px; letter-spacing: 0.02em; }
+  .cta:hover { background: #d6b97c; }
+  .cta-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+  .cta-secondary { display: inline-block; background: transparent; color: var(--accent); border: 1px solid var(--accent-dim); padding: 11px 22px; font-weight: 500; text-decoration: none; border-radius: 2px; font-size: 14px; }
+  .badge { display: inline-block; padding: 3px 9px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; border-radius: 2px; }
+  .badge.ok { background: rgba(78,163,106,0.15); color: var(--ok); border: 1px solid rgba(78,163,106,0.3); }
+  .badge.warn { background: rgba(212,154,58,0.12); color: var(--warn); border: 1px solid rgba(212,154,58,0.3); }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  footer a { color: var(--muted); text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">RISE8 Companies &nbsp;·&nbsp; Stayable Hotels</div>
+    <h1>Procurement Portal</h1>
+    <p class="sub">Overseas procurement, system of record in Zoho CRM. Five-stage SOP from spec to recommendation. Florida-validated.</p>
+  </header>
+
+  <section>
+    <h2>System Status</h2>
+    <div class="grid">
+      <div class="cell"><div class="k">System of Record</div><div class="v">Zoho CRM &nbsp; <span class="badge ok">Live</span></div></div>
+      <div class="cell"><div class="k">Module</div><div class="v"><code>Procurement_Items</code></div></div>
+      <div class="cell"><div class="k">Pipeline</div><div class="v">Overseas Procurement</div></div>
+      <div class="cell"><div class="k">Active Items</div><div class="v">— <span class="badge warn">Pending Import</span></div></div>
+      <div class="cell"><div class="k">Vendors Imported</div><div class="v">19 Accounts &nbsp;·&nbsp; 20 Contacts</div></div>
+      <div class="cell"><div class="k">Property Coverage</div><div class="v">8 properties (FL)</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Workflow — Five-Stage SOP</h2>
+    <div class="stages">
+      <div class="stage"><div class="n">Stage 1</div><div class="name">Spec</div><div class="gate">COO sign-off</div></div>
+      <div class="stage"><div class="n">Stage 2</div><div class="name">Bid</div><div class="gate">≥3 vendor bids</div></div>
+      <div class="stage"><div class="n">Stage 3</div><div class="name">Level</div><div class="gate">HTS code set</div></div>
+      <div class="stage"><div class="n">Stage 4</div><div class="name">FL-Validate</div><div class="gate">Humidity · Salt air · Code</div></div>
+      <div class="stage"><div class="n">Stage 5</div><div class="name">Recommend</div><div class="gate">Decision Notes signed</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Properties in Scope</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Property</th><th>County</th></tr></thead>
+      <tbody>
+        <tr><td class="id">4645</td><td>Lakeland</td><td>Polk</td></tr>
+        <tr><td class="id">2295</td><td>Kissimmee East</td><td>Osceola</td></tr>
+        <tr><td class="id">6802</td><td>Jacksonville West</td><td>Duval</td></tr>
+        <tr><td class="id">812</td><td>Jacksonville North</td><td>Duval</td></tr>
+        <tr><td class="id">5399</td><td>Kissimmee West</td><td>Osceola</td></tr>
+        <tr><td class="id">2535</td><td>St. Augustine</td><td>St. Johns</td></tr>
+        <tr><td class="id">44199</td><td>Davenport</td><td>Polk</td></tr>
+        <tr><td class="id">8700</td><td>Orlando OBT</td><td>Orange</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Access</h2>
+    <div class="cta-row">
+      <a class="cta" href="https://crm.zoho.com/crm/org/Procurement_Items" target="_blank" rel="noopener">Open Procurement_Items in Zoho</a>
+      <a class="cta-secondary" href="https://github.com/Stayable/purchasing" target="_blank" rel="noopener">Documentation Repo</a>
+    </div>
+  </section>
+
+  <footer>
+    <div>RISE8 Companies · Boca Raton, FL · Internal use only</div>
+    <div>Last deploy: <span id="ts"></span></div>
+  </footer>
+</div>
+<script>document.getElementById("ts").textContent = new Date().toISOString().slice(0,10);</script>
+</body>
+</html>

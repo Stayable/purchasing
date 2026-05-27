@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 05/27/26
+**Last Updated:** 05/28/26
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -15,8 +15,8 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 Ordered. Do them in this order. Each item links to the detailed task below.
 
-1. **[P1]** ⏳ Phase 0 — Authenticate the 3 Zoho MCP servers in `/mcp` after session restart (servers registered, "Needs authentication"). Owner: Kyle. **Was #1 — now partially done.**
-2. **[P1]** Phase 0 — Link this repo to Vercel project (preps deployment pipeline; no live URL until Task 9 lands). Owner: Kyle.
+1. ~~**[P1]** Phase 0 — Authenticate the 3 Zoho MCP servers~~ — **✅ done 05/28/26** (all 3 connected this session).
+2. ~~**[P1]** Phase 0 — Link this repo to Vercel project~~ — **✅ done 05/28/26** (Kyle). Production deploy still gated on Task 9.
 3. **[P1]** Task 2 — Create `Procurement_Items` custom module shell **manually in Zoho Settings UI** (no prebuilt MCP covers module creation). Owner: Kyle. ~10 min.
 4. **[P1]** Task 3 — Create 19 fields + 7 picklists **manually in Zoho Settings UI** using `ZohoModuleSpec_ProcurementItems_052626.md` as source of truth (no prebuilt MCP covers field creation). Owner: Kyle. ~30 min.
 5. **[P2]** Task 4 — Layout sections + permissions **manual UI**; 5 workflow rules **via `zoho-crm-workflows` MCP**. Owner: Kyle.
@@ -41,7 +41,7 @@ Added 05/27/26. Captures the build-systems work that gates everything downstream
   - `zoho-crm-workflows` — CRM Automation & Workflows (workflow rules, field updates, email notifications)
   - `zoho-crm-activities` — CRM Activities & Engagement (tasks, notes, comms)
   - Created in Zoho MCP Console (zoho.com/mcp) under `admin@rentstayable.com`, Authorization mode = **Authorization via Connections** (org-level).
-- [ ] ⏳ **[P1]** Authenticate the 3 servers in `/mcp` after session restart. Owner: Kyle. They currently show "Needs authentication." Expected: one OAuth handshake per server using the existing super-admin connection. **Unblocks:** Task 4 workflow rules, Tasks 5/6 record creation, Task 9 repoint validation.
+- [x] ✅ **[P1]** Authenticate the 3 servers in `/mcp` — **done 05/28/26.** All 3 (`zoho-crm-data`, `zoho-crm-workflows`, `zoho-crm-activities`) connected this session. Unblocks Task 4 workflow rules, Tasks 5/6 record creation, Task 9 repoint validation.
 - [ ] 🔲 **[P2]** Do NOT authenticate the `claude.ai Zoho CRM` MCP visible in `/mcp list` — it's a separate generic Zoho integration hosted through claude.ai that overlaps with the 3 Zoho-native servers. Keep the surface area scoped.
 - [ ] 🔲 **[P2]** Document the MCP setup steps in a new `ZohoMCP_Setup_052726.md` so the install is reproducible (re-auth on token expiry, second machine, etc.). Owner: Kyle. Status: optional — do after MCP auth is verified working.
 
@@ -49,7 +49,7 @@ Added 05/27/26. Captures the build-systems work that gates everything downstream
 
 ### Vercel hosting
 
-- [ ] 🔲 **[P1]** Create Vercel project linked to `github.com/Stayable/purchasing`. Owner: Kyle. Repo root is the deploy root; the two HTML trackers are static. No build step needed. Set framework preset to "Other" / static.
+- [x] ✅ **[P1]** Create Vercel project linked to `github.com/Stayable/purchasing` — **done 05/28/26** (Kyle). Repo root is the deploy root; static HTML, no build step. Production deploy of `ZohoProcurementTracker_052626.html` remains gated on Task 9.
 - [ ] 🔲 **[P2]** Configure Vercel project settings: production branch = `main`, deploy previews on PRs disabled (single-branch workflow per `CLAUDE.md`), set custom domain only if Rob approves a subdomain on `rentstayable.com`. Owner: Kyle.
 - [ ] ⚠️ **[P2]** **GATED ON TASK 9** — Deploy repointed `ZohoProcurementTracker_052626.html` to Vercel production. Owner: Kyle. Do not deploy before Task 9 ships: the current HTML is wired to the Deals architecture and would actively mislead Jefferson. Once Task 9 lands and is committed to `main`, the Vercel build auto-promotes.
 - [ ] 🔲 **[P3]** Share Vercel production URL with Rob + Jefferson; add it to `CLAUDE.md` reference list. Owner: Kyle, post-deploy.
@@ -59,6 +59,45 @@ Added 05/27/26. Captures the build-systems work that gates everything downstream
 
 - [ ] 🔲 **[P3]** Add a minimal `index.html` or `vercel.json` to route the Vercel root URL to `ZohoProcurementTracker_052626.html`. Owner: Kyle. Without this, visitors hit a 404 at `/` even though the file is deployed.
 - [ ] 🔲 **[P3]** Confirm no secrets/credentials accidentally embedded in either HTML tracker before deploy. Owner: Kyle. Static deploy = world-readable.
+
+---
+
+## Phase 0.5 — Webapp Decision (deferred to 06/21/26 checkpoint)
+
+Added 05/28/26. The `purchasing.rentstayable.com` static portal (Option A) is live. Whether to invest in a custom interactive webapp (Option B) that talks to the Zoho API directly is **deferred to the Phase 1 validation checkpoint (target 06/21/26)** to anchor the decision in real Jefferson workflow data, not speculation.
+
+### Decision gate
+- **Gate date:** 06/21/26 (Phase 1 Validation Checkpoint)
+- **Decision owner:** Kyle, with Rob's sign-off if Option B is chosen
+- **Inputs required before the gate:**
+  - [ ] Jefferson logs ≥5 procurement items in Zoho native UI for 2+ weeks
+  - [ ] Friction log captured: which specific Zoho UI steps slow Jefferson down (FL-Validation entry, Stage advance, Linked Vendors related-list management, Decision_Notes drafting, etc.)
+  - [ ] Volume forecast: how many items/week will move through the system in steady state
+  - [ ] Multi-user check: will Bea/Crystal/Rob touch procurement items, or just Jefferson
+
+### Options to revisit at the gate
+
+|  | Option A (current) | Option B |
+|---|---|---|
+| State | ✅ Live (`purchasing.rentstayable.com` once DNS lands) | Not built |
+| What it is | Static branded portal · Zoho deep-link · `noindex`, internal-only | Interactive webapp with Zoho OAuth + API integration; replaces or augments Zoho native UI for procurement-specific workflows |
+| Dev cost | Shipped | 2–5 days build + 2–5 hr/mo ongoing maintenance |
+| $ cost | $0 ongoing | ~$252–500/yr (Vercel Pro seat + token store + monitoring) |
+| New risks | None material | Jefferson coupled to webapp reliability · framework upgrade load · Zoho API rate-limit ceiling · drift if data caches creep in |
+| Reversibility | N/A | Hard once Jefferson depends on it — owned forever |
+
+### Trigger conditions to commit to Option B
+Go to B only if **all three** are true at 06/21/26:
+1. Jefferson has identified ≥3 specific Zoho-native UI frictions that a custom UI would fix (not "I just want it prettier")
+2. Volume justifies it (>20 procurement items/month sustained, or multi-user concurrent workflow)
+3. The friction is durable — can't be fixed by a Zoho layout tweak, a custom button, a Deluge script, or a workflow rule
+
+If any is false → **stay on A.** Iterate the static portal (add status feeds, dashboards, links) without an SPA build.
+
+### If we go to B
+- Spawn `ZohoWebApp_Spec_<MMDDYY>.md` with: framework choice, OAuth flow, deployment topology, scope cuts, owner.
+- Add `app/` (or `phase-0.5/`) subdir for code — keep the markdown archive distinct from JS.
+- Pause `ZohoProcurementTracker_052626.html` edits (Task 9 still ships, but no further investment beyond the repoint) — it would be wasted work once B is the real UI.
 
 ---
 

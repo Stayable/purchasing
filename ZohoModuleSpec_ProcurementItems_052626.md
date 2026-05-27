@@ -4,6 +4,9 @@
 
 **Owner of this setup:** Zoho admin (one-time, ~30 min)
 **Date:** 052626
+**Last Updated:** 05/28/26 — API names reconciled to deployed module state. Module is live as of 05/28/26.
+
+> **Deployed API names supersede the original spec for 4 fields** (Zoho's 25-char API name cap + system-primary-field convention). All references in code, MCP calls, and the HTML tracker must use the deployed names below. Field labels remain unchanged.
 
 ---
 
@@ -14,7 +17,7 @@
 | Module label (singular) | Procurement Item |
 | Module label (plural) | Procurement Items |
 | API name | `Procurement_Items` |
-| Primary field | `Item_Name` |
+| Primary field | **`Name`** (system; Label = "Item Name") — **API name is `Name`, not `Item_Name`** |
 | Module type | Custom (CRM) |
 | Pipeline | Single pipeline named "Overseas Procurement" |
 | Permissions | Admin: full · Procurement team: read/write · All others: read-only |
@@ -29,7 +32,7 @@ Fields are grouped by layout section. Build in this order.
 
 | API Name | Label | Type | Required | Notes |
 |---|---|---|---|---|
-| `Item_Name` | Item Name | Single line text (100) | YES | Primary field. CamelCase, no spaces (e.g., `QueenMattress`, `PTAC9000BTU`). Matches SharePoint folder name verbatim. |
+| `Name` | Item Name | Single line text (100) | YES | **Primary field (system; API name = `Name`).** CamelCase, no spaces (e.g., `QueenMattress`, `PTAC9000BTU`). Matches SharePoint folder name verbatim. |
 | `Stage` | Stage | Picklist | YES | See picklist values below. |
 | `Category` | Category | Picklist | YES | See picklist values below. |
 | `Owner` | Owner | User lookup | YES | Person driving the item. System field — Zoho provides this. |
@@ -41,7 +44,7 @@ Fields are grouped by layout section. Build in this order.
 |---|---|---|---|---|
 | `Property_Scope` | Property Scope | Picklist | YES | See picklist values below. |
 | `Estimated_Item_Level_Spend` | Estimated Item-Level Spend (USD) | Currency | YES | Drives approval routing. |
-| `US_Baseline_Cost_Per_Unit` | US Baseline Cost / Unit (USD) | Currency | NO | For cost-per-year-of-service comparison at Stage 3 (Level). |
+| `US_Baseline_Cost_Unit` | US Baseline Cost / Unit (USD) | Currency | NO | For cost-per-year-of-service comparison at Stage 3 (Level). (Currently flagged Required in deployed layout — recommend unflagging; not always known at Stage = Spec.) |
 | `Approver` | Approver | Picklist | YES | See picklist values below. Set manually based on spend tier. |
 | `Target_Decision_Date` | Target Decision Date | Date | NO | When the recommendation should land at the approver's desk. |
 
@@ -53,7 +56,7 @@ Fields are grouped by layout section. Build in this order.
 | `Original_Retailer_SKU` | Original Retailer SKU | Single line text (50) | NO | For traceability back to Home Depot / Amazon historical purchase. |
 | `Original_Retailer_Item_Name` | Original Retailer Item Name | Single line text (200) | NO | Full original name from purchase report (un-CamelCased). |
 | `HTS_Code` | HTS Code | Single line text (15) | NO | Harmonized Tariff Schedule code. Required to advance past Stage 3 (Level). |
-| `Estimated_Tariff_Rate` | Est. Tariff Rate (%) | Decimal (1 decimal place) | NO | Current tariff exposure on the HTS code. |
+| `Est_Tariff_Rate` | Est. Tariff Rate | Percent (2 decimal places) | NO | Current tariff exposure on the HTS code. Stored as a percent field (modified 05/28/26 from spec's decimal — percent is cleaner UI). |
 
 ### Section 4 — Workflow status
 
@@ -61,16 +64,16 @@ Fields are grouped by layout section. Build in this order.
 |---|---|---|---|---|
 | `Spec_Sheet_Status` | Spec Sheet Status | Picklist | YES | See picklist values below. Must be "COO Signed Off" before Stage advances to Bid. |
 | `Florida_Validation_Status` | Florida Validation Status | Picklist | YES | See picklist values below. Must be "Passed" before Stage advances to Recommend. |
-| `Bid_Count` | # of Bids Received | Integer | NO | Minimum 3 required to advance past Stage 2 (Bid). |
+| `Bid_Count` | Bid Count | Number (integer) | NO | Minimum 3 required to advance past Stage 2 (Bid). Stored as Zoho "Number" field (API data_type = `integer`). |
 | `Winning_Vendor` | Winning Vendor | Lookup → Accounts | NO | Set at Stage 5 (Recommend). Must be populated before Stage = Approved. |
 
 ### Section 5 — Audit trail & decision
 
 | API Name | Label | Type | Required | Notes |
 |---|---|---|---|---|
-| `SharePoint_Folder_Link` | SharePoint Folder Link | URL | YES | Link to the 8-subfolder structure. Required at Stage = Bid. |
+| `Sharepoint_Folder_Link` | Sharepoint Folder Link | URL | YES | Link to the 8-subfolder structure. Required at Stage = Bid. |
 | `Description` | Scope Notes | Multi-line textarea (2000) | YES | What the item is, why we're sourcing overseas, Florida overlay considerations, candidate vendors. |
-| `Decision_Notes` | Decision Notes | Multi-line textarea (3000) | NO | Populated at Stage = Recommend with the one-page recommendation summary. Final approval rationale appended at Stage = Approved / Declined. **The decision lives here, never in email.** |
+| `Decision_Notes` | Decision Notes | Multi-line textarea (3000) | NO | Populated at Stage = Recommend with the one-page recommendation summary. Final approval rationale appended at Stage = Approved / Declined. **The decision lives here, never in email.** (Currently flagged Required in deployed layout — **must be unflagged** before Task 5; otherwise no record can be saved at Stage = Spec/Bid since no decision exists yet.) |
 
 ### Related lists (configured on the layout, not as fields)
 
