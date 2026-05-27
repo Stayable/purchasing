@@ -4,29 +4,40 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 05/28/26
+**Last Updated:** 05/28/26 (end-of-day checkpoint)
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
 
 ---
 
-## Top Priorities — Active Sprint (refreshed 05/27/26 post-MCP setup)
+## Top Priorities — Active Sprint (refreshed 05/28/26 end-of-day)
 
-Ordered. Do them in this order. Each item links to the detailed task below.
+**Done this session (05/28/26):**
+- ✅ MCP auth (all 3 Zoho servers connected)
+- ✅ Vercel project linked + custom domain `procurement.rentstayable.com` live
+- ✅ Task 2 — `Procurement_Items` module shell created (Kyle, in Zoho UI)
+- ✅ Task 3 — 19 custom fields + 7 picklists deployed (Kyle, in Zoho UI). Required flags set on the 11 spec'd fields (per layout screenshot proof). Two over-required fields (`US_Baseline_Cost_Unit`, `Decision_Notes`) un-flagged on review.
+- ✅ Task 4 (partial) — Layout sections + permissions done (per screenshot). Workflow rules still pending.
+- ✅ Task 9 — HTML tracker repointed Deals → Procurement_Items, deployed at `/tracker`. Demo-mode banner makes the unauthenticated-API-call state explicit. v1 vendor tracker deleted.
+- ✅ Static portal landing live at `procurement.rentstayable.com` with Tracker + Zoho + Docs CTAs.
+- ✅ Spec doc reconciled to deployed API names (`Name`, `Est_Tariff_Rate`, `US_Baseline_Cost_Unit`, `Sharepoint_Folder_Link`).
+- ✅ Phase 0.5 Webapp Decision section added — gated to 06/21/26 with explicit trigger conditions.
 
-1. ~~**[P1]** Phase 0 — Authenticate the 3 Zoho MCP servers~~ — **✅ done 05/28/26** (all 3 connected this session).
-2. ~~**[P1]** Phase 0 — Link this repo to Vercel project~~ — **✅ done 05/28/26** (Kyle). Production deploy still gated on Task 9.
-3. **[P1]** Task 2 — Create `Procurement_Items` custom module shell **manually in Zoho Settings UI** (no prebuilt MCP covers module creation). Owner: Kyle. ~10 min.
-4. **[P1]** Task 3 — Create 19 fields + 7 picklists **manually in Zoho Settings UI** using `ZohoModuleSpec_ProcurementItems_052626.md` as source of truth (no prebuilt MCP covers field creation). Owner: Kyle. ~30 min.
-5. **[P2]** Task 4 — Layout sections + permissions **manual UI**; 5 workflow rules **via `zoho-crm-workflows` MCP**. Owner: Kyle.
-6. **[P2]** Task 9 — Repoint `ZohoProcurementTracker_052626.html` Deals → Procurement_Items. Owner: Kyle. **Gates the Vercel deploy.**
-7. **[P2]** Phase 0 — Deploy repointed tracker to Vercel and share URL with Rob + Jefferson. Owner: Kyle.
-8. **[P2]** Task 5 — Test 5 procurement items end-to-end in Zoho **via `zoho-crm-data` MCP**.
-9. **[P2]** Task 7 — Rewrite `OverseasProcSOP_RISE8` (Smartsheet → Zoho).
-10. **[P1]** Phase 1 Security gates: re-open 2FA decision (`admin@`, `jefferson@`) — currently on hold per Rob.
+**Active, next session:**
 
-**Out of scope this sprint:** Phase 2 (Non-Profit Sales), Phase 3 (Special Projects), Phase 1 email integration tasks (purchasing@ forwarding setup), and Phase 1 module-cleanup (these were Deals-era cleanups — partially obviated by the Procurement_Items pivot but still needed to disable unused modules).
+1. **[P1]** Task 5 prerequisite — **locate the 197-item filtered purchase report** (Home Depot + Amazon historical, ≥$100). Without this, Task 5 (test batch) and Task 6 (full push) can't run. Owner: Kyle or Kate. Likely OneDrive / SharePoint / Jefferson's email.
+2. **[P2]** Task 4 finish — Configure the **5 workflow rules** via `zoho-crm-workflows` MCP (Stage→Bid blocked unless Spec_Sheet_Status=COO Signed Off; Stage→Recommend blocked unless Florida_Validation_Status=Passed; Stage→Approved blocked unless Winning_Vendor populated; alert on items stuck at Bid >14 days; auto-suggest Approver from spend tier).
+3. **[P2]** Task 5 — Test 5 named items (PTAC9000BTU, PressureWasher4400PSI, MiniSplit23000BTU, ArcWelderAC225S, ExtensionLadder40FT) via `zoho-crm-data` MCP. **Gated on #1 above** + workflow rules (#2). Kyle explicitly vetoed creating placeholder test records — wait for real data.
+4. **[P3]** Stray "Batteries" Account cleanup — Account ID `…1418001`, created 05/26/26 14:51:48 (2.5 hr after the bulk import 12:24:20), `Vendor_Type` null. Likely a manual test or dupe of "GP Batteries Inc". Inspect + delete if confirmed. 30 sec via `zoho-crm-data` MCP.
+5. **[P3]** Receive Kate's `Non_Profits` module .md spec (she's building it in parallel). Review when delivered. **Note:** Phase 2 (Non-Profit Sales) is officially out-of-sprint, but the module-build itself can proceed independent of the sales-team rollout.
+6. **[P2]** Task 7 — Locate current `OverseasProcSOP_RISE8` doc (SharePoint / OneDrive). Once surfaced, rewrite Smartsheet refs → Zoho. Owner: Kyle to locate; rewrite is Claude.
+7. **[P3]** Task 6 — Push remaining 192 procurement items (gated on Task 5).
+8. **[P3]** Task 8 — Audit 6 vendor-adjacent Smartsheets (Vendor Relationship Tracker, Overseas Vendor Tracking, Overseas Vendor Progress Report, Vendor Matrix, Vendor Masterlist, Preferred Vendor Matrix) — purely investigative; route findings to Rob.
+9. **[P1]** Phase 1 Security gates: re-open 2FA decision (`admin@`, `jefferson@`) — currently on hold per Rob.
+10. **[P3]** Replace 20 vendor contact placeholder Last Names (Jefferson follow-up).
+
+**Out of scope this sprint:** Phase 2 sales-team rollout (Bea/Crystal seats + non-profit pipeline; Kate's module-build doesn't trigger this), Phase 3 (Special Projects), Phase 1 email integration (purchasing@ forwarding), Phase 1 Deals-module cleanup (partially obviated by pivot).
 
 ---
 
