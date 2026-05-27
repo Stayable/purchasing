@@ -24,9 +24,10 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 - [x] ✅ **[P1]** Connect Jefferson's personal mailbox (`jefferson@rentstayable.com`) via IMAP/OAuth — done 05/20/26
   - Setup → Channels → Email → IMAP Configuration
   - **05/26/26 status check:** Configuration Status = Working, Sync Status = Completed. Mail tab appears empty — diagnosed as expected behavior at this stage: no Accounts/Contacts imported yet, so emails do not auto-associate to records. Do NOT reconnect. Once vendor Accounts + Contacts are imported, re-verify. Secondary check: open Email Sync Preferences accordion and confirm date range / folder selection (default IMAP often syncs only forward-from-now, INBOX only).
-- [ ] 🔲 **[P1]** Add `purchasing@rentstayable.com` as Organization Email (shared mailbox)
+- [ ] 🔲 **[P1]** Set up M365 forwarding rule on `purchasing@rentstayable.com` → `jefferson@rentstayable.com` (keep copy in purchasing@ for audit). Required because Zoho Professional has no true shared inbox; Organization Emails is outbound-only.
+- [ ] 🔲 **[P1]** Add `purchasing@rentstayable.com` as Organization Email (shared mailbox — outbound only)
   - Setup → Channels → Email → Organization Emails
-- [ ] 🔲 **[P1]** Grant Jefferson read + send access to `purchasing@`
+- [ ] 🔲 **[P1]** Grant Jefferson Send-As permission on `purchasing@`
 - [ ] 🔲 **[P1]** Test inbound: send a test email to `purchasing@` from a Gmail account, confirm it appears in Jefferson's Zoho inbox view
 - [ ] 🔲 **[P1]** Test outbound: have Jefferson reply from `purchasing@` inside Zoho, confirm the thread logs against a test record
 
