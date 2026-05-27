@@ -12,7 +12,7 @@ This document was produced against a **different test Zoho account** (which was 
 
 - The **current production account** is already on **Professional tier with 3 users** (admin@rentstayable.com, jefferson@rentstayable.com, rb@rise8companies.com). **Task 1 below is N/A** — no upgrade needed; subscription is already in place.
 - The **architectural goal** of this 05/27 doc — pivoting from Deals pipeline to a `Procurement_Items` custom module — is **adopted** for the current paid account. This supersedes the 05/21 rollout doc's "Deals pipeline with custom fields" approach. See decision log in `ZohoCRM_Rollout_052126.md`.
-- The **4 referenced files** (`ZohoProcurementTracker_052626.html`, `ProjectInstructions_OverseasProc_052626.md`, `ZohoModuleSpec_ProcurementItems_052626.md`, `ZohoVendorTracker_Procurement_052626.html`) are **on hold** — location unknown, not in this repo. Tasks 2–9 cannot meaningfully proceed without the spec file in particular.
+- The **4 referenced files** (`ZohoProcurementTracker_052626.html`, `ProjectInstructions_OverseasProc_052626.md`, `ZohoModuleSpec_ProcurementItems_052626.md`, `ZohoVendorTracker_Procurement_052626.html`) were **Claude-generated artifacts in the source chat, not files on disk** (confirmed by Rob 05/27/26). They need to be either pasted into this repo from the source-chat transcript or regenerated here from the underlying inputs. Tasks 2–9 remain on hold until the spec file in particular is restored.
 
 **Net:** until the 4 source files surface, the only items below that are actionable are notional. Once the spec lands, re-evaluate.
 

@@ -23,7 +23,7 @@ Reverses the original "Deals pipeline" approach. See `ZohoTaskUpdate_RISE8_05272
 - [ ] ⚠️ **[P2]** Task 7 — Rewrite OverseasProcSOP_RISE8 doc (Smartsheet → Zoho) — **ON HOLD** pending current SOP doc location
 - [ ] ⚠️ **[P3]** Task 8 — Resolve 6 vendor-adjacent Smartsheets — **ON HOLD** pending Rob/Operations input; no Smartsheet tool in this environment
 - [ ] ⚠️ **[P2]** Task 9 — Repoint `ZohoProcurementTracker_052626.html` artifact — **ON HOLD** pending artifact file + Task 2/3 completion
-- [ ] 🔲 **[P1]** Locate the 4 missing files (search OneDrive, prior Claude sessions, Rob's local) and place in repo before unblocking Tasks 2–9
+- [ ] 🔲 **[P1]** Recover the 4 Claude-generated artifacts from the source chat (per Rob 05/27: they were never saved to disk — generated inline in a prior session). Two paths: (a) Rob pastes each artifact's content back in here and we commit them, or (b) regenerate from the 197-item purchase report + procurement requirements with this session, then have Rob diff against the originals. Path (a) is faster and authoritative.
 
 **Note on the 05/26 vendor import:** The 19 Accounts + 20 Contacts imported yesterday remain valid. Under the new architecture they will sit on Procurement_Items records as the "Linked Vendors" related list rather than as Deal parents. No data migration needed.
 
