@@ -2,6 +2,9 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    { "source": "/tracker", "destination": "/ZohoProcurementTracker_052626.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
