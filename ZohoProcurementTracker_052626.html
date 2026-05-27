@@ -1,0 +1,1110 @@
+<!-- STAYABLE PROCUREMENT TRACKER -->
+<!-- Zoho is the system of record. Deals = items moving through the 5-stage SOP. -->
+<!-- Vendors = Accounts linked to Deals. Activities = notes/tasks on Deals. -->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stayable · Procurement Tracker</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #0a0e14;
+    --surface: #141922;
+    --surface-2: #1c222d;
+    --border: #252c3a;
+    --border-bright: #3a4458;
+    --text: #f0ede5;
+    --text-dim: #9ba3af;
+    --text-faint: #5f6776;
+    --accent: #c89b48;
+    --accent-bright: #e0b25a;
+    --success: #7da87d;
+    --warn: #c89b48;
+    --danger: #c87a5c;
+    --info: #6b8caf;
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at top right, rgba(200, 155, 72, 0.04), transparent 60%),
+      radial-gradient(ellipse at bottom left, rgba(107, 140, 175, 0.03), transparent 60%);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  .app { max-width: 1280px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { display: flex; align-items: baseline; gap: 16px; }
+  .brand-mark {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+  }
+  .brand-bar { width: 1px; height: 18px; background: var(--border-bright); align-self: center; }
+  .brand-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--text);
+  }
+  .header-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .header-meta .live { color: var(--success); }
+  .header-meta .live::before {
+    content: '●';
+    margin-right: 4px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* Architecture banner */
+  .arch-banner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--accent);
+    padding: 10px 16px;
+    margin: 16px 0 0 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.02em;
+  }
+  .arch-banner b {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin: 20px 0 24px 0;
+  }
+  .tab {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 16px 22px;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.15s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); }
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+  .tab-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    margin-right: 6px;
+  }
+
+  /* Panels */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 18px;
+  }
+  .panel-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+  }
+  .panel-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+
+  /* Form */
+  .grid { display: grid; gap: 14px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .field-required::after { content: ' *'; color: var(--accent); }
+  .field-hint {
+    font-family: var(--sans);
+    font-size: 11px;
+    color: var(--text-faint);
+    font-style: italic;
+    margin-top: -2px;
+  }
+
+  input[type="text"], input[type="email"], input[type="number"], textarea, select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    padding: 10px 12px;
+    border-radius: 2px;
+    width: 100%;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--surface-2);
+  }
+  textarea {
+    min-height: 80px;
+    resize: vertical;
+    font-family: var(--sans);
+  }
+  select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239ba3af' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+
+  /* Buttons */
+  .btn {
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 12px 24px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.15s;
+  }
+  .btn:hover:not(:disabled) { background: var(--accent-bright); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border-bright);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    color: var(--text);
+    border-color: var(--text-dim);
+    background: var(--surface);
+  }
+  .actions { display: flex; gap: 12px; margin-top: 20px; align-items: center; }
+
+  /* Response */
+  .response {
+    margin-top: 32px;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+  .response-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .response-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .response-status {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 2px;
+  }
+  .response-status.ok { background: rgba(125, 168, 125, 0.15); color: var(--success); }
+  .response-status.err { background: rgba(200, 122, 92, 0.15); color: var(--danger); }
+  .response-status.pending { background: rgba(200, 155, 72, 0.15); color: var(--accent); }
+
+  .response-body {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+    border-radius: 2px;
+    font-size: 13.5px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    color: var(--text);
+  }
+
+  .toolcall-summary {
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 10px 0;
+    user-select: none;
+  }
+  .toolcall-summary:hover { color: var(--text-dim); }
+  .toolcall-details {
+    margin-top: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    border-radius: 2px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+  .toolcall-block {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .toolcall-block:last-child {
+    margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+  }
+  .toolcall-block .tc-name { color: var(--accent); font-weight: 600; }
+  .toolcall-block .tc-output { white-space: pre-wrap; word-break: break-word; }
+
+  /* Spinner */
+  .spinner {
+    display: inline-block;
+    width: 12px; height: 12px;
+    border: 1.5px solid var(--border-bright);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Spend tier indicator */
+  .spend-indicator {
+    margin-top: 6px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    display: none;
+  }
+  .spend-indicator.show { display: block; }
+  .spend-indicator b { color: var(--accent); }
+
+  /* Footer */
+  .footer-note {
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+
+<div class="app">
+
+  <div class="header">
+    <div class="brand">
+      <div class="brand-mark">STAYABLE</div>
+      <div class="brand-bar"></div>
+      <div class="brand-title">Procurement Tracker</div>
+    </div>
+    <div class="header-meta">
+      <span class="live">Zoho CRM · Connected</span>
+    </div>
+  </div>
+
+  <div class="arch-banner">
+    <b>Architecture:</b> Items = Zoho <b>Deals</b> (Stage = Spec → Bid → Level → FL-Validate → Recommend). Vendors = Zoho <b>Accounts</b>, linked to Deals. Activities = notes/tasks on the Deal.
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-panel="search"><span class="tab-num">01</span>Search</button>
+    <button class="tab" data-panel="pipeline"><span class="tab-num">02</span>Pipeline</button>
+    <button class="tab" data-panel="log"><span class="tab-num">03</span>Log Activity</button>
+    <button class="tab" data-panel="newitem"><span class="tab-num">04</span>New Item</button>
+    <button class="tab" data-panel="newvendor"><span class="tab-num">05</span>New Vendor</button>
+  </div>
+
+  <!-- ============ 01 · SEARCH ============ -->
+  <div class="panel active" id="panel-search">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Search</div>
+        <div class="panel-sub">Find a Deal (item) or Account (vendor)</div>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="field">
+        <label class="field-label">Search query</label>
+        <input type="text" id="search-q" placeholder="Item name, vendor name, contact email, country, category…">
+      </div>
+      <div class="field">
+        <label class="field-label">Object</label>
+        <select id="search-type">
+          <option value="both">Deals + Vendors</option>
+          <option value="deals">Deals only (items)</option>
+          <option value="accounts">Accounts only (vendors)</option>
+        </select>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="search-btn">Search Zoho</button>
+      <button class="btn btn-secondary" onclick="clearResponse('search')">Clear</button>
+    </div>
+
+    <div class="response" id="response-search" style="display:none;">
+      <div class="response-header">
+        <span class="response-label">Result</span>
+        <span class="response-status" id="status-search"></span>
+      </div>
+      <div class="response-body" id="body-search"></div>
+      <details>
+        <summary class="toolcall-summary">▸ Tool call detail</summary>
+        <div class="toolcall-details" id="tools-search"></div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ============ 02 · PIPELINE ============ -->
+  <div class="panel" id="panel-pipeline">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Pipeline</div>
+        <div class="panel-sub">Deals grouped by SOP stage</div>
+      </div>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="field">
+        <label class="field-label">Stage filter</label>
+        <select id="pipeline-stage">
+          <option value="all">All stages</option>
+          <option value="Spec">01 · Spec</option>
+          <option value="Bid">02 · Bid</option>
+          <option value="Level">03 · Level</option>
+          <option value="FL-Validate">04 · FL-Validate</option>
+          <option value="Recommend">05 · Recommend</option>
+          <option value="Submitted">Submitted</option>
+          <option value="Approved">Approved</option>
+          <option value="Approved-with-Conditions">Approved w/ Conditions</option>
+          <option value="Declined">Declined</option>
+          <option value="Need-More-Info">Need More Info</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Category</label>
+        <select id="pipeline-category">
+          <option value="">Any</option>
+          <option>FF&E</option>
+          <option>OS&E</option>
+          <option>Appliances</option>
+          <option>Building Materials</option>
+          <option>Soft Goods</option>
+          <option>Linens</option>
+          <option>Furniture</option>
+          <option>Lighting</option>
+          <option>Hardware</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Flag stuck deals</label>
+        <select id="pipeline-stuck">
+          <option value="14">≥14 days at stage</option>
+          <option value="7">≥7 days at stage</option>
+          <option value="30">≥30 days at stage</option>
+          <option value="0">Don't flag</option>
+        </select>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="pipeline-btn">Pull Pipeline</button>
+      <button class="btn btn-secondary" onclick="clearResponse('pipeline')">Clear</button>
+    </div>
+
+    <div class="response" id="response-pipeline" style="display:none;">
+      <div class="response-header">
+        <span class="response-label">Pipeline snapshot</span>
+        <span class="response-status" id="status-pipeline"></span>
+      </div>
+      <div class="response-body" id="body-pipeline"></div>
+      <details>
+        <summary class="toolcall-summary">▸ Tool call detail</summary>
+        <div class="toolcall-details" id="tools-pipeline"></div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ============ 03 · LOG ACTIVITY ============ -->
+  <div class="panel" id="panel-log">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Log Activity</div>
+        <div class="panel-sub">Record a touch against a Deal (item). Vendor optional.</div>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="field">
+        <label class="field-label field-required">Deal / item name</label>
+        <input type="text" id="log-deal" placeholder="e.g. QueenMattress, PTAC9000, LVPFlooring">
+        <div class="field-hint">Will match in Zoho. If multiple matches, you'll be asked to pick.</div>
+      </div>
+      <div class="field">
+        <label class="field-label">Vendor (optional)</label>
+        <input type="text" id="log-vendor" placeholder="If this activity is tied to a specific vendor">
+      </div>
+      <div class="field">
+        <label class="field-label field-required">Activity type</label>
+        <select id="log-type">
+          <option value="">— Select —</option>
+          <option>RFQ Sent</option>
+          <option>Bid Received (DDP)</option>
+          <option>Bid Received (FOB - rejected, re-requesting DDP)</option>
+          <option>Sample Requested</option>
+          <option>Sample Received</option>
+          <option>Reference Check Completed</option>
+          <option>BSCI/Sedex/SA8000 Audit Verified</option>
+          <option>ImportKey Check Completed</option>
+          <option>Spec Sheet Locked (Stage 1 complete)</option>
+          <option>Bid Leveling Complete (Stage 3 complete)</option>
+          <option>FL Validation Passed</option>
+          <option>FL Validation Failed</option>
+          <option>FX Locked</option>
+          <option>QC Inspection Scheduled</option>
+          <option>QC Inspection Completed</option>
+          <option>Vendor Declined</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Advance to SOP stage?</label>
+        <select id="log-stage">
+          <option value="">— No change —</option>
+          <option>Spec</option>
+          <option>Bid</option>
+          <option>Level</option>
+          <option>FL-Validate</option>
+          <option>Recommend</option>
+          <option>Submitted</option>
+          <option>Approved</option>
+          <option>Approved-with-Conditions</option>
+          <option>Declined</option>
+          <option>Need-More-Info</option>
+        </select>
+        <div class="field-hint">Only set if this activity advances the deal stage.</div>
+      </div>
+    </div>
+    <div class="field" style="margin-top:14px;">
+      <label class="field-label field-required">Notes</label>
+      <textarea id="log-notes" placeholder="Specific: price, lead time, exceptions, follow-ups, sample tracking, defects. No 'good vendor' — give numbers."></textarea>
+    </div>
+    <div class="actions">
+      <button class="btn" id="log-btn">Log to Zoho Deal</button>
+      <button class="btn btn-secondary" onclick="clearResponse('log')">Clear</button>
+    </div>
+
+    <div class="response" id="response-log" style="display:none;">
+      <div class="response-header">
+        <span class="response-label">Activity log result</span>
+        <span class="response-status" id="status-log"></span>
+      </div>
+      <div class="response-body" id="body-log"></div>
+      <details>
+        <summary class="toolcall-summary">▸ Tool call detail</summary>
+        <div class="toolcall-details" id="tools-log"></div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ============ 04 · NEW ITEM (DEAL) ============ -->
+  <div class="panel" id="panel-newitem">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">New Item (Deal)</div>
+        <div class="panel-sub">Open a new procurement Deal at Stage = Spec</div>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="field">
+        <label class="field-label field-required">Item name</label>
+        <input type="text" id="ni-name" placeholder="e.g. QueenMattress, PTAC9000, LVPFlooring">
+        <div class="field-hint">No spaces. CamelCase. This becomes the Deal name and SharePoint folder name.</div>
+      </div>
+      <div class="field">
+        <label class="field-label field-required">Category</label>
+        <select id="ni-category">
+          <option value="">— Select —</option>
+          <option>FF&E</option>
+          <option>OS&E</option>
+          <option>Appliances</option>
+          <option>Building Materials</option>
+          <option>Soft Goods</option>
+          <option>Linens</option>
+          <option>Furniture</option>
+          <option>Lighting</option>
+          <option>Hardware</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Property scope</label>
+        <select id="ni-property">
+          <option value="">— Select —</option>
+          <option>Portfolio-wide (all 8 properties)</option>
+          <option>Lakeland (4645)</option>
+          <option>Kissimmee East (2295)</option>
+          <option>Jacksonville West (6802)</option>
+          <option>Jacksonville North (812)</option>
+          <option>Kissimmee West (5399)</option>
+          <option>St. Augustine (2535)</option>
+          <option>Davenport (44199)</option>
+          <option>Orlando OBT (8700)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Estimated item-level spend (USD)</label>
+        <input type="number" id="ni-spend" placeholder="e.g. 45000" min="0">
+        <div class="spend-indicator" id="ni-spend-indicator"></div>
+      </div>
+      <div class="field">
+        <label class="field-label">Target close date</label>
+        <input type="text" id="ni-close" placeholder="YYYY-MM-DD or 'Q3 2026'">
+      </div>
+      <div class="field">
+        <label class="field-label">Current US baseline cost (USD/unit)</label>
+        <input type="number" id="ni-baseline" placeholder="For cost-per-year-of-service comparison later" min="0" step="0.01">
+      </div>
+      <div class="field" style="grid-column: 1 / -1;">
+        <label class="field-label">SharePoint folder link</label>
+        <input type="text" id="ni-folder" placeholder="Link to the 8-subfolder structure once created">
+        <div class="field-hint">If not created yet, leave blank and add it once the folder exists.</div>
+      </div>
+    </div>
+    <div class="field" style="margin-top:14px;">
+      <label class="field-label field-required">Scope notes</label>
+      <textarea id="ni-notes" placeholder="What's the item? Why are we sourcing it overseas now? Florida overlay considerations (humidity, salt air for coastal props, hurricane code, 120V/60Hz, UL/ETL). Any known vendor candidates from IBS or ImportKey."></textarea>
+    </div>
+    <div class="actions">
+      <button class="btn" id="ni-btn">Create Deal in Zoho</button>
+      <button class="btn btn-secondary" onclick="clearResponse('newitem')">Clear</button>
+    </div>
+
+    <div class="response" id="response-newitem" style="display:none;">
+      <div class="response-header">
+        <span class="response-label">Deal creation result</span>
+        <span class="response-status" id="status-newitem"></span>
+      </div>
+      <div class="response-body" id="body-newitem"></div>
+      <details>
+        <summary class="toolcall-summary">▸ Tool call detail</summary>
+        <div class="toolcall-details" id="tools-newitem"></div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ============ 05 · NEW VENDOR (ACCOUNT) ============ -->
+  <div class="panel" id="panel-newvendor">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">New Vendor (Account)</div>
+        <div class="panel-sub">Onboard an overseas vendor as a Zoho Account. Link to Deal(s) later.</div>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="field">
+        <label class="field-label field-required">Company name</label>
+        <input type="text" id="nv-name">
+      </div>
+      <div class="field">
+        <label class="field-label">Country of origin</label>
+        <select id="nv-country">
+          <option value="">— Select —</option>
+          <option>China</option>
+          <option>Vietnam</option>
+          <option>India</option>
+          <option>Turkey</option>
+          <option>Pakistan</option>
+          <option>Cambodia</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Primary category</label>
+        <select id="nv-category">
+          <option value="">— Select —</option>
+          <option>FF&E</option>
+          <option>OS&E</option>
+          <option>Appliances</option>
+          <option>Building Materials</option>
+          <option>Soft Goods</option>
+          <option>Linens</option>
+          <option>Furniture</option>
+          <option>Lighting</option>
+          <option>Hardware</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Source</label>
+        <select id="nv-source">
+          <option value="">— Select —</option>
+          <option>IBS 2026 (vetted exhibitor)</option>
+          <option>ImportKey customs match</option>
+          <option>Vendor referral</option>
+          <option>Cold outreach</option>
+          <option>Alibaba / GlobalSources</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Primary contact name</label>
+        <input type="text" id="nv-contact">
+      </div>
+      <div class="field">
+        <label class="field-label">Contact email</label>
+        <input type="email" id="nv-email">
+      </div>
+      <div class="field" style="grid-column: 1 / -1;">
+        <label class="field-label">Factory address</label>
+        <input type="text" id="nv-address" placeholder="Street, city, province, country">
+      </div>
+      <div class="field">
+        <label class="field-label">Audit status</label>
+        <select id="nv-audit">
+          <option value="">— Not yet verified —</option>
+          <option>BSCI ≤24mo verified</option>
+          <option>Sedex ≤24mo verified</option>
+          <option>SA8000 ≤24mo verified</option>
+          <option>Audit expired (re-request)</option>
+          <option>No audit available</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">Incoterms preferred</label>
+        <select id="nv-terms">
+          <option value="">— Select —</option>
+          <option>DDP-to-property (required)</option>
+          <option>FOB (must convert to DDP)</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field" style="grid-column: 1 / -1;">
+        <label class="field-label">Link to Deal (optional)</label>
+        <input type="text" id="nv-deal" placeholder="If this vendor is bidding on a specific item, name the Deal">
+      </div>
+    </div>
+    <div class="field" style="margin-top:14px;">
+      <label class="field-label">Initial notes</label>
+      <textarea id="nv-notes" placeholder="Context: what they make, US hospitality references, lead time, MOQ, anything else relevant."></textarea>
+    </div>
+    <div class="actions">
+      <button class="btn" id="nv-btn">Create Account in Zoho</button>
+      <button class="btn btn-secondary" onclick="clearResponse('newvendor')">Clear</button>
+    </div>
+
+    <div class="response" id="response-newvendor" style="display:none;">
+      <div class="response-header">
+        <span class="response-label">Vendor creation result</span>
+        <span class="response-status" id="status-newvendor"></span>
+      </div>
+      <div class="response-body" id="body-newvendor"></div>
+      <details>
+        <summary class="toolcall-summary">▸ Tool call detail</summary>
+        <div class="toolcall-details" id="tools-newvendor"></div>
+      </details>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <span>RISE8 Companies · Stayable Overseas Procurement · Zoho Deals as system of record</span>
+    <span id="last-action">Awaiting input</span>
+  </div>
+
+</div>
+
+<script>
+// ==========================================================================
+//  STATE & TAB CONTROL
+// ==========================================================================
+const ZOHO_MCP_URL = "https://claude-zohocrm.zohomcp.com/mcp/message";
+const MODEL = "claude-sonnet-4-20250514";
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+  });
+});
+
+// ==========================================================================
+//  SPEND INDICATOR (approval routing per SOP)
+// ==========================================================================
+document.getElementById('ni-spend').addEventListener('input', (e) => {
+  const v = parseFloat(e.target.value);
+  const ind = document.getElementById('ni-spend-indicator');
+  if (isNaN(v) || v <= 0) { ind.classList.remove('show'); return; }
+  let tier = '';
+  if (v < 25000) tier = '<b>UNDER $25K</b> → Approver: COO';
+  else if (v < 100000) tier = '<b>$25K – $100K</b> → Approver: CEO (Robert Beyer) + physical sample required';
+  else tier = '<b>OVER $100K</b> → Approver: CEO + Investment Committee + sample + pre-production inspection plan';
+  ind.innerHTML = tier;
+  ind.classList.add('show');
+});
+
+// ==========================================================================
+//  API CALL
+// ==========================================================================
+async function callZoho(prompt) {
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: MODEL,
+      max_tokens: 1000,
+      messages: [{ role: "user", content: prompt }],
+      mcp_servers: [{
+        type: "url",
+        url: ZOHO_MCP_URL,
+        name: "zoho-crm"
+      }]
+    })
+  });
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`API ${response.status}: ${errText}`);
+  }
+  return await response.json();
+}
+
+// ==========================================================================
+//  RESPONSE PARSING & RENDER
+// ==========================================================================
+function parseResponse(data) {
+  const blocks = data.content || [];
+  const textBlocks = blocks.filter(b => b.type === "text").map(b => b.text).join("\n\n");
+  const toolUses = blocks.filter(b => b.type === "mcp_tool_use");
+  const toolResults = blocks.filter(b => b.type === "mcp_tool_result");
+  return { text: textBlocks, toolUses, toolResults };
+}
+
+function renderTools(panel, toolUses, toolResults) {
+  const target = document.getElementById('tools-' + panel);
+  if (!toolUses.length && !toolResults.length) {
+    target.innerHTML = '<em style="color:var(--text-faint);">No tool calls — Claude answered from context.</em>';
+    return;
+  }
+  let html = '';
+  toolUses.forEach((use, i) => {
+    const result = toolResults[i];
+    html += '<div class="toolcall-block">';
+    html += `<div><span class="tc-name">${escapeHtml(use.name)}</span> · ${escapeHtml(use.server_name || 'zoho-crm')}</div>`;
+    html += `<div style="margin-top:6px;color:var(--text-faint);">INPUT:</div>`;
+    html += `<div class="tc-output">${escapeHtml(JSON.stringify(use.input, null, 2))}</div>`;
+    if (result) {
+      const resultText = (result.content || []).map(c => c.text || JSON.stringify(c)).join("\n");
+      const isError = result.is_error;
+      html += `<div style="margin-top:8px;color:${isError ? 'var(--danger)' : 'var(--text-faint)'};">OUTPUT${isError ? ' (ERROR)' : ''}:</div>`;
+      html += `<div class="tc-output">${escapeHtml(resultText)}</div>`;
+    }
+    html += '</div>';
+  });
+  target.innerHTML = html;
+}
+
+function escapeHtml(s) {
+  if (typeof s !== 'string') s = String(s);
+  return s.replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+
+function setStatus(panel, state, text) {
+  const el = document.getElementById('status-' + panel);
+  el.className = 'response-status ' + state;
+  el.textContent = text;
+}
+function showResponse(panel) {
+  document.getElementById('response-' + panel).style.display = 'block';
+}
+function clearResponse(panel) {
+  document.getElementById('response-' + panel).style.display = 'none';
+  document.getElementById('body-' + panel).innerHTML = '';
+  document.getElementById('tools-' + panel).innerHTML = '';
+}
+function setLoading(panel, btnId) {
+  showResponse(panel);
+  setStatus(panel, 'pending', 'Querying Zoho…');
+  document.getElementById('body-' + panel).innerHTML = '<span class="spinner"></span><span style="color:var(--text-dim);">Calling Zoho CRM via MCP…</span>';
+  document.getElementById(btnId).disabled = true;
+}
+function setDone(panel, btnId, ok, text, data) {
+  document.getElementById(btnId).disabled = false;
+  setStatus(panel, ok ? 'ok' : 'err', ok ? 'OK' : 'Error');
+  document.getElementById('body-' + panel).textContent = text || '(no response)';
+  if (data) renderTools(panel, data.toolUses || [], data.toolResults || []);
+  document.getElementById('last-action').textContent =
+    new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'}) + ' · ' + panel.toUpperCase();
+}
+
+// ==========================================================================
+//  HANDLERS
+// ==========================================================================
+
+// --- 01 · SEARCH ---
+document.getElementById('search-btn').addEventListener('click', async () => {
+  const q = document.getElementById('search-q').value.trim();
+  const type = document.getElementById('search-type').value;
+  if (!q) { alert('Enter a search query'); return; }
+
+  setLoading('search', 'search-btn');
+  let scope = '';
+  if (type === 'deals') scope = 'Search ONLY the Deals module (items in procurement). ';
+  else if (type === 'accounts') scope = 'Search ONLY the Accounts module (vendors). ';
+  else scope = 'Search BOTH the Deals module (items) AND the Accounts module (vendors). Distinguish them in the response. ';
+
+  const prompt =
+    `${scope}Query: "${q}". This is for the Stayable / RISE8 overseas procurement workflow. ` +
+    `Return up to 10 matches per object type. ` +
+    `For Deals: name, Stage (Spec/Bid/Level/FL-Validate/Recommend/etc.), linked Account/vendor, item category, estimated value, days at current stage. ` +
+    `For Accounts: name, country, category, primary contact, # of linked Deals, last activity date. ` +
+    `Format as a clean numbered list with clear section headers if both types are returned. If no matches, say so plainly.`;
+
+  try {
+    const data = await callZoho(prompt);
+    const parsed = parseResponse(data);
+    setDone('search', 'search-btn', true, parsed.text || '(no text response)', parsed);
+  } catch (e) {
+    setDone('search', 'search-btn', false, 'Error: ' + e.message);
+  }
+});
+document.getElementById('search-q').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('search-btn').click();
+});
+
+// --- 02 · PIPELINE ---
+document.getElementById('pipeline-btn').addEventListener('click', async () => {
+  const stage = document.getElementById('pipeline-stage').value;
+  const category = document.getElementById('pipeline-category').value;
+  const stuckDays = parseInt(document.getElementById('pipeline-stuck').value);
+
+  setLoading('pipeline', 'pipeline-btn');
+  let prompt = `Pull a procurement Deal pipeline from Zoho CRM. `;
+  if (stage === 'all') {
+    prompt += `Group all active Deals (i.e. not Closed Lost / Declined) by Stage. Stages in our SOP: Spec, Bid, Level, FL-Validate, Recommend, Submitted, Approved, Approved-with-Conditions. `;
+  } else {
+    prompt += `Filter to Deals at Stage: ${stage}. `;
+  }
+  if (category) prompt += `Further filter to category: ${category}. `;
+  prompt +=
+    `For each Deal return: item name, linked Account/vendor (or # of vendors bidding if at Bid stage), property scope, estimated value, days at current stage, last activity. `;
+  if (stuckDays > 0) prompt += `Flag any Deal that has been at its current stage for ≥${stuckDays} days — these are stuck. Put a "⚠ STUCK" marker next to them. `;
+  prompt += `Format as a concise table-style list grouped by Stage. No padding — facts only.`;
+
+  try {
+    const data = await callZoho(prompt);
+    const parsed = parseResponse(data);
+    setDone('pipeline', 'pipeline-btn', true, parsed.text || '(no text response)', parsed);
+  } catch (e) {
+    setDone('pipeline', 'pipeline-btn', false, 'Error: ' + e.message);
+  }
+});
+
+// --- 03 · LOG ACTIVITY ---
+document.getElementById('log-btn').addEventListener('click', async () => {
+  const deal = document.getElementById('log-deal').value.trim();
+  const vendor = document.getElementById('log-vendor').value.trim();
+  const type = document.getElementById('log-type').value;
+  const stage = document.getElementById('log-stage').value;
+  const notes = document.getElementById('log-notes').value.trim();
+
+  if (!deal || !type || !notes) {
+    alert('Deal name, activity type, and notes are required.');
+    return;
+  }
+
+  setLoading('log', 'log-btn');
+  const prompt =
+    `Log a new activity in Zoho CRM against the Deal named "${deal}". ` +
+    `Activity type: ${type}. ` +
+    (vendor ? `Linked vendor (Account): ${vendor}. ` : '') +
+    (stage ? `IMPORTANT: also advance the Deal's Stage to: ${stage}. ` : '') +
+    `Notes: ${notes}` +
+    `\n\nSteps:` +
+    `\n(1) Find the Deal in Zoho. If multiple matches, list them with their current Stage and ask which one.` +
+    `\n(2) Create a Note (or Task) on that Deal record with the activity type and notes above. Tag the activity type clearly so it's filterable later.` +
+    (vendor ? `\n(3) If vendor "${vendor}" is named, ensure the Account is linked to this Deal. If not linked, link it. If the Account doesn't exist in Zoho, say so — don't auto-create.` : '') +
+    (stage ? `\n(4) Update the Deal's Stage to "${stage}". Confirm the update.` : '') +
+    `\n(5) Return: Deal ID/URL, confirmation of what was created, any errors encountered.` +
+    `\n\nIf the Deal isn't found, say so and offer to create it via the New Item flow.`;
+
+  try {
+    const data = await callZoho(prompt);
+    const parsed = parseResponse(data);
+    setDone('log', 'log-btn', true, parsed.text || '(no text response)', parsed);
+  } catch (e) {
+    setDone('log', 'log-btn', false, 'Error: ' + e.message);
+  }
+});
+
+// --- 04 · NEW ITEM (DEAL) ---
+document.getElementById('ni-btn').addEventListener('click', async () => {
+  const name = document.getElementById('ni-name').value.trim();
+  const category = document.getElementById('ni-category').value;
+  const notes = document.getElementById('ni-notes').value.trim();
+  if (!name || !category || !notes) {
+    alert('Item name, category, and scope notes are required.');
+    return;
+  }
+
+  const spend = document.getElementById('ni-spend').value;
+  const fields = {
+    'Deal name (item)': name,
+    'Category': category,
+    'Property scope': document.getElementById('ni-property').value,
+    'Estimated item-level spend (USD)': spend,
+    'Target close date': document.getElementById('ni-close').value.trim(),
+    'Current US baseline cost (USD/unit)': document.getElementById('ni-baseline').value,
+    'SharePoint folder link': document.getElementById('ni-folder').value.trim(),
+    'Scope notes': notes
+  };
+  const fieldLines = Object.entries(fields).filter(([k,v]) => v).map(([k,v]) => `  - ${k}: ${v}`).join('\n');
+
+  let approver = 'COO (under $25K)';
+  if (spend) {
+    const v = parseFloat(spend);
+    if (v >= 25000 && v < 100000) approver = 'CEO Robert Beyer + physical sample required ($25K–$100K)';
+    else if (v >= 100000) approver = 'CEO + Investment Committee + sample + pre-production inspection plan (≥$100K)';
+  }
+
+  setLoading('newitem', 'ni-btn');
+  const prompt =
+    `Create a new Deal in Zoho CRM for the Stayable overseas procurement workflow. ` +
+    `\n\nDeal must be created with Stage = "Spec" (the first stage of our 5-stage workflow: Spec → Bid → Level → FL-Validate → Recommend). ` +
+    `\nIf "Spec" is not a valid Stage pick-list value in this Zoho instance, return the list of valid Stage values so we can fix the picklist. ` +
+    `\n\nFields to set:\n${fieldLines}` +
+    `\n  - Approver routing: ${approver}` +
+    `\n\nBefore creating, check if a Deal with this exact name already exists. If yes, do NOT duplicate — flag it and ask if I want to view the existing one. ` +
+    `\n\nReturn: confirmation of the created Deal with its Zoho record ID/URL, any fields that couldn't be mapped, and a reminder of the SOP next step (Spec Sheet must be built and COO-signed before Stage advances to Bid).`;
+
+  try {
+    const data = await callZoho(prompt);
+    const parsed = parseResponse(data);
+    setDone('newitem', 'ni-btn', true, parsed.text || '(no text response)', parsed);
+  } catch (e) {
+    setDone('newitem', 'ni-btn', false, 'Error: ' + e.message);
+  }
+});
+
+// --- 05 · NEW VENDOR (ACCOUNT) ---
+document.getElementById('nv-btn').addEventListener('click', async () => {
+  const name = document.getElementById('nv-name').value.trim();
+  if (!name) { alert('Company name is required.'); return; }
+
+  const fields = {
+    'Account name (vendor)': name,
+    'Country of origin': document.getElementById('nv-country').value,
+    'Primary category': document.getElementById('nv-category').value,
+    'Source': document.getElementById('nv-source').value,
+    'Primary contact name': document.getElementById('nv-contact').value.trim(),
+    'Contact email': document.getElementById('nv-email').value.trim(),
+    'Factory address': document.getElementById('nv-address').value.trim(),
+    'Audit status': document.getElementById('nv-audit').value,
+    'Incoterms preferred': document.getElementById('nv-terms').value,
+    'Initial notes': document.getElementById('nv-notes').value.trim()
+  };
+  const linkDeal = document.getElementById('nv-deal').value.trim();
+  const fieldLines = Object.entries(fields).filter(([k,v]) => v).map(([k,v]) => `  - ${k}: ${v}`).join('\n');
+
+  setLoading('newvendor', 'nv-btn');
+  const prompt =
+    `Create a new Account in Zoho CRM for Stayable's overseas procurement program. ` +
+    `This is a vendor, not a customer. ` +
+    `Map the fields below to the Accounts module. ` +
+    `\n\nFields:\n${fieldLines}` +
+    (linkDeal ? `\n\nALSO: link this Account to the existing Deal named "${linkDeal}". If the Deal isn't found, say so and don't try to create it from this flow.` : '') +
+    `\n\nBefore creating, check if an Account with this name already exists. If yes, do NOT duplicate — flag it and ask if I want to update the existing one instead.` +
+    `\n\nReturn: confirmation of the created Account with its Zoho record ID/URL, the Deal link result (if applicable), and any fields that couldn't be mapped.`;
+
+  try {
+    const data = await callZoho(prompt);
+    const parsed = parseResponse(data);
+    setDone('newvendor', 'nv-btn', true, parsed.text || '(no text response)', parsed);
+  } catch (e) {
+    setDone('newvendor', 'nv-btn', false, 'Error: ' + e.message);
+  }
+});
+</script>

@@ -15,15 +15,15 @@ Reverses the original "Deals pipeline" approach. See `ZohoTaskUpdate_RISE8_05272
 
 - [x] ✅ **[P1]** Task 1 — Subscription upgrade — **N/A**, account is already on Professional with 3 seats (admin@, jefferson@, rb@rise8companies.com)
 - [x] ✅ **[P1]** Activate 3rd seat: rb@rise8companies.com — done 05/27/26 (pulled forward from Phase 3)
-- [ ] ⚠️ **[P1]** Task 2 — Create `Procurement_Items` custom module shell — **ON HOLD** pending `ZohoModuleSpec_ProcurementItems_052626.md` (referenced but not in repo)
-- [ ] ⚠️ **[P1]** Task 3 — Deploy 19 fields + 7 picklists via Zoho MCP — **ON HOLD** pending spec file + Zoho MCP authorization in this environment
-- [ ] ⚠️ **[P2]** Task 4 — Layout sections, permissions, 5 workflow rules — **ON HOLD** pending spec file
-- [ ] ⚠️ **[P2]** Task 5 — Test 5 procurement items (PTAC9000BTU, PressureWasher4400PSI, MiniSplit23000BTU, ArcWelderAC225S, ExtensionLadder40FT) — **ON HOLD** pending Task 4 + filtered purchase report (197-item dataset)
-- [ ] ⚠️ **[P3]** Task 6 — Push remaining 192 items — **ON HOLD** pending Task 5
-- [ ] ⚠️ **[P2]** Task 7 — Rewrite OverseasProcSOP_RISE8 doc (Smartsheet → Zoho) — **ON HOLD** pending current SOP doc location
-- [ ] ⚠️ **[P3]** Task 8 — Resolve 6 vendor-adjacent Smartsheets — **ON HOLD** pending Rob/Operations input; no Smartsheet tool in this environment
-- [ ] ⚠️ **[P2]** Task 9 — Repoint `ZohoProcurementTracker_052626.html` artifact — **ON HOLD** pending artifact file + Task 2/3 completion
-- [ ] 🔲 **[P1]** Recover the 4 Claude-generated artifacts from the source chat (per Rob 05/27: they were never saved to disk — generated inline in a prior session). Two paths: (a) Rob pastes each artifact's content back in here and we commit them, or (b) regenerate from the 197-item purchase report + procurement requirements with this session, then have Rob diff against the originals. Path (a) is faster and authoritative.
+- [x] ✅ **[P1]** Restore the 4 source artifacts to this repo — done 05/27/26 (pulled from `claude/zoho-crm-reintroduction-CSKYu` where Rob uploaded them)
+- [ ] 🔲 **[P1]** Task 2 — Create `Procurement_Items` custom module shell — **READY**. Spec is in `ZohoModuleSpec_ProcurementItems_052626.md`. Execution blocked at tool level: no Zoho MCP in this environment. Two paths: (a) write a Jefferson-executable UI walkthrough doc that maps spec → Zoho Settings clicks, or (b) run from a session with the Zoho MCP server enabled.
+- [ ] 🔲 **[P1]** Task 3 — Deploy 19 custom fields + 7 picklists — **READY**. Same Zoho MCP blocker as Task 2; same two paths.
+- [ ] 🔲 **[P2]** Task 4 — Layout sections, permissions, 5 workflow rules — **READY**. Same Zoho MCP blocker.
+- [ ] 🔲 **[P2]** Task 5 — Test 5 procurement items (PTAC9000BTU, PressureWasher4400PSI, MiniSplit23000BTU, ArcWelderAC225S, ExtensionLadder40FT) — Blocked on Task 4 + the 197-item filtered purchase report (not in repo).
+- [ ] 🔲 **[P3]** Task 6 — Push remaining 192 items — Blocked on Task 5
+- [ ] 🔲 **[P2]** Task 7 — Rewrite OverseasProcSOP_RISE8 doc (Smartsheet → Zoho) — Blocked on current SOP doc location (not in repo)
+- [ ] 🔲 **[P3]** Task 8 — Resolve 6 vendor-adjacent Smartsheets — Blocked on Rob/Operations input; no Smartsheet tool in this environment
+- [ ] 🔲 **[P2]** Task 9 — Repoint `ZohoProcurementTracker_052626.html` artifact references from Deals → Procurement_Items — **READY** as a doc-only change once the module is built. The HTML tracker (`ZohoProcurementTracker_052626.html`) is now in repo.
 
 **Note on the 05/26 vendor import:** The 19 Accounts + 20 Contacts imported yesterday remain valid. Under the new architecture they will sit on Procurement_Items records as the "Linked Vendors" related list rather than as Deal parents. No data migration needed.
 
