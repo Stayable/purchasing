@@ -3,7 +3,7 @@
 **Owner:** Rob Beyer
 **Project Start:** 05/21/26
 **Status:** In Progress — Phase 1 (Procurement)
-**Last Updated:** 05/26/26
+**Last Updated:** 05/27/26
 
 ---
 
@@ -50,8 +50,8 @@ Reasoning:
 
 | Phase | Seats | Cost/mo (monthly billing) | Users |
 |---|---|---|---|
-| **Phase 1 (current)** | 2 | $70 | Rob (Super Admin) + Jefferson (Administrator) |
-| **Phase 2** | 4 | $140 | + Bea + Crystal (Non-Profit pipeline activation) |
+| **Phase 1 (current)** | 3 | $105 | Rob (admin@, Super Admin) + Jefferson (Administrator) + Rob (rb@rise8companies.com, working account — activated early per 05/27 decision) |
+| **Phase 2** | 5 | $175 | + Bea + Crystal (Non-Profit pipeline activation) |
 
 ---
 
@@ -61,6 +61,7 @@ Reasoning:
 |---|---|---|---|---|
 | Rob Beyer | admin@rentstayable.com | **Super Admin** | CEO | Institutional chair — configuration, billing, recovery only. Not a daily operator account by design. |
 | Jefferson Gomez | jefferson@rentstayable.com | **Administrator** | Manager | Procurement operator + backup admin (recovery rights if Rob's super admin is locked). |
+| Rob Beyer | rb@rise8companies.com | **Standard User** (TBD) | CEO (working account) | Daily working account. Activated 05/27/26 — originally deferred to Phase 3, pulled forward per 05/27 architecture pivot to support Procurement_Items module ownership and Special Projects work. |
 
 **Key governance decisions:**
 
@@ -202,6 +203,10 @@ For internal reference — Zoho's module names don't always match how we'd natur
 | 05/26/26 | Both import files uploaded successfully; Account ↔ Contact lookup confirmed | Jefferson spot-checked: clicking Account Name on a Contact opens the matching Account record. Phase 1 vendor master data is now live in Zoho. |
 | 05/26/26 | Jefferson IMAP confirmed working post-import — vendor emails to `jefferson@` are visible in Zoho Mail tab | Original "empty mail" symptom resolved as predicted: needed Contacts to associate against. Diagnosis from earlier in this session was correct. |
 | 05/26/26 | `purchasing@` shared inbox to be implemented via M365 forwarding → `jefferson@`, not a native Zoho shared inbox | Zoho Professional has no true shared inbox (SalesInbox is paid add-on). Organization Emails feature is outbound-only. Forwarding pattern works for single-operator Phase 1 but co-mingles purchasing@ mail into Jefferson's personal Mail tab. Revisit in Phase 2 when Bea + Crystal need their own shared inboxes. |
+| 05/27/26 | **Architecture pivot:** Procurement tracking moves from Deals pipeline (with custom fields) to a dedicated `Procurement_Items` custom module | Source: 05/27 task update doc originally written against a separate test account, applied here per Rob. Reverses the 05/21 "avoid module sprawl — use Deals pipeline" decision. Tradeoff acknowledged: heavier setup (19 fields, 7 picklists, 5 workflow rules, 3 layout sections per planned spec), but cleaner separation from any future tenant/lease/non-profit work that would otherwise compete for the Deals module. Justified by 3-user paid Professional tier that supports custom modules + workflow rules. |
+| 05/27/26 | Third seat activated: `rb@rise8companies.com` working account | Pulled forward from Phase 3 deferral. Required because Procurement_Items module needs a real Procurement-team owner separate from `admin@` (which stays institutional-only). 3 seats × $35 = $105/mo monthly billing. |
+| 05/27/26 | Imported 05/27 task update doc was sourced from a different (free-tier) test Zoho account | Confirmed by Rob. Only the architectural goal carries over; the "subscription upgrade" task is N/A on current paid Professional. 4 referenced source files (HTML tracker, project instructions, module spec, vendor tracker) marked on hold pending location. Tasks 2–9 cannot start until the module spec file surfaces. |
+| 05/27/26 | The 19 Alibaba Accounts + 20 Contacts imported 05/26 remain valid under new architecture | Vendors are still vendors. Under the pivot, they become the "Linked Vendors" related list on Procurement_Items records rather than the parent record of a Deal. No re-import needed. |
 
 ---
 
