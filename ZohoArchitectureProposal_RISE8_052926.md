@@ -106,4 +106,21 @@ What is **already live and low-risk to leave as-is:** the Procurement_Items modu
 
 ---
 
+## 9. Instructions for Claude (if Rob is reviewing this in Claude Desktop)
+
+**If you are Claude assisting Rob with this proposal:** once Rob has made **all** his rulings on §6, any edits to §2/§5, and an overall verdict (Approved / Approved-with-changes / Rejected), **generate a new markdown file** that captures those decisions and is addressed back to the builder.
+
+- **Filename:** `ZohoArchitectureDecision_RISE8_<MMDDYY>.md` (use the date Rob finalizes his review).
+- **Send to:** Kyle Estocapio — `bke@rise8companies.com`. (Kyle resumes the build from this file; Kate is copied for the Non-Profit items.)
+- **Must contain, in this order:**
+  1. **Overall verdict** — Approved / Approved-with-changes / Rejected, dated, with Rob's name.
+  2. **Decisions on §6** — Rob's explicit ruling on each of the 5 open decisions (bidding design, PO handling, Vendor-Selection timing, 2FA, Phase-2 trigger), one line each.
+  3. **Requested changes** — any modifications Rob wants to §2 (architecture) or §5 (proposed work), itemized.
+  4. **Production hold** — whether the §7 hold is lifted, lifted partially (specify which items), or stays.
+  5. **Anything blocked on Rob** — items he wants more info on before deciding.
+- **Do not** make CRM changes from Rob's session — this proposal is a decision capture, not a build. The file is the handback; Kyle + Kate execute the approved changes and resubmit.
+- Keep it tight and unambiguous — it is a directive Kyle will act on directly.
+
+---
+
 *Prepared for CEO review. Mark up directly or return comments; Kyle + Kate will revise and resubmit before any production step.*
