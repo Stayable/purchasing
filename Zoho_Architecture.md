@@ -107,7 +107,23 @@ Shared mailboxes never burn a license — they're inboxes, not people.
 
 ---
 
-## 7. Conventions everyone follows
+## 7. Front-end & hosting (procurement portal)
+
+Today the only custom front-end is for **Procurement**. Non-Profit and Vendor Selection use the **native Zoho UI** — no separate app.
+
+| Layer | What | State |
+|---|---|---|
+| **Portal** | `procurement.rentstayable.com` — static branded landing (Tracker · Zoho · Docs links), internal-only, `noindex` | ✅ Live (Vercel) |
+| **Procurement Tracker** | `/tracker` — HTML tracker pointed at the `Procurement_Items` module | 🔸 Live in **DEMO MODE** — renders the action/prompt but **does not write to Zoho** yet |
+| **Hosting** | Vercel, linked to `github.com/Stayable/purchasing` `main`; static, no build step; SSL via Vercel | ✅ Live |
+
+**Interactive webapp (Option B) — deferred.** Whether to build a custom app that talks to the Zoho API directly (replacing/augmenting the native UI for procurement) is a **decision gated to the 06/21/26 Phase-1 checkpoint**, anchored in real Jefferson workflow data, not speculation. Default is to stay on the static portal (Option A) unless three trigger conditions are met. Full criteria in `ZohoCRM_Todo_052126.md` → "Phase 0.5 — Webapp Decision."
+
+> The tracker stays in demo mode (no live writes) until both Rob lifts the production hold **and** the Phase 0.5 decision lands.
+
+---
+
+## 8. Conventions everyone follows
 
 - **File naming:** `DocType_Identifier_MMDDYY.ext`. Identifier = property ID for property files, the `Item_Name` for procurement files, or the entity/matter name otherwise. No spaces.
 - **Procurement Item_Name:** CamelCase, no spaces (`QueenMattress`), and must match its SharePoint folder verbatim.
@@ -117,7 +133,7 @@ Shared mailboxes never burn a license — they're inboxes, not people.
 
 ---
 
-## 8. Where to look
+## 9. Where to look
 
 | Need | Doc |
 |---|---|
@@ -129,3 +145,4 @@ Shared mailboxes never burn a license — they're inboxes, not people.
 | Procurement process (workflow reference) | `ZohoProcurementProcessGuide_RISE8_052926.md` |
 | Non-Profit Sales build | `ZohoBuildTracker_NonProfitSales_Kate_052926.md` |
 | Operating doctrine (5-stage SOP, FL rules) | `ProjectInstructions_OverseasProc_052626.md` |
+| Procurement portal + webapp (Option B) decision | live: `procurement.rentstayable.com` · gate: `ZohoCRM_Todo_052126.md` → Phase 0.5 |
