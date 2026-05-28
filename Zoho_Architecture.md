@@ -1,5 +1,7 @@
 # Zoho CRM — Universal Architecture (RISE8 Companies / Stayable)
 
+> 🟡 **PROPOSED — pending Rob's approval. Production is ON HOLD.** This is the design submitted to Rob in `ZohoArchitectureProposal_RISE8_052926.md`; it may change after his review. No go-live, no real data load, no team onboarding until sign-off. See the proposal §3 for what is already built vs. §5 for what is proposed.
+
 **The single source of truth for how Zoho CRM is structured at RISE8.** Everyone builds against this doc. If a detailed spec disagrees with this map, this map wins until the spec is reconciled.
 
 **Builders:** Kyle Estocapio (Procurement + Vendor/Professional Selection) & Kate (Non-Profit Sales) · **Process owner / Approver:** Rob Beyer (CEO) · **Procurement SME:** Jefferson Gomez
@@ -23,7 +25,7 @@ Two **builders** (Kyle + Kate) stand up the system. **Rob** designs and optimize
 | **Rob Beyer** | CEO — **Process owner** | Creates & optimizes the processes across **all three** workflows (Kyle + Kate build to his process) | **Approves** all procurement decisions (vendor selection, PO, spend) and any architectural shift |
 | **Kyle Estocapio** | **Builder** + super-admin | Builds **Procurement** and **Vendor / Professional Selection** (modules, fields, layouts, subforms); owns overall architecture | Executes; routes architecture/process changes to Rob |
 | **Kate** | **Builder** | Builds **Non-Profit Sales** (Deals / Non-Profit Placements) | Owns the non-profit module design; routes process to Rob |
-| **Jefferson Gomez** | Purchasing Manager — **SME / end-user** | Guides the procurement process & build (he will use it daily); recommends vendors to Rob | Advises; procurement decisions go to Rob |
+| **Jefferson Gomez** | Purchasing Manager — **SME / end-user (Procurement only)** | Guides the **procurement** process & build only (he will use it daily); recommends vendors to Rob. Not involved in Non-Profit or Vendor Selection. | Advises; procurement decisions go to Rob |
 | **Bea** | Non-Profit **end-user** (North FL) | Uses Non-Profit Deals — north FL properties | Operates her pipeline |
 | **Crystal** | Non-Profit **end-user** (Central FL) | Uses Non-Profit Deals — central FL properties | Operates her pipeline |
 
