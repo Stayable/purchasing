@@ -6,6 +6,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is **not a code repository.** It is the working knowledge base and document archive for the **RISE8 Companies / Stayable overseas procurement rollout on Zoho CRM.** Everything here is Markdown specs, HTML tracker artifacts, Excel imports/exports, and one Windows batch launcher. There is no build, no test suite, no linter, no application to run.
 
+### Repository structure (reorganized 05/29/26)
+
+Docs referenced below by bare filename now live in subfolders — resolve them via this map:
+
+| Location | Contents |
+|---|---|
+| **root** | Deploy + entry files only: `index.html`, `vercel.json`, `ZohoProcurementTracker_052626.html` (Vercel static deploy — must stay at root), `CLAUDE.md`, `start-claude.bat`, and `Zoho_Architecture.md` (the canonical architecture + CEO proposal, single Rob-facing file) |
+| **`docs/`** | Planning & process: `ZohoCRM_Rollout_052126.md`, `ZohoCRM_Todo_052126.md`, `ProjectInstructions_OverseasProc_052626.md`, `ZohoProcurementProcessGuide_RISE8_052926.md`, `ZohoBuildTracker_NonProfitSales_Kate_052926.md`, `ZohoTaskUpdate_RISE8_052726.md` |
+| **`specs/`** | Module specs: `ZohoModuleSpec_ProcurementItems_052626.md`, `ZohoModuleSpec_ContactTrackingSubform_052926.md`, `ZohoModuleSpec_VendorBids_052926.md` |
+| **`reference/`** | Source inputs: `chart 1.jpg`, `ZohoCRM_VendorList_052626.xlsx` |
+| **`outputs/`** | Zoho import files (org `/outputs` convention) |
+
+> Vercel static deploy depends on `index.html`, `vercel.json`, and `ZohoProcurementTracker_052626.html` staying at root (the `/tracker` rewrite resolves to a root file). Do not move them into subfolders.
+
 Stayable is an extended-stay hotel brand with 8 Florida properties (IDs: 4645, 2295, 6802, 812, 5399, 2535, 44199, 8700). The procurement workflow sources FF&E, OS&E, appliances, building materials, and soft goods overseas and brings recommendations to Rob Beyer (CEO) for approval. Zoho CRM is being reintroduced as the system of record after a prior deployment was abandoned due to module sprawl.
 
 ## Project ownership

@@ -222,15 +222,17 @@ Until you approve:
 
 | Need | Doc |
 |---|---|
-| This map + proposal (single Rob-facing file) | `Zoho_Architecture.md` (you are here) |
-| Rollout plan + decision log (audit trail) | `ZohoCRM_Rollout_052126.md` |
-| Live task list | `ZohoCRM_Todo_052126.md` |
-| Procurement item module (fields/picklists) | `ZohoModuleSpec_ProcurementItems_052626.md` |
-| Procurement multi-vendor tracking | `ZohoModuleSpec_ContactTrackingSubform_052926.md` |
-| Procurement process (workflow reference) | `ZohoProcurementProcessGuide_RISE8_052926.md` |
-| Non-Profit Sales build | `ZohoBuildTracker_NonProfitSales_Kate_052926.md` |
-| Operating doctrine (5-stage SOP, FL rules) | `ProjectInstructions_OverseasProc_052626.md` |
-| Procurement portal + webapp (Option B) decision | live: `procurement.rentstayable.com` · gate: `ZohoCRM_Todo_052126.md` → Phase 0.5 |
+| This map + proposal (single Rob-facing file) | `Zoho_Architecture.md` (root — you are here) |
+| Rollout plan + decision log (audit trail) | `docs/ZohoCRM_Rollout_052126.md` |
+| Live task list | `docs/ZohoCRM_Todo_052126.md` |
+| Procurement item module (fields/picklists) | `specs/ZohoModuleSpec_ProcurementItems_052626.md` |
+| Procurement multi-vendor tracking | `specs/ZohoModuleSpec_ContactTrackingSubform_052926.md` |
+| Procurement process (workflow reference) | `docs/ZohoProcurementProcessGuide_RISE8_052926.md` |
+| Non-Profit Sales build | `docs/ZohoBuildTracker_NonProfitSales_Kate_052926.md` |
+| Operating doctrine (5-stage SOP, FL rules) | `docs/ProjectInstructions_OverseasProc_052626.md` |
+| Procurement portal + webapp (Option B) decision | live: `procurement.rentstayable.com` · gate: `docs/ZohoCRM_Todo_052126.md` → Phase 0.5 |
+
+**Repository layout:** deploy + entry files at root (`index.html`, `vercel.json`, `ZohoProcurementTracker_052626.html`, `CLAUDE.md`, `start-claude.bat`, `Zoho_Architecture.md`) · planning/process in `docs/` · module specs in `specs/` · source reference in `reference/` · Zoho import files in `outputs/`.
 
 ---
 
