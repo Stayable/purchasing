@@ -10,12 +10,12 @@
 
 ## How to give feedback
 
-The repo is local to Kyle — R&D doesn't edit it. Send recommendations to **Kyle** directly:
+The repo is local to Kyle — R&D doesn't edit it. Two ways to send recommendations to **Kyle**:
 
-- **Simplest:** chat Kyle your recommendation (one line is fine — name the workflow + what you'd change + why).
-- **Or:** drop a short markdown of your suggestions and send it over.
+- **Chat Kyle** your recommendation (one line is fine — name the workflow + what you'd change + why).
+- **Or use Claude:** paste `Zoho_Architecture.md` into Claude, ask it to analyze and apply your changes, have it **generate a modified `.md`**, and send that file to Kyle.
 
-Kyle logs each one in the table below, plugs it into `Zoho_Architecture.md` to check **viability and conflicts**, fills in the builder response + status, and routes design-changing items to Rob. This file is Kyle's consolidation log — the single place all suggestions land before build.
+Either way, Kyle logs each suggestion in the table below, plugs it into `Zoho_Architecture.md` to check **viability and conflicts**, fills in the builder response + status, and routes design-changing items to Rob. This file is Kyle's consolidation log — the single place all suggestions land before build.
 
 - **Workflow:** Procurement · Non-Profit · Vendor Selection · Shared (Accounts/Contacts/firewall) · Front-end
 - **Section:** the §number or heading in `Zoho_Architecture.md`
