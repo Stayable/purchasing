@@ -7,6 +7,8 @@
 
 **Builders:** Kyle (Procurement + Vendor/Professional Selection) & Kate (Non-Profit Sales) · **Process owner / Approver:** Rob Beyer (CEO) · **Procurement SME:** Jefferson Gomez (Procurement only)
 
+📊 **Visual guide:** `reference/ZohoArchitecture_VisualGuide_052926.png` · 📝 **Suggest changes here (don't edit this file):** `docs/ZohoArchitecture_Feedback_052926.md`
+
 ---
 
 ## 1. What we're asking you to do
