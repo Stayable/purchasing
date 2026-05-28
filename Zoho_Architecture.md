@@ -68,7 +68,7 @@ All emails / calls / notes log as **Activities on the home-module record** (the 
 - **Home module:** `Procurement_Items` (custom). The **item** is the center of gravity. Single pipeline "Overseas Procurement", 10-stage flow: Spec → Bid → Level → FL-Validate → Recommend → Submitted → Approved / Approved-with-Conditions / Declined / Need-More-Info.
 - **Vendors:** Accounts tagged `Procurement`.
 - **Multi-vendor bidding:** a **`Contact_Tracking` subform** on each item — every vendor/contact in a row (staging → RFQ → quote → negotiate → award/lost), with optional Contact lookup + fallback text for trade-show reps. Bid comparison and award happen here.
-- **PO:** `PO_Number` + `PO_Status` fields track PO numbers across channels (Alibaba confirmation, Amazon/Home Depot numbers); for office-supplies/linen, Jefferson generates the PO from his Word template and attaches the PDF. No native PO/Quotes/Products modules.
+- **PO:** `PO_Number` + `PO_Status` fields track PO numbers across channels (Alibaba confirmation, Amazon/Home Depot numbers); for office-supplies/linen, Jefferson generates the PO from his template (Excel — sample at `reference/FSCP Linen Default PO for Properties NP 3.xlsx`) and attaches the PDF. No native PO/Quotes/Products modules.
 - **Decision:** recorded in `Decision_Notes` on the item — never in email.
 - **Specs:** `ZohoModuleSpec_ProcurementItems_052626.md` · `ZohoModuleSpec_ContactTrackingSubform_052926.md` · process reference `ZohoProcurementProcessGuide_RISE8_052926.md` (process adopted, module mapping redirected).
 
@@ -184,7 +184,7 @@ Verified against the live org on 05/29/26.
 ## 13. Open decisions that need you
 
 1. **Procurement bidding design.** Track 3+ vendor bids as a **subform on the item** (item-centric), *not* the standard Deals/Quotes/Products/PO suite. Trade-off: the subform can't send **automated per-vendor follow-up reminders** (a "Stale >14 days" report is the manual substitute). Accept the subform, or fund the heavier child-module path for automated nudges?
-2. **PO in Zoho.** PO *numbers* tracked as fields + actual PO *documents* from Jefferson's Word template, attached — **no native PO module**. Confirm.
+2. **PO in Zoho.** PO *numbers* tracked as fields + actual PO *documents* from Jefferson's template (Excel; sample in `reference/`), attached — **no native PO module**. Confirm.
 3. **Vendor / Professional Selection timing.** Build later by cloning Procurement (recommended), or in parallel now?
 4. **Security: 2FA.** Enabling 2FA on `admin@` and Jefferson's account has been **on hold per you since 05/20**. Super-admin without 2FA is a single point of failure. Re-open before seats / go-live?
 5. **Phase-2 trigger.** What signals readiness to add Bea + Crystal — a fixed date, or Jefferson logging procurement daily for 2 weeks first?

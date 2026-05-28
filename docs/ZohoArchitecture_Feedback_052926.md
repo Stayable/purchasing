@@ -39,7 +39,7 @@ Status values: **Open** · **Accepted** (will build) · **Rejected** (with reaso
 These come from `Zoho_Architecture.md` §13 and need a call before/at build:
 
 1. **Procurement bidding** — vendor bids as a **subform on the item** (chosen) vs. a separate child module. Subform can't send automated per-vendor follow-up reminders (a "Stale >14 days" report is the manual substitute). Acceptable?
-2. **PO in Zoho** — PO *numbers* tracked as fields + PO *documents* from Jefferson's Word template (attach PDF); no native PO module. OK?
+2. **PO in Zoho** — PO *numbers* tracked as fields + PO *documents* from Jefferson's template (Excel; sample in `reference/`, attach PDF); no native PO module. OK?
 3. **Vendor / Professional Selection timing** — build later by cloning Procurement (recommended) vs. in parallel now.
 4. **Security: 2FA** — re-open the on-hold 2FA on `admin@` + Jefferson before go-live?
 5. **Phase-2 trigger** — what signals readiness to add Bea + Crystal.
