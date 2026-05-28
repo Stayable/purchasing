@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 05/28/26 (end-of-day checkpoint)
+**Last Updated:** 05/29/26
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -26,6 +26,7 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 **Active, next session:**
 
+0. **[P1]** Task 10 — Build the **`Contact_Tracking` subform** on Procurement_Items (Kyle, manual UI) per `ZohoModuleSpec_ContactTrackingSubform_052926.md`. Multi-vendor bid tracking, chosen over the `Vendor_Bids` child module (superseded) and Jefferson's standard-suite guide. Includes added `Incoterm` + `Sample Status` columns and the corrected "Stale" report filter. Before building, resolve the 4 open items in the spec (color-coding tier check, Stale blank-date handling, Winning_Vendor manual-set vs drop, Linked Vendors keep vs retire). Also add `PO_Number` + `PO_Status` fields to Procurement_Items (PO decision 05/29). **When built, Kyle pings Kate/Claude** → bulk-load existing contacts from VendorMatrix into the right items via `updateRecords`.
 1. **[P1]** Task 5 prerequisite — **locate the 197-item filtered purchase report** (Home Depot + Amazon historical, ≥$100). Without this, Task 5 (test batch) and Task 6 (full push) can't run. Owner: Kyle or Kate. Likely OneDrive / SharePoint / Jefferson's email.
 2. **[P2]** Task 4 finish — Configure the **5 workflow rules** via `zoho-crm-workflows` MCP (Stage→Bid blocked unless Spec_Sheet_Status=COO Signed Off; Stage→Recommend blocked unless Florida_Validation_Status=Passed; Stage→Approved blocked unless Winning_Vendor populated; alert on items stuck at Bid >14 days; auto-suggest Approver from spend tier).
 3. **[P2]** Task 5 — Test 5 named items (PTAC9000BTU, PressureWasher4400PSI, MiniSplit23000BTU, ArcWelderAC225S, ExtensionLadder40FT) via `zoho-crm-data` MCP. **Gated on #1 above** + workflow rules (#2). Kyle explicitly vetoed creating placeholder test records — wait for real data.
