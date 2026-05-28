@@ -2,7 +2,7 @@
 
 **The single source of truth for how Zoho CRM is structured at RISE8.** Everyone builds against this doc. If a detailed spec disagrees with this map, this map wins until the spec is reconciled.
 
-**Maintained by:** Kyle Estocapio (spearhead, super-admin) · **Approver:** Rob Beyer (CEO — architectural shifts)
+**Builders:** Kyle Estocapio (Procurement + Vendor/Professional Selection) & Kate (Non-Profit Sales) · **Process owner / Approver:** Rob Beyer (CEO) · **Procurement SME:** Jefferson Gomez
 **Last Updated:** 05/29/26
 **Detailed specs (the "how"):** linked per track in §4.
 
@@ -16,16 +16,18 @@ One Zoho CRM org (Professional tier) serves **three workflows** — Procurement,
 
 ## 2. Who owns what
 
-| Person | Role | Owns in Zoho | Decision authority |
-|---|---|---|---|
-| **Rob Beyer** | CEO | — | **Approves** all procurement decisions (vendor selection, PO, spend) and any architectural shift |
-| **Kyle Estocapio** | Project spearhead | Super-admin; builds all modules/fields/layouts; architecture | Executes; routes architecture changes to Rob |
-| **Jefferson Gomez** | Purchasing Manager | Day-to-day **Procurement** operator (Procurement_Items + Contact Tracking) | Runs the procurement process; recommends to Rob |
-| **Kate** | Non-Profit Sales lead | **Non-Profit Sales** build (Deals / Non-Profit Placements) | Owns the non-profit module design |
-| **Bea** | Non-Profit (North FL) | Non-Profit Deals — north FL properties | Operates her pipeline |
-| **Crystal** | Non-Profit (Central FL) | Non-Profit Deals — central FL properties | Operates her pipeline |
+Two **builders** (Kyle + Kate) stand up the system. **Rob** designs and optimizes the processes they build to. **Jefferson** guides the procurement build and is its end-user. **Bea + Crystal** are the Non-Profit end-users.
 
-> "Owner" = executes the work. Procurement *decisions* (what to buy, from whom) always route to **Rob** before action.
+| Person | Role | Responsibility | Decision authority |
+|---|---|---|---|
+| **Rob Beyer** | CEO — **Process owner** | Creates & optimizes the processes across **all three** workflows (Kyle + Kate build to his process) | **Approves** all procurement decisions (vendor selection, PO, spend) and any architectural shift |
+| **Kyle Estocapio** | **Builder** + super-admin | Builds **Procurement** and **Vendor / Professional Selection** (modules, fields, layouts, subforms); owns overall architecture | Executes; routes architecture/process changes to Rob |
+| **Kate** | **Builder** | Builds **Non-Profit Sales** (Deals / Non-Profit Placements) | Owns the non-profit module design; routes process to Rob |
+| **Jefferson Gomez** | Purchasing Manager — **SME / end-user** | Guides the procurement process & build (he will use it daily); recommends vendors to Rob | Advises; procurement decisions go to Rob |
+| **Bea** | Non-Profit **end-user** (North FL) | Uses Non-Profit Deals — north FL properties | Operates her pipeline |
+| **Crystal** | Non-Profit **end-user** (Central FL) | Uses Non-Profit Deals — central FL properties | Operates her pipeline |
+
+> **Builders:** Kyle + Kate. **Process:** Rob (with Jefferson's guidance on procurement). **Users:** Jefferson (procurement), Bea + Crystal (non-profit). Procurement *decisions* (what to buy, from whom) always route to **Rob** before action.
 
 ---
 
@@ -50,7 +52,7 @@ All emails / calls / notes log as **Activities on the home-module record** for t
 
 ## 4. The three workflows
 
-### 4.1 Procurement (overseas + domestic sourcing) — *Jefferson*
+### 4.1 Procurement (overseas + domestic sourcing) — *Build: Kyle · Uses: Jefferson · Process: Rob*
 - **Home module:** `Procurement_Items` (custom). The **item** is the center of gravity. 21 fields, single pipeline "Overseas Procurement", 10-stage flow: Spec → Bid → Level → FL-Validate → Recommend → Submitted → Approved / Approved-with-Conditions / Declined / Need-More-Info.
 - **Vendors:** Accounts tagged `Procurement`.
 - **Multi-vendor bidding:** a **`Contact_Tracking` subform** on each item — every vendor/contact in a row (staging → RFQ → quote → negotiate → award/lost), with optional Contact lookup + fallback text for trade-show reps. The bid comparison and award happen here.
@@ -59,7 +61,7 @@ All emails / calls / notes log as **Activities on the home-module record** for t
 - **Specs:** `ZohoModuleSpec_ProcurementItems_052626.md` · `ZohoModuleSpec_ContactTrackingSubform_052926.md` · process reference `ZohoProcurementProcessGuide_RISE8_052926.md` (process adopted, module mapping redirected).
 - **Status:** module live; subform + PO fields pending build (Todo Task 10).
 
-### 4.2 Non-Profit Sales (extended-stay group placements) — *Kate, Bea, Crystal*
+### 4.2 Non-Profit Sales (extended-stay group placements) — *Build: Kate · Uses: Bea, Crystal · Process: Rob*
 - **Home module:** standard `Deals`, pipeline **"Non-Profit Placements"**: Referred → Qualified → Funded → Pre Move-in → Active Stay → Renewed / Departed / Declined.
 - **Partners:** Accounts tagged `Non-Profit Sales`. **Case workers:** Contacts.
 - **Deal = one placement** (a tenant/household into a property under a funding program).
@@ -67,7 +69,7 @@ All emails / calls / notes log as **Activities on the home-module record** for t
 - **Spec:** `ZohoBuildTracker_NonProfitSales_Kate_052926.md` (Kate-owned).
 - **Status:** in build by Kate; Deals module is uncontested (Procurement left it). Import of 48 partner Accounts + 11 case-worker Contacts pending; all must be tagged `Non-Profit Sales`.
 
-### 4.3 Vendor / Professional Selection (mini-RFPs) — *Rob + Kyle (later)*
+### 4.3 Vendor / Professional Selection (mini-RFPs) — *Build: Kyle · Process: Rob (later)*
 - **Home module:** a future custom module **cloned from the Procurement pattern** (item/project + Contact-Tracking-style candidate rows). Counterparties = Accounts tagged `Vendor Selection`.
 - **Flow:** Sent inquiry → Replied → Scored → Shortlisted → Interviewed → Selected → Engaged. Losers stay as Accounts for future reference.
 - **Status:** deferred. Build after the Procurement Contact-Tracking pattern is proven, then clone — don't design twice.
