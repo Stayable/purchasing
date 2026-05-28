@@ -8,13 +8,17 @@
 
 ---
 
-## How to give feedback (please don't edit `Zoho_Architecture.md` directly)
+## How to give feedback
 
-Add a row to the table below. One suggestion per row. Keep it specific — name the section and what you'd change.
+The repo is local to Kyle — R&D doesn't edit it. Send recommendations to **Kyle** directly:
+
+- **Simplest:** chat Kyle your recommendation (one line is fine — name the workflow + what you'd change + why).
+- **Or:** drop a short markdown of your suggestions and send it over.
+
+Kyle logs each one in the table below, plugs it into `Zoho_Architecture.md` to check **viability and conflicts**, fills in the builder response + status, and routes design-changing items to Rob. This file is Kyle's consolidation log — the single place all suggestions land before build.
 
 - **Workflow:** Procurement · Non-Profit · Vendor Selection · Shared (Accounts/Contacts/firewall) · Front-end
 - **Section:** the §number or heading in `Zoho_Architecture.md`
-- **Status** is filled in by the builders, not you.
 
 | # | Date | From | Workflow | Section | Suggestion / change | Why | Builder response | Status |
 |---|---|---|---|---|---|---|---|---|
