@@ -11,9 +11,21 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 ---
 
-## Top Priorities — Active Sprint (refreshed 05/28/26 end-of-day)
+## Top Priorities — Active Sprint (refreshed 05/29/26)
 
-**Done this session (05/28/26):**
+**Done this session (05/29/26):**
+- ✅ Created `CRM_Use_Case` firewall field on Accounts (multi-select, required; single→multi recreate) and backfilled all **21** vendor Accounts to `Procurement`.
+- ✅ Reconciled + renamed Kate's non-profit tracker → `docs/ZohoBuildTracker_NonProfitSales_Kate_052926.md` (stale cross-module assumptions fixed vs live Zoho).
+- ✅ Decided procurement multi-vendor bidding = **`Contact_Tracking` subform** on Procurement_Items (chose over `Vendor_Bids` child module [superseded] and Jefferson's standard-suite guide). Wrote `specs/ZohoModuleSpec_ContactTrackingSubform_052926.md`.
+- ✅ PO handling decided: `PO_Number`/`PO_Status` fields + attach PDF from Jefferson's template (Excel; sample committed at `reference/FSCP Linen Default PO for Properties NP 3.xlsx`). No PO/Quotes/Products modules.
+- ✅ Annotated Jefferson's `ZohoProcurementProcessGuide` (process adopted, module mapping redirected).
+- ✅ Created **`Zoho_Architecture.md`** — single consolidated architecture + CEO proposal (production-hold framing, ownership matrix, Claude Desktop handback instruction). Folded the separate proposal file in.
+- ✅ Built **visual guide** `reference/ZohoArchitecture_VisualGuide_052926.png` (headless-Chrome render).
+- ✅ Created R&D feedback intake `docs/ZohoArchitecture_Feedback_052926.md` (Claude-analysis path primary, chat Kyle secondary).
+- ✅ Reorganized repo: `docs/` `specs/` `reference/` (deploy + entry files kept at root; Vercel intact). Updated CLAUDE.md structure map + resume skill paths.
+- ✅ 6 new decision-log entries in `ZohoCRM_Rollout_052126.md`. Team message sent to R&D.
+
+**Done prior session (05/28/26):**
 - ✅ MCP auth (all 3 Zoho servers connected)
 - ✅ Vercel project linked + custom domain `procurement.rentstayable.com` live
 - ✅ Task 2 — `Procurement_Items` module shell created (Kyle, in Zoho UI)
@@ -26,12 +38,14 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 **Active, next session:**
 
+> ⚠️ **PRODUCTION HOLD (05/29/26).** `Zoho_Architecture.md` is a PROPOSAL pending Rob's approval + R&D feedback consolidation (`docs/ZohoArchitecture_Feedback_052926.md`). Build steps below (Task 10, data loads, Non-Profit/Vendor-Selection) **wait for Rob's sign-off**. Already-live config (Procurement_Items shell, CRM_Use_Case tagging, static portal) is low-risk and stays. Next inbound: Rob's `ZohoArchitectureDecision_RISE8_<MMDDYY>.md` + any R&D suggestions Kyle logs.
+
 0. **[P1]** Task 10 — Build the **`Contact_Tracking` subform** on Procurement_Items (Kyle, manual UI) per `ZohoModuleSpec_ContactTrackingSubform_052926.md`. Multi-vendor bid tracking, chosen over the `Vendor_Bids` child module (superseded) and Jefferson's standard-suite guide. Includes added `Incoterm` + `Sample Status` columns and the corrected "Stale" report filter. Before building, resolve the 4 open items in the spec (color-coding tier check, Stale blank-date handling, Winning_Vendor manual-set vs drop, Linked Vendors keep vs retire). Also add `PO_Number` + `PO_Status` fields to Procurement_Items (PO decision 05/29). **When built, Kyle pings Kate/Claude** → bulk-load existing contacts from VendorMatrix into the right items via `updateRecords`.
 1. **[P1]** Task 5 prerequisite — **locate the 197-item filtered purchase report** (Home Depot + Amazon historical, ≥$100). Without this, Task 5 (test batch) and Task 6 (full push) can't run. Owner: Kyle or Kate. Likely OneDrive / SharePoint / Jefferson's email.
 2. **[P2]** Task 4 finish — Configure the **5 workflow rules** via `zoho-crm-workflows` MCP (Stage→Bid blocked unless Spec_Sheet_Status=COO Signed Off; Stage→Recommend blocked unless Florida_Validation_Status=Passed; Stage→Approved blocked unless Winning_Vendor populated; alert on items stuck at Bid >14 days; auto-suggest Approver from spend tier).
 3. **[P2]** Task 5 — Test 5 named items (PTAC9000BTU, PressureWasher4400PSI, MiniSplit23000BTU, ArcWelderAC225S, ExtensionLadder40FT) via `zoho-crm-data` MCP. **Gated on #1 above** + workflow rules (#2). Kyle explicitly vetoed creating placeholder test records — wait for real data.
 4. **[P3]** Stray "Batteries" Account cleanup — Account ID `…1418001`, created 05/26/26 14:51:48 (2.5 hr after the bulk import 12:24:20), `Vendor_Type` null. Likely a manual test or dupe of "GP Batteries Inc". Inspect + delete if confirmed. 30 sec via `zoho-crm-data` MCP.
-5. **[P3]** Receive Kate's `Non_Profits` module .md spec (she's building it in parallel). Review when delivered. **Note:** Phase 2 (Non-Profit Sales) is officially out-of-sprint, but the module-build itself can proceed independent of the sales-team rollout.
+5. ✅ **[P3]** ~~Receive Kate's Non-Profit module spec~~ — received + reconciled 05/29/26 (`docs/ZohoBuildTracker_NonProfitSales_Kate_052926.md`). Non-Profit build itself still gated on Rob's approval (production hold).
 6. **[P2]** Task 7 — Locate current `OverseasProcSOP_RISE8` doc (SharePoint / OneDrive). Once surfaced, rewrite Smartsheet refs → Zoho. Owner: Kyle to locate; rewrite is Claude.
 7. **[P3]** Task 6 — Push remaining 192 procurement items (gated on Task 5).
 8. **[P3]** Task 8 — Audit 6 vendor-adjacent Smartsheets (Vendor Relationship Tracker, Overseas Vendor Tracking, Overseas Vendor Progress Report, Vendor Matrix, Vendor Masterlist, Preferred Vendor Matrix) — purely investigative; route findings to Rob.
