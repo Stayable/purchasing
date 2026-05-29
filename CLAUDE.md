@@ -18,6 +18,7 @@ Docs referenced below by bare filename now live in subfolders — resolve them v
 | **`reference/`** | Source inputs & reference: `chart 1.jpg`, `ZohoCRM_VendorList_052626.xlsx`, `NonProfitPartners_ImportSource_053026.csv`, `ProcurementItemsModuleLayout_052826.png` |
 | **`outputs/`** | Zoho import files (org `/outputs` convention) |
 | **`infographics/`** | Standalone HTML visual one-pagers (internal, `noindex`, **not** Vercel deploy files): `ProcurementProcessInfographic_RISE8_053026.html`, `ArchitectureComparison_CurrentVsRob_053026.html` |
+| **`jefferson/`** | Procurement handback materials from Jefferson (05/29): `IntlVendorContacts_RISE8_052926.md`, `ItemStaging_Procurement_052926.xlsx`, `JeffersonHandback_052926.md` |
 
 > Vercel static deploy depends on `index.html`, `vercel.json`, and `ZohoProcurementTracker_052626.html` staying at root (the `/tracker` rewrite resolves to a root file). Do not move them into subfolders.
 
