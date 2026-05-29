@@ -1,0 +1,921 @@
+﻿[
+    {
+        "Account_Name":  "St. Vincent de Paul CARES - Polk County",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Polk County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Outreach_status":  "Email Sent",
+        "Who_they_serve":  "Veterans and non-veterans experiencing homelessness",
+        "Website":  "https://www.svdpsp.org/service-areas/polk-county/",
+        "Notes_partnership_details":  "Strong candidate for veteran and family referrals.",
+        "Contact_Name":  {
+                             "id":  "6342912000001460027"
+                         }
+    },
+    {
+        "Account_Name":  "Talbot House Ministries",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Polk County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Outreach_status":  "Email Sent",
+        "Who_they_serve":  "Individuals and families experiencing homelessness or housing instability",
+        "Website":  "https://talbothouse.org/affordable-housing/",
+        "Notes_partnership_details":  "Rapid rehousing is by referral from the Homeless Coalition of Polk County.",
+        "Contact_Name":  {
+                             "id":  "6342912000001460028"
+                         }
+    },
+    {
+        "Account_Name":  "Heart for Winter Haven - Housing Partnership of Winter Haven",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Polk County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Outreach_status":  "Email Sent",
+        "Who_they_serve":  "Vulnerable families facing housing instability, eviction risk, or homelessness",
+        "Website":  "https://www.heart4wh.org/hpwh",
+        "Notes_partnership_details":  "Good relationship target for family placements and landlord collaboration.",
+        "Contact_Name":  {
+                             "id":  "6342912000001460029"
+                         }
+    },
+    {
+        "Account_Name":  "Catholic Charities of Central Florida - Family Stability Program",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Polk County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Who_they_serve":  "Men, women, and families at risk of homelessness or experiencing homelessness",
+        "Website":  "https://cflcc.org/financial-assistance/family-stability-program/",
+        "Notes_partnership_details":  "Program says up to $1,000 rental help and up to $500 utility help, case-manager reviewed.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470023"
+                         }
+    },
+    {
+        "Account_Name":  "United Way of Central Florida 211",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Polk County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Residents needing emergency housing resources, security deposit help, and landlord-tenant support",
+        "Website":  "https://uwcf.org/211/",
+        "Notes_partnership_details":  "City of Lakeland page says 211 coordinates emergency housing, deposit assistance, and landlord-tenant resources.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470024"
+                         }
+    },
+    {
+        "Account_Name":  "The Salvation Army of Winter Haven / East Polk",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Polk County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "Medium",
+        "Outreach_status":  "Email Sent",
+        "Who_they_serve":  "Residents in financial hardship at risk of homelessness",
+        "Website":  "https://winterhaven.salvationarmyflorida.org/winterhaven/ways-we-help-1/",
+        "Notes_partnership_details":  "Included by Polk rental-assistance resource as an application-taking agency.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470025"
+                         }
+    },
+    {
+        "Account_Name":  "Agricultural and Labor Program, Inc. (ALPI)",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Polk County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "Medium",
+        "Outreach_status":  "Email Sent",
+        "Who_they_serve":  "Income-qualified Polk County residents needing rental assistance",
+        "Website":  "https://www.alpi.org",
+        "Notes_partnership_details":  "Included by Polk rental-assistance resource as an agency accepting applications.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470026"
+                         }
+    },
+    {
+        "Account_Name":  "Homeless Services Network of Central Florida",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Orange County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Who_they_serve":  "Families, veterans, youth, survivors, people with disabilities, households experiencing homelessness",
+        "Website":  "https://www.hsncfl.org",
+        "Notes_partnership_details":  "Regional system lead for Orange and Osceola.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470027"
+                         }
+    },
+    {
+        "Account_Name":  "Coalition for the Homeless of Central Florida",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Orange County"
+                                ],
+        "Billing_Street":  "18 N Terry Ave",
+        "Billing_City":  "Orlando",
+        "Billing_State":  "FL",
+        "Billing_Code":  "32801",
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Outreach_status":  "Email Sent",
+        "Who_they_serve":  "Men, women, children, and families experiencing homelessness",
+        "Website":  "https://www.centralfloridahomeless.org",
+        "Notes_partnership_details":  "Good partner for diversion and family stabilization conversations.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470028"
+                         }
+    },
+    {
+        "Account_Name":  "Christian Service Center",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Orange County"
+                                ],
+        "Billing_Street":  "808 W Central Blvd",
+        "Billing_City":  "Orlando",
+        "Billing_State":  "FL",
+        "Billing_Code":  "32805",
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Who_they_serve":  "Individuals and families struggling with homelessness or poverty in Central Florida",
+        "Website":  "https://www.christianservicecenter.org/downtownorlando",
+        "Notes_partnership_details":  "City of Orlando page confirms emergency financial assistance.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470029"
+                         }
+    },
+    {
+        "Account_Name":  "Catholic Charities of Central Florida - Family Stability Program",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Orange County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Who_they_serve":  "Men, women, and families at risk of homelessness or experiencing homelessness",
+        "Website":  "https://cflcc.org/financial-assistance/family-stability-program/",
+        "Notes_partnership_details":  "Requires household income and limits on amount owed / eviction status.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470030"
+                         }
+    },
+    {
+        "Account_Name":  "Samaritan Resource Center",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Orange County"
+                                ],
+        "Billing_Street":  "9837 E Colonial Dr",
+        "Billing_City":  "Orlando",
+        "Billing_State":  "FL",
+        "Billing_Code":  "32817",
+        "Organization_type":  "Nonprofit",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Adults experiencing homelessness in East Orange County",
+        "Website":  "https://samaritanresourcecenter.org/services/",
+        "Notes_partnership_details":  "Best fit for referral visibility and case-manager relationships.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470031"
+                         }
+    },
+    {
+        "Account_Name":  "Matthew\u0027s Hope Ministries",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Orange County"
+                                ],
+        "Billing_Street":  "611 Business Park Blvd #101",
+        "Billing_City":  "Winter Garden",
+        "Billing_State":  "FL",
+        "Billing_Code":  "34787",
+        "Organization_type":  "Nonprofit",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Homeless men, women, and children in Orange County",
+        "Website":  "https://www.matthewshopeministries.org/ourstory",
+        "Notes_partnership_details":  "Good for bridge-housing conversations even though it is not an emergency shelter.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470032"
+                         }
+    },
+    {
+        "Account_Name":  "Orange County Crisis Assistance Program",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Orange County"
+                                ],
+        "Organization_type":  "County program",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Orange County households with recent financial crisis and past-due housing costs",
+        "Website":  "https://ocfl.net/FamiliesHealthSocialSvcs/CrisisAssistanceProgram.aspx",
+        "Notes_partnership_details":  "Government option rather than nonprofit, but still relevant for fund flow.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470033"
+                         }
+    },
+    {
+        "Account_Name":  "Orange County Housing Choice Voucher / TBRA",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Orange County"
+                                ],
+        "Organization_type":  "County program",
+        "Priority":  "Low",
+        "Outreach_status":  "Email Sent",
+        "Who_they_serve":  "Very low-income households using rental vouchers",
+        "Website":  "https://www.orangecountyfl.net/NeighborsHousing/RentalAssistance.aspx",
+        "Notes_partnership_details":  "Page says the Housing Choice Voucher waiting list is not currently accepting applications.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470034"
+                         }
+    },
+    {
+        "Account_Name":  "Salvation Army Orlando Social Services",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Orange County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Households in emergency need",
+        "Website":  "https://orlando.salvationarmyflorida.org",
+        "Notes_partnership_details":  "City of Orlando page confirms emergency financial assistance.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470035"
+                         }
+    },
+    {
+        "Account_Name":  "Homeless Services Network of Central Florida",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Osceola County"
+                                ],
+        "Billing_Street":  "142 E Jackson St",
+        "Billing_City":  "Orlando",
+        "Billing_State":  "FL",
+        "Billing_Code":  "32801",
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Outreach_status":  "Email Sent",
+        "Who_they_serve":  "Families, veterans, youth, survivors, people with disabilities, households experiencing homelessness",
+        "Website":  "https://www.hsncfl.org",
+        "Notes_partnership_details":  "Important relationship for countywide referrals.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470036"
+                         }
+    },
+    {
+        "Account_Name":  "Osceola County Homeless Services",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Osceola County"
+                                ],
+        "Billing_Street":  "1392 E Vine St",
+        "Billing_City":  "Kissimmee",
+        "Billing_State":  "FL",
+        "Billing_Code":  "34744",
+        "Organization_type":  "County program",
+        "Priority":  "High",
+        "Who_they_serve":  "Residents at risk of homelessness, doubled-up households, households in extended-stay hotels, families with children",
+        "Website":  "https://www.osceola.org/Services/Housing-Programs/Homeless-Services",
+        "Notes_partnership_details":  "Government option but highly relevant to your use case.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470037"
+                         }
+    },
+    {
+        "Account_Name":  "Osceola County CDBG Emergency Rental Assistance Program",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Osceola County"
+                                ],
+        "Organization_type":  "County program",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Low-income residents in danger of homelessness outside Kissimmee city limits",
+        "Website":  "https://www.osceola.org/Services/Housing-Programs/Community-Development-Block-Grant/CDBG-Emergency-Rental-Assistance-Program",
+        "Notes_partnership_details":  "Can help only if assistance brings household current.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470038"
+                         }
+    },
+    {
+        "Account_Name":  "Osceola County Security / Utility Deposits Rental Assistance",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Osceola County"
+                                ],
+        "Organization_type":  "County program",
+        "Priority":  "High",
+        "Outreach_status":  "Email Sent",
+        "Who_they_serve":  "Eligible residents seeking residence in rental housing within Osceola County",
+        "Website":  "https://www.osceola.org/Services/Housing-Programs/SHIP/Security-andor-Utility-Deposits-Rental-Assistance",
+        "Notes_partnership_details":  "Program states assistance up to $1,500 combined or separately depending on eligibility.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470039"
+                         }
+    },
+    {
+        "Account_Name":  "Catholic Charities of Central Florida - Family Stability Program",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Osceola County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Who_they_serve":  "Men, women, and families at risk of homelessness or experiencing homelessness",
+        "Website":  "https://cflcc.org/financial-assistance/family-stability-program/",
+        "Notes_partnership_details":  "Holy Redeemer in Kissimmee is listed as one service location.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470040"
+                         }
+    },
+    {
+        "Account_Name":  "Osceola Council on Aging - Building Strong Families",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Osceola County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Who_they_serve":  "Low-income Osceola families with school-aged children at risk of homelessness",
+        "Website":  "https://osceolagenerations.org/building-strong-families/",
+        "Notes_partnership_details":  "Program focuses on families with school-aged children.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470041"
+                         }
+    },
+    {
+        "Account_Name":  "Osceola Council on Aging - Housing Stability Program",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Osceola County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Osceola households with children in unstable housing and loss of income",
+        "Website":  "https://osceolagenerations.org/building-strong-families-housing-stability-program/",
+        "Notes_partnership_details":  "Page currently says applications are not being accepted; still worth tracking.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470042"
+                         }
+    },
+    {
+        "Account_Name":  "City of Kissimmee housing resource hub",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Osceola County"
+                                ],
+        "Organization_type":  "City referral hub",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Osceola residents seeking emergency rental or supportive services",
+        "Website":  "https://www.kissimmee.gov/Services/Social-Services-Quality-of-Life-Programs/Available-Resources-and-Help",
+        "Notes_partnership_details":  "Useful for identifying programs backed by local government.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470043"
+                         }
+    },
+    {
+        "Account_Name":  "The Salvation Army Kissimmee",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Osceola County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Osceola households in crisis",
+        "Website":  "https://orlando.salvationarmyflorida.org/Kissimmee",
+        "Notes_partnership_details":  "Included via community resource guide; current availability should be verified on outreach.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470044"
+                         }
+    },
+    {
+        "Account_Name":  "Changing Homelessness",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Duval County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Outreach_status":  "Email Sent",
+        "Who_they_serve":  "People experiencing homelessness in Duval and nearby counties, including veterans and families",
+        "Website":  "https://www.changinghomelessness.org",
+        "Notes_partnership_details":  "Important for referrals from coordinated entry and outreach teams.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470045"
+                         }
+    },
+    {
+        "Account_Name":  "Family Promise of Jacksonville",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Duval County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Who_they_serve":  "Families with children experiencing homelessness",
+        "Website":  "https://familypromisejax.org/get-help/",
+        "Notes_partnership_details":  "If funding is available, the organization says it will respond within three business days.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470046"
+                         }
+    },
+    {
+        "Account_Name":  "Sulzbacher",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Duval County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Who_they_serve":  "Men, women, children, veterans, and families experiencing homelessness",
+        "Website":  "https://www.sulzbacherjax.org",
+        "Notes_partnership_details":  "Large provider with multiple housing-related programs.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470047"
+                         }
+    },
+    {
+        "Account_Name":  "Catholic Charities Jacksonville",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Duval County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Who_they_serve":  "Households struggling to pay rent, mortgage, utilities, or deposits",
+        "Website":  "https://www.ccbjax.org/emergency-financial-assistance",
+        "Notes_partnership_details":  "Good target for deposit-assisted move-ins.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470048"
+                         }
+    },
+    {
+        "Account_Name":  "Downtown Ecumenical Services Council (DESC)",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Duval County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Who_they_serve":  "Households with children, seniors, or someone with a disability",
+        "Website":  "https://descjax.org/assistance-services/get-help-with-rent-or-utilities/",
+        "Notes_partnership_details":  "Cannot help once an eviction summons is already issued.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470049"
+                         }
+    },
+    {
+        "Account_Name":  "Northeast Florida Community Action Agency (NFCAA) - Duval",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Duval County"
+                                ],
+        "Billing_Street":  "2055 Reyko Rd Suite 200",
+        "Billing_City":  "Jacksonville",
+        "Billing_State":  "FL",
+        "Billing_Code":  "32207",
+        "Organization_type":  "Nonprofit",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Income-qualified households in Duval County",
+        "Website":  "https://nfcaa.org/utility-assistance/",
+        "Notes_partnership_details":  "Resource directory indicates shelter agreement and W-9 can be required for rent help.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470050"
+                         }
+    },
+    {
+        "Account_Name":  "Jacksonville Eviction Diversion Program",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Duval County"
+                                ],
+        "Organization_type":  "Program administered with community partners",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Tenants and landlords working to avoid eviction in Duval County",
+        "Website":  "https://jacksonvilleevictiondiversion.org",
+        "Notes_partnership_details":  "Up to three months of back rent per site language.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470051"
+                         }
+    },
+    {
+        "Account_Name":  "City of Jacksonville Emergency Financial Assistance Program",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Duval County"
+                                ],
+        "Billing_Street":  "Midtown Centre, 1809 Art Museum Dr Suite 100",
+        "Billing_City":  "Jacksonville",
+        "Billing_State":  "FL",
+        "Billing_Code":  "32207",
+        "Organization_type":  "City program",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Duval residents facing documentable crisis",
+        "Website":  "https://www.jacksonville.gov/departments/parks-and-recreation/social-services/emergency-financial-assistance-program",
+        "Notes_partnership_details":  "Court-ordered eviction notices receive priority.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470052"
+                         }
+    },
+    {
+        "Account_Name":  "The Salvation Army of Northeast Florida",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "Duval County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Low-income Duval residents facing eviction or disconnection",
+        "Website":  "https://jacksonville.salvationarmyflorida.org/nefl/rental-assistance",
+        "Notes_partnership_details":  "Official page directs prospects to Towers Center of Hope for qualification.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470053"
+                         }
+    },
+    {
+        "Account_Name":  "Homeless Coalition of St. Johns County",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "St. Johns County"
+                                ],
+        "Billing_Street":  "62 Chapin St",
+        "Billing_City":  "St. Augustine",
+        "Billing_State":  "FL",
+        "Billing_Code":  "32084",
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Who_they_serve":  "Homeless families with minor children and other vulnerable households",
+        "Website":  "https://homelesscoalitionstjohns.com/about/",
+        "Notes_partnership_details":  "One of the most relevant St. Johns nonprofits for direct outreach.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470054"
+                         }
+    },
+    {
+        "Account_Name":  "St. Johns County Continuum of Care / Opening Doors network",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "St. Johns County"
+                                ],
+        "Billing_Street":  "100 Whetstone Place Suite 303",
+        "Billing_City":  "St. Augustine",
+        "Billing_State":  "FL",
+        "Billing_Code":  "32086",
+        "Organization_type":  "Countywide network",
+        "Priority":  "High",
+        "Who_they_serve":  "County residents needing housing, shelter, and referral services",
+        "Website":  "https://www.stjohnscountycoc.org/opening-doors",
+        "Notes_partnership_details":  "Useful master list for agencies, shelters, and niche programs.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470055"
+                         }
+    },
+    {
+        "Account_Name":  "Catholic Charities St. Augustine",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "St. Johns County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Who_they_serve":  "Families, elderly, disabled individuals, and others on the brink of homelessness",
+        "Website":  "https://www.ccbstaug.org/emergency-financial-assistance",
+        "Notes_partnership_details":  "Covers St. Johns County along with neighboring counties.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470056"
+                         }
+    },
+    {
+        "Account_Name":  "St. Johns County Social Services - Limited Rental and Utility Assistance",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "St. Johns County"
+                                ],
+        "Billing_Street":  "200 San Sebastian View Suite 2300",
+        "Billing_City":  "St. Augustine",
+        "Billing_State":  "FL",
+        "Billing_Code":  "32084",
+        "Organization_type":  "County program",
+        "Priority":  "Medium",
+        "Who_they_serve":  "St. Johns residents with documented financial crisis",
+        "Website":  "https://www.sjcfl.us/limited-rental-and-utility-assistance/",
+        "Notes_partnership_details":  "Assistance generally available once in an 18-month period.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470057"
+                         }
+    },
+    {
+        "Account_Name":  "Home Again St. Johns",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "St. Johns County"
+                                ],
+        "Billing_Street":  "285 S Holmes Blvd",
+        "Billing_City":  "St. Augustine",
+        "Billing_State":  "FL",
+        "Billing_Code":  "32084",
+        "Organization_type":  "Nonprofit",
+        "Priority":  "High",
+        "Who_they_serve":  "Housing-challenged residents and veterans in St. Johns County",
+        "Website":  "https://www.homeagainsaintjohns.org",
+        "Notes_partnership_details":  "Housing coalition provider page lists direct phone and service summary.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470058"
+                         }
+    },
+    {
+        "Account_Name":  "St. Vincent de Paul Society - St. Augustine",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "St. Johns County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Residents in need in St. Johns County",
+        "Website":  "https://www.svdpsa.com/neighbor-services.html",
+        "Notes_partnership_details":  "School district resource guide says it helps with rent and utilities.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470059"
+                         }
+    },
+    {
+        "Account_Name":  "St. Francis House",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "St. Johns County"
+                                ],
+        "Billing_Street":  "70 Washington St",
+        "Billing_City":  "St. Augustine",
+        "Billing_State":  "FL",
+        "Billing_Code":  "32084",
+        "Organization_type":  "Nonprofit",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Men, women, and families experiencing homelessness",
+        "Website":  "https://www.stfrancisshelter.org/",
+        "Notes_partnership_details":  "More of a placement/referral relationship than a funding source.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470060"
+                         }
+    },
+    {
+        "Account_Name":  "St. Johns Housing Partnership",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "St. Johns County"
+                                ],
+        "Organization_type":  "Nonprofit",
+        "Priority":  "Medium",
+        "Who_they_serve":  "Low- and moderate-income households, seniors, disabled residents, and veterans",
+        "Website":  "https://www.sjhp.org/rent/",
+        "Notes_partnership_details":  "Good strategic contact for county affordable-housing relationships.",
+        "Contact_Name":  {
+                             "id":  "6342912000001470061"
+                         }
+    },
+    {
+        "Account_Name":  "Michael Clark- Sheriff",
+        "CRM_Use_Case":  [
+                             "Non-Profit Sales"
+                         ],
+        "Layout":  {
+                       "id":  "6342912000001457398"
+                   },
+        "County_service_area":  [
+                                    "St. Johns County"
+                                ],
+        "Outreach_status":  "Email Sent",
+        "Website":  "www.sjso.org",
+        "Contact_Name":  {
+                             "id":  "6342912000001470062"
+                         }
+    }
+]
