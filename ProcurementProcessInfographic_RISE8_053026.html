@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Procurement Process — How It Works & What's Built · RISE8 / Stayable</title>
+<style>
+  :root{
+    --ink:#0f1722;          /* near-black navy */
+    --navy:#16243a;         /* header navy */
+    --navy2:#1f3350;
+    --slate:#5b6878;
+    --line:#dfe4ea;
+    --paper:#f5f6f8;
+    --card:#ffffff;
+    --gold:#b08d3a;         /* institutional accent */
+    --done:#1f7a4d;         /* green = built/live */
+    --done-bg:#e7f3ec;
+    --partial:#b8772a;      /* amber = partial/demo */
+    --partial-bg:#fbf0e0;
+    --prop:#3a5a8c;         /* blue = proposed */
+    --prop-bg:#e8eef7;
+    --hold:#9e2b2b;         /* red = on hold */
+    --hold-bg:#f7e7e7;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5;font-size:15px;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px 64px;}
+
+  /* ---- header ---- */
+  header{
+    background:linear-gradient(150deg,var(--ink) 0%,var(--navy) 55%,var(--navy2) 100%);
+    color:#fff;padding:34px 0 30px;border-bottom:4px solid var(--gold);
+  }
+  header .wrap{padding-bottom:0;}
+  .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#9fb1c9;font-weight:600;}
+  h1{font-size:30px;line-height:1.15;margin:8px 0 6px;font-weight:700;letter-spacing:-.01em;}
+  .sub{color:#c7d2e0;font-size:15px;max-width:760px;}
+  .meta{margin-top:16px;font-size:12.5px;color:#9fb1c9;display:flex;gap:22px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.12);padding-top:14px;}
+  .meta b{color:#e6ecf4;font-weight:600;}
+
+  /* ---- status banner ---- */
+  .banner{
+    background:var(--hold-bg);border:1px solid #e3bcbc;border-left:5px solid var(--hold);
+    border-radius:8px;padding:14px 18px;margin:22px 0 4px;display:flex;gap:14px;align-items:flex-start;
+  }
+  .banner .dot{font-size:18px;line-height:1.2;}
+  .banner b{color:var(--hold);}
+  .banner p{margin:0;font-size:13.5px;color:#5a3636;}
+
+  /* ---- section scaffolding ---- */
+  section{margin-top:40px;}
+  .sec-h{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:18px;}
+  .sec-n{font-size:13px;font-weight:700;color:#fff;background:var(--ink);border-radius:5px;padding:3px 9px;letter-spacing:.04em;}
+  .sec-h h2{font-size:20px;margin:0;font-weight:700;letter-spacing:-.01em;}
+  .sec-h .note{margin-left:auto;font-size:12.5px;color:var(--slate);font-style:italic;}
+  .lead{color:var(--slate);font-size:14.5px;margin:-6px 0 18px;max-width:840px;}
+
+  /* ---- model diagram ---- */
+  .model{display:grid;grid-template-columns:1fr;gap:14px;}
+  .org-band{
+    background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;text-align:center;
+    box-shadow:0 1px 2px rgba(15,23,34,.04);
+  }
+  .org-band .t{font-weight:700;font-size:15px;}
+  .org-band .d{color:var(--slate);font-size:12.5px;}
+  .firewall{
+    background:#fff8ec;border:1px dashed var(--gold);border-radius:10px;padding:12px 16px;text-align:center;font-size:13px;
+  }
+  .firewall b{color:var(--gold);}
+  .firewall code{background:#f0e6cf;padding:1px 6px;border-radius:4px;font-size:12px;}
+  .tracks{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .track{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--prop);border-radius:10px;padding:14px 15px;box-shadow:0 1px 2px rgba(15,23,34,.04);}
+  .track.mine{border-top-color:var(--gold);}
+  .track .tag{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--slate);font-weight:600;}
+  .track h3{margin:4px 0 6px;font-size:15.5px;}
+  .track .home{font-size:12px;color:var(--prop);font-weight:600;}
+  .track.mine .home{color:var(--gold);}
+  .track ul{margin:8px 0 0;padding-left:16px;font-size:12.5px;color:#3a4656;}
+  .track li{margin-bottom:3px;}
+  .track .who{margin-top:9px;font-size:11.5px;color:var(--slate);border-top:1px solid var(--line);padding-top:7px;}
+  .mine-flag{display:inline-block;background:var(--gold);color:#fff;font-size:10px;font-weight:700;letter-spacing:.05em;padding:2px 7px;border-radius:4px;margin-left:6px;vertical-align:middle;}
+
+  /* ---- pipeline ---- */
+  .pipe{display:flex;flex-wrap:wrap;gap:8px;align-items:stretch;}
+  .stage{
+    flex:1 1 150px;min-width:150px;background:var(--card);border:1px solid var(--line);border-radius:9px;
+    padding:12px 13px;position:relative;box-shadow:0 1px 2px rgba(15,23,34,.04);
+  }
+  .stage .sn{font-size:11px;font-weight:700;color:var(--gold);}
+  .stage h4{margin:2px 0 5px;font-size:14.5px;}
+  .stage p{margin:0;font-size:12px;color:#3a4656;}
+  .stage .deliv{margin-top:7px;font-size:11px;color:var(--slate);border-top:1px dotted var(--line);padding-top:6px;}
+  .stage .deliv b{color:var(--ink);font-weight:600;}
+  .arrow{align-self:center;color:#b8c0cc;font-weight:700;font-size:18px;flex:0 0 auto;}
+  .outcomes{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .oc{font-size:12px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid;}
+  .oc.sub{color:#3a4656;border-color:var(--line);background:#fff;}
+  .oc.ok{color:var(--done);border-color:#bfe0cd;background:var(--done-bg);}
+  .oc.cond{color:var(--partial);border-color:#ead2ad;background:var(--partial-bg);}
+  .oc.no{color:var(--hold);border-color:#e3bcbc;background:var(--hold-bg);}
+  .oc.info{color:var(--prop);border-color:#c4d3e8;background:var(--prop-bg);}
+
+  /* ---- FL gates ---- */
+  .gates{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+  .gate{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--prop);border-radius:8px;padding:12px 14px;}
+  .gate h4{margin:0 0 4px;font-size:14px;}
+  .gate p{margin:0;font-size:12.5px;color:#3a4656;}
+  .reject{background:#fcf3f3;border:1px solid #ebcccc;border-radius:8px;padding:13px 16px;margin-top:14px;}
+  .reject h4{margin:0 0 7px;font-size:13.5px;color:var(--hold);}
+  .reject ul{margin:0;padding-left:18px;font-size:12.5px;color:#5a3636;columns:2;column-gap:26px;}
+  .reject li{margin-bottom:3px;break-inside:avoid;}
+
+  /* ---- roles ---- */
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;font-size:13px;}
+  thead th{background:var(--ink);color:#fff;text-align:left;padding:9px 12px;font-size:12px;letter-spacing:.03em;font-weight:600;}
+  tbody td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top;}
+  tbody tr:nth-child(even){background:#fafbfc;}
+  td .nm{font-weight:700;}
+  td .rl{color:var(--slate);font-size:11.5px;}
+
+  /* ---- status board ---- */
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin:-4px 0 18px;font-size:12.5px;}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .chip{width:13px;height:13px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.12);}
+  .chip.done{background:var(--done);} .chip.partial{background:var(--partial);}
+  .chip.prop{background:var(--prop);} .chip.hold{background:var(--hold);}
+  .board{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+  .col h3{font-size:13.5px;margin:0 0 9px;text-transform:uppercase;letter-spacing:.05em;}
+  .col.c-done h3{color:var(--done);} .col.c-partial h3{color:var(--partial);}
+  .col.c-prop h3{color:var(--prop);} .col.c-hold h3{color:var(--hold);}
+  .item{background:var(--card);border:1px solid var(--line);border-radius:7px;padding:9px 12px;margin-bottom:8px;font-size:12.5px;border-left:3px solid var(--line);}
+  .c-done .item{border-left-color:var(--done);}
+  .c-partial .item{border-left-color:var(--partial);}
+  .c-prop .item{border-left-color:var(--prop);}
+  .c-hold .item{border-left-color:var(--hold);}
+  .item b{display:block;font-size:13px;margin-bottom:1px;}
+  .item span{color:var(--slate);}
+
+  /* ---- decisions ---- */
+  .decisions{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 18px;}
+  .decisions li{padding:9px 0;border-top:1px solid var(--line);font-size:13px;}
+  .decisions li:first-child{border-top:none;}
+  .decisions b{color:var(--ink);}
+
+  footer{margin-top:46px;border-top:2px solid var(--ink);padding-top:14px;font-size:11.5px;color:var(--slate);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+
+  @media (max-width:760px){
+    .tracks,.gates,.board{grid-template-columns:1fr;}
+    .reject ul{columns:1;}
+    h1{font-size:24px;}
+  }
+  @media print{
+    body{background:#fff;font-size:12px;}
+    header{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    section{break-inside:avoid;}
+    .wrap{max-width:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">RISE8 Companies · Stayable — Zoho CRM Rollout</div>
+    <h1>The Procurement Process: How It Works &amp; What's Built</h1>
+    <p class="sub">A one-page orientation to the proposed overseas-procurement workflow on Zoho CRM — the model, the five stages you'll run, the Florida gates every item must pass, and exactly what is live vs. still proposed.</p>
+    <div class="meta">
+      <span><b>Track:</b> Procurement &amp; Vendor Selection (Kyle)</span>
+      <span><b>System of record:</b> Zoho CRM (Professional)</span>
+      <span><b>Approver:</b> Rob Beyer (CEO)</span>
+      <span><b>As of:</b> 05/30/26</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="banner">
+    <span class="dot">🟡</span>
+    <p><b>Status: PROPOSAL — production is ON HOLD.</b> The architecture awaits Rob's sign-off. Until then we build only in a <i>held</i> state (config, not go-live): no real data load, no team onboarding, no live tracker writes. Everything below marked "built" is low-risk config that can still be redirected.</p>
+  </div>
+
+  <!-- 1. THE MODEL -->
+  <section>
+    <div class="sec-h"><span class="sec-n">01</span><h2>The model in one view</h2><span class="note">One org · three workflows · shared foundation</span></div>
+    <p class="lead">A single Zoho org serves three separate workflows. They share two foundation tables (organizations &amp; people) and are kept from colliding by a required tag on every Account. No module sprawl — that's what killed the last deployment.</p>
+
+    <div class="model">
+      <div class="org-band">
+        <div class="t">ONE Zoho CRM Org · Professional · 3 seats</div>
+        <div class="d">Shared foundation: <b>Accounts</b> (organizations) + <b>Contacts</b> (people at those organizations)</div>
+      </div>
+      <div class="firewall">
+        🔒 The firewall: every Account carries a required <code>CRM Use Case</code> tag — <b>Procurement</b> · <b>Non-Profit Sales</b> · <b>Vendor Selection</b> — so the three workflows never collide.
+        <br><span style="font-size:11.5px;color:var(--done);">✅ Live as of 05/29/26 — all 21 vendor Accounts tagged <code>Procurement</code>.</span>
+      </div>
+      <div class="tracks">
+        <div class="track mine">
+          <div class="tag">Track 1 <span class="mine-flag">YOUR TRACK</span></div>
+          <h3>Procurement</h3>
+          <div class="home">Home module: Procurement_Items (custom)</div>
+          <ul>
+            <li>The <b>item</b> is the center of gravity</li>
+            <li>Vendors = Accounts tagged <i>Procurement</i></li>
+            <li>Multi-vendor bids via a Contact-Tracking subform</li>
+            <li>Decisions in <code>Decision_Notes</code>, never email</li>
+          </ul>
+          <div class="who">Build: <b>Kyle</b> · Uses: Jefferson · Process: Rob</div>
+        </div>
+        <div class="track">
+          <div class="tag">Track 2</div>
+          <h3>Non-Profit Sales</h3>
+          <div class="home">Home module: Deals (standard)</div>
+          <ul>
+            <li>Pipeline: "Non-Profit Placements"</li>
+            <li>A Deal = one tenant placement</li>
+            <li>Partners = Accounts tagged <i>Non-Profit</i></li>
+          </ul>
+          <div class="who">Build: <b>Kate</b> · Uses: Bea, Crystal · Process: Rob</div>
+        </div>
+        <div class="track">
+          <div class="tag">Track 3</div>
+          <h3>Vendor / Pro Selection</h3>
+          <div class="home">Home module: cloned later</div>
+          <ul>
+            <li>Mini-RFPs for professionals/vendors</li>
+            <li>Cloned from the Procurement pattern</li>
+            <li>Deferred until Track 1 is proven</li>
+          </ul>
+          <div class="who">Build: <b>Kyle</b> (later) · Process: Rob</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. THE 5-STAGE WORKFLOW -->
+  <section>
+    <div class="sec-h"><span class="sec-n">02</span><h2>What you'll be doing — the 5-stage workflow</h2><span class="note">Never skip a stage</span></div>
+    <p class="lead">Every procurement item moves through five stages, then routes to Rob for a decision. Each stage has a required deliverable that must exist before the next stage begins. The item's <b>Stage</b> field in Zoho always reflects current state.</p>
+
+    <div class="pipe">
+      <div class="stage">
+        <div class="sn">STAGE 1</div><h4>Spec</h4>
+        <p>Build the RFQ spec sheet — dimensions (in + mm), materials, finish, performance, 120V/UL-ETL, compliance certs, warranty. Florida overlays baked in.</p>
+        <div class="deliv"><b>Out:</b> Spec sheet + Est. Item Spend set</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="stage">
+        <div class="sn">STAGE 2</div><h4>Bid</h4>
+        <p>Minimum 3 quotes, identical RFQ packet, <b>DDP only</b> (reject FOB). Collect factory audit, US references, sample policy, terms. Run ImportKey on every vendor. Log every touch.</p>
+        <div class="deliv"><b>Out:</b> ≥3 normalized bids logged</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="stage">
+        <div class="sn">STAGE 3</div><h4>Level</h4>
+        <p>Convert every bid to true <b>landed cost</b> — freight, duties (verify HTS), broker, drayage, FX ±5%, QC, defect allowance. Yellow-cell every assumption. Cost-per-year vs. US baseline.</p>
+        <div class="deliv"><b>Out:</b> Leveled cost spreadsheet</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="stage">
+        <div class="sn">STAGE 4</div><h4>FL-Validate</h4>
+        <p>Apply the Florida checklist (Section 03) to each bid — humidity, salt air, hurricane code, electrical. Log pass/fail per vendor. Fails are auto-rejected.</p>
+        <div class="deliv"><b>Out:</b> Pass/fail per vendor</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="stage">
+        <div class="sn">STAGE 5</div><h4>Recommend</h4>
+        <p>One-page decision summary, single recommended vendor. Submit to Rob by advancing the Stage. Sample in hand for $25K+ items.</p>
+        <div class="deliv"><b>Out:</b> Decision package → Rob</div>
+      </div>
+    </div>
+
+    <div class="outcomes">
+      <span class="oc sub">Submitted →</span>
+      <span class="oc ok">✓ Approved</span>
+      <span class="oc cond">≈ Approved w/ Conditions</span>
+      <span class="oc no">✕ Declined</span>
+      <span class="oc info">? Need More Info</span>
+    </div>
+  </section>
+
+  <!-- 3. FLORIDA GATES -->
+  <section>
+    <div class="sec-h"><span class="sec-n">03</span><h2>The Florida gates (Stage 4)</h2><span class="note">Applied to every item by default</span></div>
+    <div class="gates">
+      <div class="gate"><h4>💧 Humidity (all 8 properties, 75%+ RH)</h4><p>No bare particleboard/MDF below 36" — marine ply or solid hardwood. Mattress foam ≥1.8 lb/ft³, CertiPUR-US/Greenguard. Cabinet hardware solid brass/stainless/zinc — never plated steel. Damp-rated bath lighting min.</p></div>
+      <div class="gate"><h4>🌊 Salt air (Jax W, Jax N, St. Augustine)</h4><p>Stainless 316 on exposed hardware — 304 pits within 18 months. Outdoor furniture: powder-coated aluminum or marine-grade poly. No exposed ferrous metal.</p></div>
+      <div class="gate"><h4>🌀 Hurricane code</h4><p>Coastal (Jacksonville, St. Augustine): 140 mph wind rating on exterior signage/fixtures. Inland: typically 130 mph. Confirm against the property's CO zone.</p></div>
+      <div class="gate"><h4>⚡ Electrical (insurance-critical)</h4><p>120V/60Hz ONLY. UL or ETL listing REQUIRED — "equivalent" certs not accepted. NEMA 5-15P plug. GFCI compatibility for bath/exterior. 220V or non-UL = automatic reject.</p></div>
+    </div>
+
+    <div class="reject">
+      <h4>⛔ Automatic rejection — these never reach Rob</h4>
+      <ul>
+        <li>FOB compared to DDP without normalizing</li>
+        <li>"Premium / hotel grade / luxury" with no numerical specs</li>
+        <li>No physical sample on first order</li>
+        <li>Particleboard or MDF below 36" in Florida</li>
+        <li>220V appliances or non-UL/ETL electrical</li>
+        <li>Single overseas vendor with no Plan B</li>
+        <li>Verbal / WhatsApp pricing — must be in writing, ≥30 days</li>
+        <li>HTS tariff exposure not addressed</li>
+        <li>Assumptions hidden inside clean numbers (yellow cells required)</li>
+        <li>Decision logged anywhere but the Zoho record</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. ROLES -->
+  <section>
+    <div class="sec-h"><span class="sec-n">04</span><h2>Who does what</h2></div>
+    <table>
+      <thead><tr><th style="width:22%">Person</th><th style="width:30%">Role</th><th>On procurement</th></tr></thead>
+      <tbody>
+        <tr><td><span class="nm">Rob Beyer</span><div class="rl">CEO · Process owner</div></td><td>Designs &amp; optimizes the process; final authority</td><td><b>Approves</b> every vendor selection, PO, and spend decision before action</td></tr>
+        <tr><td><span class="nm">Kyle Estocapio</span><div class="rl">Builder · Super-admin</div></td><td>Builds Procurement + Vendor Selection; owns architecture</td><td>Executes the build &amp; runs items through the 5 stages; routes architecture changes to Rob</td></tr>
+        <tr><td><span class="nm">Jefferson Gomez</span><div class="rl">Purchasing Mgr · SME / end-user</div></td><td>Daily procurement operator inside Zoho</td><td>Guides the process, sources vendors, generates POs from template; <b>recommends</b> to Rob</td></tr>
+        <tr><td><span class="nm">Kate</span><div class="rl">Builder (Non-Profit)</div></td><td>Builds Non-Profit Sales track</td><td>Not involved in procurement</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 5. STATUS BOARD -->
+  <section>
+    <div class="sec-h"><span class="sec-n">05</span><h2>What's complete vs. what's proposed</h2><span class="note">Verified against the live org 05/29/26</span></div>
+    <div class="legend">
+      <span><i class="chip done"></i> Built / live</span>
+      <span><i class="chip partial"></i> Partial / demo only</span>
+      <span><i class="chip prop"></i> Proposed — pending approval</span>
+      <span><i class="chip hold"></i> On hold</span>
+    </div>
+
+    <div class="board">
+      <div class="col c-done">
+        <h3>✅ Done — live in the CRM today</h3>
+        <div class="item"><b>Zoho Professional · 3 seats</b><span>admin@ (super-admin), jefferson@, rb@rise8companies.com</span></div>
+        <div class="item"><b>Procurement_Items module (shell)</b><span>19 custom fields + 7 picklists; layout sections &amp; permissions set</span></div>
+        <div class="item"><b>CRM Use Case firewall field</b><span>Multi-select, required; all 21 vendor Accounts tagged Procurement</span></div>
+        <div class="item"><b>21 vendor Accounts + 20 Contacts</b><span>19 Alibaba vendors imported 05/26 (+ stub flagged for cleanup)</span></div>
+        <div class="item"><b>PO_Number + PO_Status fields</b><span>Built 05/29 as held config (PO_Status = 7-value picklist)</span></div>
+        <div class="item"><b>Vercel portal + /tracker</b><span>procurement.rentstayable.com — live, internal-only, noindex</span></div>
+        <div class="item"><b>Zoho MCP (3 servers)</b><span>Connected — enables record/workflow automation from tooling</span></div>
+      </div>
+
+      <div class="col c-partial">
+        <h3>🔸 Partial — exists but not real yet</h3>
+        <div class="item"><b>Procurement Tracker (the HTML app)</b><span>Live in DEMO MODE — renders the action but does NOT write to Zoho yet</span></div>
+        <div class="item"><b>Procurement_Items records</b><span>Only 2 test records — the real 197-item historical load has not run</span></div>
+        <div class="item"><b>Contacts cleanup</b><span>Some placeholder last names &amp; a "Batteries" Account stub still pending</span></div>
+      </div>
+
+      <div class="col c-prop">
+        <h3>🔷 Proposed — not yet built (needs Rob's go)</h3>
+        <div class="item"><b>P1 · Contact-Tracking subform</b><span>Multi-vendor bidding rows on each item — the heart of Stage 2–3</span></div>
+        <div class="item"><b>P3 · 5 workflow rules</b><span>Stage gates + stuck-item alerts on Procurement_Items</span></div>
+        <div class="item"><b>P4 · Real data load</b><span>197 historical procurement items</span></div>
+        <div class="item"><b>P6 · Vendor Selection module</b><span>Clone of Procurement — later, after Track 1 is proven</span></div>
+      </div>
+
+      <div class="col c-hold">
+        <h3>🔴 On hold — frozen until sign-off</h3>
+        <div class="item"><b>Go-live / team onboarding</b><span>Jefferson not asked to work live; Bea &amp; Crystal not added</span></div>
+        <div class="item"><b>Real data load</b><span>197 items + 48 non-profit partners stay out until approved</span></div>
+        <div class="item"><b>Live tracker writes</b><span>Portal stays in demo mode until the hold lifts</span></div>
+        <div class="item"><b>2FA on admin@ &amp; Jefferson</b><span>On hold per Rob since 05/20 — flagged as a single point of failure</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. OPEN DECISIONS -->
+  <section>
+    <div class="sec-h"><span class="sec-n">06</span><h2>What Rob still needs to rule on</h2></div>
+    <ol class="decisions">
+      <li><b>Bidding design.</b> Track 3+ vendor bids as a subform on the item (item-centric) — trade-off: no automated per-vendor follow-up reminders (manual "stale &gt;14 days" report instead). Accept, or fund the heavier child-module path?</li>
+      <li><b>PO in Zoho.</b> Track PO <i>numbers</i> as fields + attach actual PO <i>documents</i> from Jefferson's Excel template — no native PO module. Confirm.</li>
+      <li><b>Vendor Selection timing.</b> Build later by cloning Procurement (recommended), or in parallel now?</li>
+      <li><b>2FA.</b> Re-open 2FA on admin@ and Jefferson before seats/go-live?</li>
+      <li><b>Phase-2 trigger.</b> What signals readiness to add Bea + Crystal — a fixed date, or Jefferson logging daily for 2 weeks first?</li>
+    </ol>
+  </section>
+
+  <footer>
+    <span>Source of truth: <b>Zoho_Architecture.md</b> (05/29/26). Note: <i>ProjectInstructions_OverseasProc</i> still reads "Item = Deal" — superseded by the 05/27 pivot to the custom Procurement_Items module.</span>
+    <span>RISE8 Companies · Stayable · Internal — not for distribution</span>
+  </footer>
+
+</div>
+</body>
+</html>
