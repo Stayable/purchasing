@@ -162,6 +162,7 @@ Verified against the live org on 05/29/26.
 |---|---|
 | `CRM Use Case` firewall field on Accounts | ✅ Created — multi-select, required |
 | Tagged existing vendor Accounts | ✅ All **21** set to `Procurement` |
+| `PO_Number` + `PO_Status` fields on `Procurement_Items` | ✅ Built (held config) — `PO_Status` 7-value picklist; approach still pending your §13 #2 confirm |
 | Non-Profit tracker reconciled + renamed | ✅ `ZohoBuildTracker_NonProfitSales_Kate_052926.md` |
 | Architecture, specs, decision log | ✅ Written/updated, committed (audit trail) |
 
@@ -172,7 +173,7 @@ Verified against the live org on 05/29/26.
 | # | Item | Workflow | Owner |
 |---|---|---|---|
 | P1 | **Contact-Tracking subform** on Procurement_Items (multi-vendor bidding) | Procurement | Kyle |
-| P2 | `PO_Number` + `PO_Status` fields; PO docs via Jefferson's template (attach PDF) | Procurement | Kyle |
+| P2 | `PO_Number` + `PO_Status` fields **(✅ built 05/29 as held config)**; PO docs via Jefferson's template (attach PDF) — *approach still pending your §13 #2 confirm* | Procurement | Kyle |
 | P3 | 5 workflow rules on Procurement_Items (stage gates, stuck-item alerts) | Procurement | Kyle |
 | P4 | Real procurement data load (197 historical items) | Procurement | Kyle |
 | P5 | **Non-Profit Sales** build — Deals pipeline, layouts, 48 partner Accounts + 11 Contacts import | Non-Profit | Kate |
