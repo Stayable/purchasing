@@ -14,7 +14,7 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 ## Top Priorities — Active Sprint (refreshed 05/29/26)
 
 **Done this session (05/30/26):**
-- ✅ Built local orientation infographic `ProcurementProcessInfographic_RISE8_053026.html` (root) — self-contained HTML one-pager from `Zoho_Architecture.md`: the model, 5-stage workflow, FL gates, roles, built/partial/proposed/on-hold status board. Local learning artifact, **not** a Vercel deploy file. Committed to `main` (`7f48fe6`); not pushed.
+- ✅ Built local orientation infographic `infographics/ProcurementProcessInfographic_RISE8_053026.html` — self-contained HTML one-pager from `Zoho_Architecture.md`: the model, 5-stage workflow, FL gates, roles, built/partial/proposed/on-hold status board. Local learning artifact, **not** a Vercel deploy file. Committed to `main` (`7f48fe6`); not pushed.
 
 **Done prior session (05/29/26):**
 - ✅ Created `CRM_Use_Case` firewall field on Accounts (multi-select, required; single→multi recreate) and backfilled all **21** vendor Accounts to `Procurement`.

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is **not a code repository.** It is the working knowledge base and document archive for the **RISE8 Companies / Stayable overseas procurement rollout on Zoho CRM.** Everything here is Markdown specs, HTML tracker artifacts, Excel imports/exports, and one Windows batch launcher. There is no build, no test suite, no linter, no application to run.
 
-### Repository structure (reorganized 05/29/26)
+### Repository structure (reorganized 05/29/26; root tidied 05/30/26)
 
 Docs referenced below by bare filename now live in subfolders — resolve them via this map:
 
@@ -15,8 +15,9 @@ Docs referenced below by bare filename now live in subfolders — resolve them v
 | **root** | Deploy + entry files only: `index.html`, `vercel.json`, `ZohoProcurementTracker_052626.html` (Vercel static deploy — must stay at root), `CLAUDE.md`, `start-claude.bat`, and `Zoho_Architecture.md` (the canonical architecture + CEO proposal, single Rob-facing file) |
 | **`docs/`** | Planning & process: `ZohoCRM_Rollout_052126.md`, `ZohoCRM_Todo_052126.md`, `ProjectInstructions_OverseasProc_052626.md`, `ZohoProcurementProcessGuide_RISE8_052926.md`, `ZohoBuildTracker_NonProfitSales_Kate_052926.md`, `ZohoTaskUpdate_RISE8_052726.md` |
 | **`specs/`** | Module specs: `ZohoModuleSpec_ProcurementItems_052626.md`, `ZohoModuleSpec_ContactTrackingSubform_052926.md`, `ZohoModuleSpec_VendorBids_052926.md` |
-| **`reference/`** | Source inputs: `chart 1.jpg`, `ZohoCRM_VendorList_052626.xlsx` |
+| **`reference/`** | Source inputs & reference: `chart 1.jpg`, `ZohoCRM_VendorList_052626.xlsx`, `NonProfitPartners_ImportSource_053026.csv`, `ProcurementItemsModuleLayout_052826.png` |
 | **`outputs/`** | Zoho import files (org `/outputs` convention) |
+| **`infographics/`** | Standalone HTML visual one-pagers (internal, `noindex`, **not** Vercel deploy files): `ProcurementProcessInfographic_RISE8_053026.html`, `ArchitectureComparison_CurrentVsRob_053026.html` |
 
 > Vercel static deploy depends on `index.html`, `vercel.json`, and `ZohoProcurementTracker_052626.html` staying at root (the `/tracker` rewrite resolves to a root file). Do not move them into subfolders.
 

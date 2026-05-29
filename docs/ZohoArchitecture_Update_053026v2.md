@@ -9,7 +9,7 @@
 
 **Companion artifacts:**
 - Rob's spec, verbatim → `docs/ZohoArchitecture_RobFeedback_053026.md`
-- Visual 3-column comparison → `ArchitectureComparison_CurrentVsRob_053026.html` (Section 05)
+- Visual 3-column comparison → `infographics/ArchitectureComparison_CurrentVsRob_053026.html` (Section 05)
 - Consolidation log → `docs/ZohoArchitecture_Feedback_052926.md`
 
 ---

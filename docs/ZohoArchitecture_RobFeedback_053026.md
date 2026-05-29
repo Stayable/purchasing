@@ -6,7 +6,7 @@
 
 **From:** Rob Beyer (CEO) · **Captured by:** Kyle · **Date:** 05/30/26
 **Reviewing against:** `Zoho_Architecture.md` (architecture of record) · `specs/ZohoModuleSpec_ProcurementItems_052626.md` · `specs/ZohoModuleSpec_ContactTrackingSubform_052926.md` · `specs/ZohoModuleSpec_VendorBids_052926.md` (superseded)
-**Side-by-side comparison:** `ArchitectureComparison_CurrentVsRob_053026.html`
+**Side-by-side comparison:** `infographics/ArchitectureComparison_CurrentVsRob_053026.html`
 **Builder analysis / disposition:** pending — to be logged in `ZohoArchitecture_Feedback_052926.md` and routed to Rob's open decision §13 #1.
 
 ---
