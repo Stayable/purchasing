@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Architecture Comparison — Current Design vs. Rob's Build Spec · RISE8 / Stayable</title>
+<style>
+  :root{
+    --ink:#0f1722; --navy:#16243a; --navy2:#1f3350;
+    --slate:#5b6878; --line:#dfe4ea; --paper:#f5f6f8; --card:#ffffff;
+    --gold:#b08d3a;                 /* our track / current design */
+    --rob:#3a5a8c;                  /* Rob's spec */
+    --rob-bg:#e8eef7;
+    --done:#1f7a4d; --done-bg:#e7f3ec;     /* aligned */
+    --partial:#b8772a; --partial-bg:#fbf0e0; /* gap Rob fills */
+    --hold:#9e2b2b; --hold-bg:#f7e7e7;       /* conflict */
+    --dec:#5a4596; --dec-bg:#ece8f6;         /* the decision */
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5;font-size:15px;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px 64px;}
+
+  header{background:linear-gradient(150deg,var(--ink) 0%,var(--navy) 55%,var(--navy2) 100%);
+    color:#fff;padding:34px 0 30px;border-bottom:4px solid var(--gold);}
+  header .wrap{padding-bottom:0;}
+  .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#9fb1c9;font-weight:600;}
+  h1{font-size:29px;line-height:1.15;margin:8px 0 6px;font-weight:700;letter-spacing:-.01em;}
+  .sub{color:#c7d2e0;font-size:15px;max-width:820px;}
+  .meta{margin-top:16px;font-size:12.5px;color:#9fb1c9;display:flex;gap:22px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.12);padding-top:14px;}
+  .meta b{color:#e6ecf4;font-weight:600;}
+
+  .banner{background:var(--dec-bg);border:1px solid #cabfe6;border-left:5px solid var(--dec);
+    border-radius:8px;padding:14px 18px;margin:22px 0 4px;display:flex;gap:14px;align-items:flex-start;}
+  .banner .dot{font-size:18px;line-height:1.2;}
+  .banner b{color:var(--dec);}
+  .banner p{margin:0;font-size:13.5px;color:#3c3357;}
+
+  section{margin-top:40px;}
+  .sec-h{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:18px;}
+  .sec-n{font-size:13px;font-weight:700;color:#fff;background:var(--ink);border-radius:5px;padding:3px 9px;letter-spacing:.04em;}
+  .sec-h h2{font-size:20px;margin:0;font-weight:700;letter-spacing:-.01em;}
+  .sec-h .note{margin-left:auto;font-size:12.5px;color:var(--slate);font-style:italic;}
+  .lead{color:var(--slate);font-size:14.5px;margin:-6px 0 18px;max-width:880px;}
+
+  /* legend */
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:-4px 0 20px;font-size:12.5px;}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .chip{width:13px;height:13px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.12);}
+  .chip.ok{background:var(--done);} .chip.gap{background:var(--partial);}
+  .chip.con{background:var(--hold);} .chip.dec{background:var(--dec);}
+
+  /* two-system diagram */
+  .stacks{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .stack{border-radius:11px;overflow:hidden;border:1px solid var(--line);background:var(--card);box-shadow:0 1px 2px rgba(15,23,34,.04);}
+  .stack .cap{padding:12px 16px;font-weight:700;font-size:14.5px;color:#fff;display:flex;align-items:center;justify-content:space-between;}
+  .stack.cur .cap{background:linear-gradient(120deg,#7a6225,var(--gold));}
+  .stack.rob .cap{background:linear-gradient(120deg,#2b436b,var(--rob));}
+  .stack .cap small{font-weight:600;font-size:11px;opacity:.85;letter-spacing:.04em;}
+  .stack .body{padding:16px;}
+  .node{border:1px solid var(--line);border-radius:9px;padding:11px 13px;margin-bottom:0;background:#fff;}
+  .node .nl{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--slate);font-weight:700;}
+  .node h4{margin:3px 0 4px;font-size:14.5px;}
+  .node p{margin:0;font-size:12px;color:#3a4656;}
+  .node .st{display:inline-block;font-size:10.5px;font-weight:700;border-radius:4px;padding:1px 7px;margin-top:6px;}
+  .st.live{background:var(--done-bg);color:var(--done);}
+  .st.spec{background:var(--partial-bg);color:var(--partial);}
+  .st.new{background:var(--rob-bg);color:var(--rob);}
+  .st.gone{background:#eee;color:#888;text-decoration:line-through;}
+  .lnk{text-align:center;color:#b8c0cc;font-weight:700;font-size:16px;padding:5px 0;}
+  .lnk small{display:block;font-size:10px;color:var(--slate);font-weight:600;letter-spacing:.03em;text-transform:uppercase;}
+  .cur .node{border-left:3px solid var(--gold);}
+  .rob .node{border-left:3px solid var(--rob);}
+
+  /* layer comparison table */
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;font-size:13px;}
+  thead th{background:var(--ink);color:#fff;text-align:left;padding:10px 12px;font-size:12px;letter-spacing:.03em;font-weight:600;}
+  thead th.cur{background:#7a6225;} thead th.rob{background:#2b436b;}
+  tbody td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:top;}
+  tbody tr:nth-child(even){background:#fafbfc;}
+  td .layer{font-weight:700;}
+  .verdict{font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap;display:inline-block;}
+  .v-ok{background:var(--done-bg);color:var(--done);border:1px solid #bfe0cd;}
+  .v-con{background:var(--hold-bg);color:var(--hold);border:1px solid #e3bcbc;}
+  .v-dec{background:var(--dec-bg);color:var(--dec);border:1px solid #cabfe6;}
+
+  /* field-diff two col */
+  .diff{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .diffcol{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:15px 16px;}
+  .diffcol.cur{border-top:4px solid var(--gold);}
+  .diffcol.rob{border-top:4px solid var(--rob);}
+  .diffcol h3{margin:0 0 3px;font-size:15px;}
+  .diffcol .desc{font-size:12px;color:var(--slate);margin:0 0 11px;}
+  .fl{font-size:12.5px;color:#3a4656;margin:0;padding:0;list-style:none;}
+  .fl li{padding:4px 0;border-top:1px dotted var(--line);}
+  .fl li:first-child{border-top:none;}
+  .fl .add{color:var(--partial);font-weight:600;}
+  .fl .add::before{content:"➕ ";}
+  .fl .only{color:var(--gold);font-weight:600;}
+  .fl .only::before{content:"◆ ";}
+  .tagrow{font-size:10.5px;color:var(--slate);margin-top:10px;border-top:1px solid var(--line);padding-top:8px;}
+
+  /* assessment cards */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .acard{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 15px;border-top:4px solid var(--line);}
+  .acard.gap{border-top-color:var(--partial);}
+  .acard.con{border-top-color:var(--hold);}
+  .acard.flag{border-top-color:var(--dec);}
+  .acard h3{margin:0 0 8px;font-size:14px;display:flex;align-items:center;gap:7px;}
+  .acard.gap h3{color:var(--partial);} .acard.con h3{color:var(--hold);} .acard.flag h3{color:var(--dec);}
+  .acard ul{margin:0;padding-left:17px;font-size:12.5px;color:#3a4656;}
+  .acard li{margin-bottom:6px;}
+  .acard li b{color:var(--ink);}
+
+  /* 3-column final plan table */
+  .final{font-size:12px;}
+  .final thead th{vertical-align:bottom;}
+  .final th.e{background:var(--ink);width:15%;}
+  .final th.o{background:#6b7685;width:25%;}
+  .final th.r{background:#2b436b;width:25%;}
+  .final th.f{background:#1a6a43;width:35%;}
+  .final tbody td{font-size:12px;}
+  .final td.el{font-weight:700;color:var(--ink);}
+  .final td.o,.final td.r{color:#46535f;}
+  .final td.fin{background:#f1f8f3;border-left:3px solid var(--done);color:#22332a;}
+  .ftag{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:3px;padding:1px 6px;margin-top:6px;}
+  .ftag.keep{background:#f3ecda;color:#7a6225;}
+  .ftag.adopt{background:var(--rob-bg);color:var(--rob);}
+  .ftag.merge{background:var(--done-bg);color:var(--done);}
+  .ftag.flag{background:var(--dec-bg);color:var(--dec);}
+  .taglegend{display:flex;flex-wrap:wrap;gap:14px;margin:-4px 0 16px;font-size:11.5px;color:var(--slate);}
+
+  /* recommendation */
+  .rec{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:9px;padding:6px 20px;}
+  .rec li{padding:11px 0;border-top:1px solid var(--line);font-size:13.5px;}
+  .rec li:first-child{border-top:none;}
+  .rec b{color:var(--ink);}
+  .rec .keep{color:var(--done);font-weight:700;}
+  .rec .take{color:var(--partial);font-weight:700;}
+  .rec .drop{color:var(--hold);font-weight:700;}
+
+  footer{margin-top:46px;border-top:2px solid var(--ink);padding-top:14px;font-size:11.5px;color:var(--slate);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+
+  @media (max-width:820px){
+    .stacks,.diff,.cards{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+  }
+  @media print{
+    body{background:#fff;font-size:12px;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    header{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    section{break-inside:avoid;} .wrap{max-width:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">RISE8 Companies · Stayable — Zoho CRM Procurement</div>
+    <h1>Architecture Comparison: Current Design vs. Rob's Build Spec</h1>
+    <p class="sub">Side-by-side of the proposed architecture-of-record against Rob's 05/30 three-module build spec. What aligns, what conflicts, what Rob's spec fixes, and the one fork that needs his call — input for open decision §13&nbsp;#1.</p>
+    <div class="meta">
+      <span><b>From:</b> Rob Beyer (build spec) · Kyle (analysis)</span>
+      <span><b>Org verified:</b> Zoho Professional · 3 seats · USD base</span>
+      <span><b>As of:</b> 05/30/26</span>
+      <span><b>Status:</b> Pre-approval — nothing built</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="banner">
+    <span class="dot">🔵</span>
+    <p><b>Bottom line:</b> Rob's "Quotes module" is — structurally — the <code>Vendor_Bids</code> child module the team shelved on 05/29 in favor of a subform, now <i>re-derived and improved</i> (landed-cost formula, per-quote spec-sheet upload, certifications). His requirements now hit the exact triggers our own spec named for reviving it. The item layer he describes is what we already built. Two pieces collide with the current architecture, and one of his cautions doesn't hold for our org. <b>Do not build — this is decision input.</b></p>
+  </div>
+
+  <!-- 1. SIDE BY SIDE STACKS -->
+  <section>
+    <div class="sec-h"><span class="sec-n">01</span><h2>The two stacks, layer for layer</h2><span class="note">3 layers · Vendor → Item → Bid/Quote</span></div>
+    <div class="stacks">
+
+      <div class="stack cur">
+        <div class="cap">Current design (architecture of record) <small>Zoho_Architecture.md · 05/29</small></div>
+        <div class="body">
+          <div class="node"><div class="nl">Vendor layer</div><h4>Accounts</h4><p>Vendors = Accounts behind the required <code>CRM Use Case</code> firewall. <code>Vendor_Type</code> field.</p><span class="st live">✅ 21 vendors live</span></div>
+          <div class="lnk"><small>linked as related list</small>↓</div>
+          <div class="node"><div class="nl">Item layer</div><h4>Procurement_Items (custom)</h4><p>19 custom fields · 10-stage pipeline (Spec→…→Approved). <code>Winning_Vendor</code> lookup → <b>Accounts</b>. Decision in <code>Decision_Notes</code>.</p><span class="st live">✅ Module live (held)</span></div>
+          <div class="lnk"><small>bids captured inline</small>↓</div>
+          <div class="node"><div class="nl">Bid layer</div><h4>Contact_Tracking subform</h4><p>One row per vendor/contact: Outreach Status, quoted price, MOQ, lead time, Incoterm, sample. Trade-show fallback text.</p><span class="st spec">🔸 Spec — not built</span></div>
+          <div class="lnk"><small>rejected alternative</small>↓</div>
+          <div class="node"><div class="nl">Bid layer (alt)</div><h4>Vendor_Bids child module</h4><p>Per-bid records. Designed, then shelved for the lighter subform.</p><span class="st gone">superseded 05/29</span></div>
+        </div>
+      </div>
+
+      <div class="stack rob">
+        <div class="cap">Rob's build spec <small>05/30 · "build Vendors → Items → Quotes"</small></div>
+        <div class="body">
+          <div class="node"><div class="nl">Module 1 · Vendor layer</div><h4>native Vendors module</h4><p>Zoho's stock Vendors + 5 custom fields (Country of Origin, Vendor Vetted, Existing Supplier, Default Payment Terms, Notes). Links to POs downstream.</p><span class="st new">⚠ different from current</span></div>
+          <div class="lnk"><small>parent lookup</small>↑</div>
+          <div class="node"><div class="nl">Module 2 · Item layer</div><h4>Procurement Items</h4><p>Deals/Potentials <i>or</i> custom. Lean: Item Name, Property, Category, Target Qty, Sourcing Status, Decision Notes. <code>Awarded Vendor</code> lookup → <b>Quotes</b>.</p><span class="st new">~ matches our custom module</span></div>
+          <div class="lnk"><small>parent lookup</small>↑</div>
+          <div class="node"><div class="nl">Module 3 · Quote layer</div><h4>Quotes (new custom module)</h4><p>One record per vendor offer. ~25 fields: pricing + <b>landed-cost formulas</b>, delivery, full specs, per-quote <b>Spec Sheet upload</b>, certifications, diligence. Kanban + grouped report.</p><span class="st new">🆕 the comparison layer</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 2. LAYER VERDICT TABLE -->
+  <section>
+    <div class="sec-h"><span class="sec-n">02</span><h2>Layer-by-layer verdict</h2></div>
+    <div class="legend">
+      <span><i class="chip ok"></i> Aligned</span>
+      <span><i class="chip con"></i> Conflicts with current architecture</span>
+      <span><i class="chip dec"></i> The open decision</span>
+    </div>
+    <table>
+      <thead><tr><th style="width:14%">Layer</th><th class="cur" style="width:31%">Current design</th><th class="rob" style="width:31%">Rob's spec</th><th style="width:24%">Verdict</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="layer">Vendor</td>
+          <td><b>Accounts</b> + <code>CRM Use Case</code> firewall (21 live). Native Vendors module turned <b>off</b> as sprawl.</td>
+          <td><b>Native Vendors module</b> + 5 custom fields. Links to Purchase Orders downstream.</td>
+          <td><span class="verdict v-con">⚠ Conflict</span><br><span style="font-size:11.5px;color:var(--slate)">Swapping loses the shared-Accounts firewall Kate's track also relies on. Genuine fork → Rob.</span></td>
+        </tr>
+        <tr>
+          <td class="layer">Item</td>
+          <td><b>Procurement_Items</b> custom module — built, 19 fields, 10-stage pipeline.</td>
+          <td>"Deals/Potentials <i>or</i> custom" — lean 7-field item; <code>Awarded Vendor</code> → Quotes.</td>
+          <td><span class="verdict v-ok">✓ Aligned (his option B)</span><br><span style="font-size:11.5px;color:var(--slate)">Keep custom — Deals is reserved for Kate's Non-Profit pipeline. His Award→Quote lookup is cleaner than ours.</span></td>
+        </tr>
+        <tr>
+          <td class="layer">Bid / Quote</td>
+          <td><b>Contact_Tracking subform</b> (chosen). <code>Vendor_Bids</code> child module rejected 05/29.</td>
+          <td><b>Quotes custom module</b> — rich, landed-cost formulas, per-quote files, Kanban, grouped report.</td>
+          <td><span class="verdict v-dec">◆ The decision (§13 #1)</span><br><span style="font-size:11.5px;color:var(--slate)">Rob's Quotes ≈ the shelved Vendor_Bids, improved. His asks now justify the heavier path.</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 3. FIELD DIFF AT THE BID LAYER -->
+  <section>
+    <div class="sec-h"><span class="sec-n">03</span><h2>Where they really diverge — the bid/quote layer</h2><span class="note">same job, different center of gravity</span></div>
+    <p class="lead">Both capture "Vendor 1 / 2 / 3 with their own status &amp; terms" — which answers Rob's "track where we are with each contact" complaint. The split: our subform leans <b>contact-relationship</b>; Rob's Quotes leans <b>commercial comparison</b>, and adds the landed-cost math neither current option computes.</p>
+    <div class="diff">
+      <div class="diffcol cur">
+        <h3>Current — Contact_Tracking subform</h3>
+        <p class="desc">Inline rows on the item. Lighter; relationship-oriented.</p>
+        <ul class="fl">
+          <li>Contact (lookup) + Contact Name fallback</li>
+          <li class="only">Email · Phone · Role</li>
+          <li>Outreach Status (color-coded lane)</li>
+          <li class="only">Last Contact · Next Step · Next Step Date</li>
+          <li>Quoted Unit Price · MOQ · Lead Time</li>
+          <li>Incoterm · Sample Status · Notes</li>
+        </ul>
+        <div class="tagrow"><b>Can't:</b> per-row file attachment · per-row Kanban · per-row reporting · time-triggered per-vendor reminders · landed-cost math</div>
+      </div>
+      <div class="diffcol rob">
+        <h3>Rob — Quotes module</h3>
+        <p class="desc">One record per offer. Heavier; comparison-oriented.</p>
+        <ul class="fl">
+          <li>Quote Status · Date Received · Vendor + Item lookups</li>
+          <li>Unit Price · Currency · Order Qty · MOQ · Price Breaks</li>
+          <li class="add">Freight · Duty/Tariff · Inspection cost</li>
+          <li class="add">Total Landed Cost + Landed Cost/Unit (formulas)</li>
+          <li class="add">Ship Mode · Port of Origin · Sample Lead Time</li>
+          <li class="add">Spec Match · Material · Dimensions</li>
+          <li class="add">Certifications (multi-select) · Spec Sheet (file upload)</li>
+          <li class="add">Warranty · Risk Notes</li>
+        </ul>
+        <div class="tagrow"><b>Can:</b> per-quote spec-sheet PDF · Kanban by status · grouped report sorted by landed cost · award workflow. <b>Lacks:</b> the per-contact Email/Phone/Next-Step relationship fields (those sit on Vendor).</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. ASSESSMENT -->
+  <section>
+    <div class="sec-h"><span class="sec-n">04</span><h2>What Rob fixes · what conflicts · what to flag</h2></div>
+    <div class="cards">
+      <div class="acard gap">
+        <h3>➕ Gaps Rob's spec fixes</h3>
+        <ul>
+          <li><b>Landed cost math</b> — unit×qty + freight + duty + inspection → per-unit comparator. This <i>is</i> our Stage 3 "Level"; neither current option computes it.</li>
+          <li><b>Per-quote spec-sheet upload</b> — each vendor's quote PDF on its own record.</li>
+          <li><b>Certifications</b> (BIFMA/CARB/Fire/ANSI) structured — absent in current.</li>
+          <li><b>Kanban + grouped report</b> sorted by landed cost — the real comparison view.</li>
+          <li><b>Award = one Quote record</b>, structurally enforced (cleaner than our Account lookup).</li>
+        </ul>
+      </div>
+      <div class="acard con">
+        <h3>⚠ Conflicts with current</h3>
+        <ul>
+          <li><b>Native Vendors module</b> — current keeps Vendors = Accounts behind the firewall (21 live). Swapping loses the firewall that separates Procurement / Non-Profit / Vendor-Selection.</li>
+          <li><b>Item on Deals/Potentials</b> — Deals is reserved for Kate's Non-Profit Placements pipeline; putting procurement there re-collides them. (His custom-module option avoids this.)</li>
+          <li><b>Loses subform's relationship fields</b> — Email/Phone/Next-Step per contact unless re-homed on Vendor.</li>
+        </ul>
+      </div>
+      <div class="acard flag">
+        <h3>◆ Flags to confirm</h3>
+        <ul>
+          <li><b>Property "2900"</b> in Rob's picklist is <b>not</b> in our 8-property canon (4645, 2295, 6802, 812, 5399, 2535, 44199, 8700). New property or typo? Not invented.</li>
+          <li><b>Caution #1 is wrong for us</b> — "custom modules need Enterprise" is contradicted by our live <code>Procurement_Items</code> custom module on <b>Professional</b>. Capability proven; only verify the custom-module <i>count cap</i>.</li>
+          <li><b>Currency caution is right</b> — matches our USD base; quote in USD or add a manual USD field.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. PROPOSED FINAL PLAN (3-COLUMN) -->
+  <section>
+    <div class="sec-h"><span class="sec-n">05</span><h2>Proposed final design</h2><span class="note">Original · Rob's · Recommended final</span></div>
+    <p class="lead">The design we'd take to Rob: keep what protects Kate's track and our SOP scaffolding, adopt Rob's comparison layer + landed-cost math, and put suppliers in the native Vendors module Rob already enabled. Decision points row by row — the right-hand column is the build target.</p>
+    <div class="taglegend">
+      <span><span class="ftag keep">keep</span> from current design</span>
+      <span><span class="ftag adopt">adopt Rob</span> take Rob's spec</span>
+      <span><span class="ftag merge">merge</span> combine both</span>
+      <span><span class="ftag flag">flag</span> confirm before build</span>
+    </div>
+    <table class="final">
+      <thead><tr>
+        <th class="e">Design element</th>
+        <th class="o">① Original (architecture of record)</th>
+        <th class="r">② Rob's build spec</th>
+        <th class="f">③ Recommended final</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="el">Supplier master</td>
+          <td class="o">Accounts + <code>CRM Use Case</code> firewall · 21 vendors live</td>
+          <td class="r">Native <b>Vendors</b> module (links to POs downstream)</td>
+          <td class="fin">Native <b>Vendors</b> module (already enabled, Rob touched 04/15). Migrate the 21 held vendor Accounts in. Accounts + firewall <b>retained</b> for Non-Profit + Track-3 counterparties.<br><span class="ftag adopt">adopt Rob</span></td>
+        </tr>
+        <tr>
+          <td class="el">Vendor diligence fields</td>
+          <td class="o"><code>Vendor_Type</code> only</td>
+          <td class="r">Country of Origin · Vendor Vetted · Existing Supplier · Default Payment Terms · Vendor Notes</td>
+          <td class="fin">All 5 of Rob's on the Vendor layout; carry <code>Vendor_Type</code> over.<br><span class="ftag adopt">adopt Rob</span></td>
+        </tr>
+        <tr>
+          <td class="el">Item home module</td>
+          <td class="o"><b>Procurement_Items</b> custom — built, live</td>
+          <td class="r">Deals/Potentials <i>or</i> custom</td>
+          <td class="fin"><b>Procurement_Items</b> custom — <b>not</b> Deals (Deals is Kate's Non-Profit pipeline).<br><span class="ftag keep">keep</span></td>
+        </tr>
+        <tr>
+          <td class="el">Item field depth</td>
+          <td class="o">19 fields: HTS, tariff, FL-validation, spend tier, Approver, SharePoint link, Stage (10-value)</td>
+          <td class="r">Lean 7: Item Name, Property, Category, Target Qty, Sourcing Status, Awarded Vendor, Decision Notes</td>
+          <td class="fin">Keep our depth (HTS / tariff / FL / approver / SharePoint / Stage) <b>+ add</b> Rob's Target Qty &amp; Sourcing Status. Awarded Vendor → Quotes.<br><span class="ftag merge">merge</span></td>
+        </tr>
+        <tr>
+          <td class="el">Florida validation gates</td>
+          <td class="o">On item — Stage 4 + <code>Florida_Validation_Status</code></td>
+          <td class="r">Not addressed</td>
+          <td class="fin">Keep on item — core to the SOP (humidity / salt air / hurricane / 120V-UL).<br><span class="ftag keep">keep</span></td>
+        </tr>
+        <tr>
+          <td class="el">Approval routing</td>
+          <td class="o">Approver picklist by spend tier (&lt;$25K / $25–100K / &gt;$100K)</td>
+          <td class="r">Not addressed</td>
+          <td class="fin">Keep spend-tier approver routing.<br><span class="ftag keep">keep</span></td>
+        </tr>
+        <tr>
+          <td class="el">Bid / quote capture</td>
+          <td class="o">Contact_Tracking subform (spec, unbuilt); Vendor_Bids module rejected</td>
+          <td class="r">Quotes custom module (~25 fields)</td>
+          <td class="fin"><b>Build the Quotes child module</b> — supersede the subform. One record per vendor offer.<br><span class="ftag adopt">adopt Rob</span></td>
+        </tr>
+        <tr>
+          <td class="el">Landed-cost math</td>
+          <td class="o">None — manual <code>Quoted_Total</code></td>
+          <td class="r">Total Landed Cost + Landed Cost/Unit formulas</td>
+          <td class="fin">Adopt Rob's formulas — this is the Stage-3 "Level" comparator we were missing.<br><span class="ftag adopt">adopt Rob</span></td>
+        </tr>
+        <tr>
+          <td class="el">Per-quote attachments</td>
+          <td class="o">Subform can't attach per row</td>
+          <td class="r">Spec Sheet file upload per quote</td>
+          <td class="fin">Per-quote Spec Sheet upload — a child-module capability the subform lacked.<br><span class="ftag adopt">adopt Rob</span></td>
+        </tr>
+        <tr>
+          <td class="el">Certifications</td>
+          <td class="o">Unstructured (free text)</td>
+          <td class="r">Multi-select: BIFMA / CARB / Fire-Rated / ANSI / None</td>
+          <td class="fin">Multi-select on the Quote record.<br><span class="ftag adopt">adopt Rob</span></td>
+        </tr>
+        <tr>
+          <td class="el">Award (one winner)</td>
+          <td class="o"><code>Winning_Vendor</code> → Accounts, set manually</td>
+          <td class="r"><code>Awarded Vendor</code> → Quotes + status workflow</td>
+          <td class="fin">Awarded Vendor → the winning <b>Quote record</b> (structurally one winner) + award-stamping workflow.<br><span class="ftag adopt">adopt Rob</span></td>
+        </tr>
+        <tr>
+          <td class="el">Conversations / contacts</td>
+          <td class="o">Activities logged on the item (single timeline)</td>
+          <td class="r">Vendor + Contact on each quote; not addressed at item level</td>
+          <td class="fin">Keep Activities on the item for the timeline; per-vendor status lives on each Quote.<br><span class="ftag keep">keep</span></td>
+        </tr>
+        <tr>
+          <td class="el">Comparison view</td>
+          <td class="o">Subform report + "Stale &gt;14d" saved view</td>
+          <td class="r">Grouped report sorted by Landed Cost/Unit + Kanban by Quote Status</td>
+          <td class="fin">Adopt Rob's grouped report (sort by landed cost/unit asc) + Kanban on Quote Status.<br><span class="ftag adopt">adopt Rob</span></td>
+        </tr>
+        <tr>
+          <td class="el">PO handling</td>
+          <td class="o"><code>PO_Number</code> + <code>PO_Status</code> on item + attached PDF</td>
+          <td class="r">Not addressed (native Vendors links to native POs)</td>
+          <td class="fin">Keep field-based PO + attached PDF. Native PO module stays <b>off</b> (anti-sprawl).<br><span class="ftag keep">keep</span></td>
+        </tr>
+        <tr>
+          <td class="el">Currency</td>
+          <td class="o">USD-only price field</td>
+          <td class="r">Quote in USD or add manual USD field (cross-module conversion unreliable)</td>
+          <td class="fin">Standardize quotes to USD (or a manual USD Unit Price feeding the formula).<br><span class="ftag adopt">adopt Rob</span></td>
+        </tr>
+        <tr>
+          <td class="el">Property picklist</td>
+          <td class="o">8-property canon + Portfolio-wide</td>
+          <td class="r">Adds <b>2900</b> (not in our canon)</td>
+          <td class="fin">8-property canon. <b>2900 = OPEN</b> — confirm new property vs. typo with Rob before building the picklist.<br><span class="ftag flag">flag</span></td>
+        </tr>
+        <tr>
+          <td class="el">Track 3 clone path</td>
+          <td class="o">Clone Procurement_Items pattern later</td>
+          <td class="r">3-module pattern is inherently cloneable</td>
+          <td class="fin">Clone the <b>Item + Quotes</b> pattern. Track-3 counterparties (attorneys/GCs) stay in <b>Accounts</b> — professionals aren't suppliers.<br><span class="ftag keep">keep</span></td>
+        </tr>
+        <tr>
+          <td class="el">Edition / module count</td>
+          <td class="o">Professional; Procurement_Items custom live</td>
+          <td class="r">Cautioned "needs Enterprise" — incorrect for us</td>
+          <td class="fin">Professional confirmed (verified 05/30). Quotes = 2nd custom module (+ Track 3 later = 3). <b>Verify the Professional custom-module count cap.</b><br><span class="ftag flag">flag</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 6. RECOMMENDATION -->
+  <section>
+    <div class="sec-h"><span class="sec-n">06</span><h2>Recommended synthesis</h2><span class="note">take the good half · reject the two collisions · route the fork to Rob</span></div>
+    <ol class="rec">
+      <li><span class="keep">KEEP</span> &nbsp;<b>Procurement_Items custom module</b> — don't move to Deals (protects Kate's Non-Profit pipeline).</li>
+      <li><span class="keep">KEEP</span> &nbsp;<b>Vendors = Accounts</b> behind the firewall; add Rob's 5 vendor fields to the Account vendor layout instead of standing up native Vendors. <i>(This is the one genuine fork — Rob's call.)</i></li>
+      <li><span class="take">TAKE</span> &nbsp;<b>Build the Quotes child module</b> (= evolved Vendor_Bids) instead of the subform — its per-quote spec-sheet upload, landed-cost formulas, Kanban, and grouped report are now requirements, not nice-to-haves.</li>
+      <li><span class="take">TAKE</span> &nbsp;Point <b>Awarded Vendor → the Quote record</b>, and build Rob's award-stamping workflow.</li>
+      <li><span class="drop">CONFIRM</span> &nbsp;Resolve <b>Property 2900</b> before any picklist; ignore the Enterprise caution (verify only the Professional module-count cap).</li>
+    </ol>
+  </section>
+
+  <footer>
+    <span>Source: <b>docs/ZohoArchitecture_RobFeedback_053026.md</b> (Rob's spec verbatim) · <b>Zoho_Architecture.md</b> §13 (open decisions) · org verified live 05/30/26. <i>Nothing built — production on hold.</i></span>
+    <span>RISE8 Companies · Stayable · Internal — not for distribution</span>
+  </footer>
+
+</div>
+</body>
+</html>
