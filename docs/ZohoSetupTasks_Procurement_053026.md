@@ -22,8 +22,8 @@ Prepared: 05/30/26 · Last Updated: 2026-05-30
 | P | Task | Owner | Status | Risk | Notes |
 |---|---|---|---|---|---|
 | **P1** | Write `WorkflowRulesSpec_ProcurementItems` — map all 5 SOP rules to correct Zoho object (validation vs workflow), exact criteria, error text, prerequisites | Kyle | 🟢 | 🟩 | Paper artifact; becomes the build checklist. Rules 1–3 = **validation rules** (manual Settings, no MCP path); rule 4 = stale-bid alert (🔴 P6); rule 5 = spend-tier (🔴 P7). |
-| **P2** | Relabel `PO_Number` field → "PO Number" (drop underscore) | Kyle | 🟢 | 🟩 | Cosmetic, 2 min in Settings. |
-| **P3** | `/tracker` UI polish in demo mode (Vercel) | Kyle | 🟢 | 🟩 | No live writes; safe. |
+| ~~P2~~ | Relabel `PO_Number` field → "PO Number" (drop underscore) | Kyle | ✅ 05/30 | 🟩 | Verified live: labels now "PO Number" / "PO Status". |
+| ~~P3~~ | `/tracker` UI polish in demo mode (Vercel) | Kyle | ✅ 05/30 | 🟩 | Spend tiers labeled placeholder (pending DOA); stale Deal refs cleaned. UI was already well-built. |
 | **P4** | Account/Contact hygiene | Kyle/Jeff | 🟢 | 🟩 | (a) Delete **GP Batteries Inc** + its contact — Jefferson approved; **manual UI** (MCP has no delete). (b) Decide leftover empty **"Batteries"** stub. (c) **Guangdong Yongcheng** `Vendor_Type` blank — needs Jefferson's value. (d) **Helen Chan** orphan contact — leave per Jefferson. |
 
 ---

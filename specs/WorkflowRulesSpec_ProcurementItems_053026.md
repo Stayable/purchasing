@@ -50,7 +50,7 @@ Prepared: 05/30/26 · Last Updated: 2026-05-30
 ## R5 — Spend-tier approver suggestion (WORKFLOW RULE)
 - **Object:** Workflow Rule, `field_update` trigger on `Estimated_Item_Level_Spend`.
 - **Intent:** suggest `Approver` by spend tier; **manual confirm** (don't hard-set).
-- **Blocker:** **spend tiers are undefined** — the thresholds and which approver per tier are a Rob/process decision that does not exist yet. Cannot build criteria without them.
+- **Blocker:** spend tiers exist only as a **placeholder** in `ProjectInstructions_OverseasProc_052626.md` §Approval routing, explicitly marked *"confirm against current DOA matrix"*: **<$25K → COO** · **$25K–$100K → CEO (Rob) + physical sample** · **>$100K → CEO + Investment Committee + sample + pre-production inspection**. Candidate values are known, but Rob must **confirm them against the DOA matrix** before they're hard-coded into automation. (The live tracker now labels these as placeholder, 05/30.)
 - **Design once tiers exist:** either (a) field-update conditions setting a **new `Suggested_Approver` field** (prereq, doesn't exist) per tier, leaving `Approver` for Jefferson to confirm; or (b) a notification "Spend = $X → suggested approver: Y."
 - **Build path:** MCP `postWorkflowRule` (field_update trigger + field_updates action) once tiers + `Suggested_Approver` field exist.
 - **Status:** 🔴 Blocked — needs spend-tier definition (tracker P7); `Suggested_Approver` field manual.
@@ -64,6 +64,6 @@ Prepared: 05/30/26 · Last Updated: 2026-05-30
 | R2 FL-validation gate | Validation | ❌ manual | hold | P9 |
 | R3 winning-vendor gate | Validation | ❌ manual | hold | P9 |
 | R4 stuck-at-Bid alert | Workflow (date) | ⚠️ partial (needs field + email notif) | Rob §13 #1 | P6 |
-| R5 spend-tier approver | Workflow (field_update) | ⚠️ partial (needs tiers + field) | spend tiers undefined | P7 |
+| R5 spend-tier approver | Workflow (field_update) | ⚠️ partial (needs field) | placeholder tiers pending Rob DOA confirm | P7 |
 
-**Net:** nothing here deploys today. R1–R3 wait on the hold and are manual Settings work. R4 waits on Rob's bidding ruling. R5 waits on Rob/process defining spend tiers. **Two prerequisite fields** (`Bid_Entered_Date`, `Suggested_Approver`) and **one email notification** must be created before R4/R5 — surface the spend tiers to Rob as a Jefferson-informed recommendation.
+**Net:** nothing here deploys today. R1–R3 wait on the hold and are manual Settings work. R4 waits on Rob's bidding ruling. R5 waits on Rob confirming the placeholder spend tiers against the DOA matrix. **Two prerequisite fields** (`Bid_Entered_Date`, `Suggested_Approver`) and **one email notification** must be created before R4/R5 — surface the spend tiers to Rob as a Jefferson-informed recommendation.

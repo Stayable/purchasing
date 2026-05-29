@@ -2,6 +2,8 @@
 <!-- Zoho is the system of record. Items = Procurement_Items custom module records moving through the 5-stage SOP. -->
 <!-- Vendors = Accounts linked to Procurement_Items. Activities = notes/tasks on the Procurement_Items record. -->
 <!-- Updated 05/28/26: repointed from Deals (pre-pivot architecture) to Procurement_Items (post-05/27 pivot). -->
+<!-- Updated 05/30/26: spend-approval tiers labeled PLACEHOLDER (pending DOA-matrix confirmation per ProjectInstructions); stale "(DEAL)" comment corrected to Procurement_Items. -->
+
 <!-- DEMO MODE: client-side API calls require a backend proxy that does not exist yet — see Phase 0.5 decision (06/21/26). -->
 
 <meta charset="UTF-8">
@@ -841,7 +843,7 @@ document.querySelectorAll('.tab').forEach(tab => {
 });
 
 // ==========================================================================
-//  SPEND INDICATOR (approval routing per SOP)
+//  SPEND INDICATOR (approval routing — PLACEHOLDER per SOP, pending DOA matrix confirmation)
 // ==========================================================================
 document.getElementById('ni-spend').addEventListener('input', (e) => {
   const v = parseFloat(e.target.value);
@@ -851,7 +853,7 @@ document.getElementById('ni-spend').addEventListener('input', (e) => {
   if (v < 25000) tier = '<b>UNDER $25K</b> → Approver: COO';
   else if (v < 100000) tier = '<b>$25K – $100K</b> → Approver: CEO (Robert Beyer) + physical sample required';
   else tier = '<b>OVER $100K</b> → Approver: CEO + Investment Committee + sample + pre-production inspection plan';
-  ind.innerHTML = tier;
+  ind.innerHTML = tier + '<br><span style="color:var(--text-faint);">⚠ Placeholder routing — pending confirmation against the DOA matrix (Rob).</span>';
   ind.classList.add('show');
 });
 
@@ -1059,7 +1061,7 @@ document.getElementById('log-btn').addEventListener('click', async () => {
   }
 });
 
-// --- 04 · NEW ITEM (DEAL) ---
+// --- 04 · NEW ITEM (PROCUREMENT_ITEMS) ---
 document.getElementById('ni-btn').addEventListener('click', async () => {
   const name = document.getElementById('ni-name').value.trim();
   const category = document.getElementById('ni-category').value;
@@ -1095,7 +1097,7 @@ document.getElementById('ni-btn').addEventListener('click', async () => {
     `\n\nRecord must be created with Stage = "Spec" (the first stage of our 5-stage workflow: Spec → Bid → Level → FL-Validate → Recommend). ` +
     `\nDefaults to also set: Spec_Sheet_Status = "Not Started", Florida_Validation_Status = "Not Yet Reviewed". ` +
     `\n\nFields to set:\n${fieldLines}` +
-    `\n  - Approver: ${approver}` +
+    `\n  - Approver (PLACEHOLDER routing — confirm against the DOA matrix before relying on this): ${approver}` +
     `\n\nBefore creating, check if a ${ZOHO_MODULE} record with this exact Name already exists. If yes, do NOT duplicate — flag it and ask if I want to view the existing one. ` +
     `\n\nReturn: confirmation of the created record with its Zoho record ID/URL, any fields that couldn't be mapped, and a reminder of the SOP next step (Spec Sheet must be built and COO-signed before Stage advances to Bid).`;
 
