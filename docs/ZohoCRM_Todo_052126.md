@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 05/29/26
+**Last Updated:** 05/30/26
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -13,7 +13,10 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 ## Top Priorities — Active Sprint (refreshed 05/29/26)
 
-**Done this session (05/29/26):**
+**Done this session (05/30/26):**
+- ✅ Built local orientation infographic `ProcurementProcessInfographic_RISE8_053026.html` (root) — self-contained HTML one-pager from `Zoho_Architecture.md`: the model, 5-stage workflow, FL gates, roles, built/partial/proposed/on-hold status board. Local learning artifact, **not** a Vercel deploy file. Committed to `main` (`7f48fe6`); not pushed.
+
+**Done prior session (05/29/26):**
 - ✅ Created `CRM_Use_Case` firewall field on Accounts (multi-select, required; single→multi recreate) and backfilled all **21** vendor Accounts to `Procurement`.
 - ✅ Reconciled + renamed Kate's non-profit tracker → `docs/ZohoBuildTracker_NonProfitSales_Kate_052926.md` (stale cross-module assumptions fixed vs live Zoho).
 - ✅ Decided procurement multi-vendor bidding = **`Contact_Tracking` subform** on Procurement_Items (chose over `Vendor_Bids` child module [superseded] and Jefferson's standard-suite guide). Wrote `specs/ZohoModuleSpec_ContactTrackingSubform_052926.md`.
