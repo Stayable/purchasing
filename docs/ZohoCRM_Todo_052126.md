@@ -50,6 +50,8 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 > ✅ **ARCHITECTURE APPROVED (06/02/26).** Rob approved the v2 merged design (`docs/ZohoArchitecture_Update_053026v2.md`). On-approval checklist **done this session:** wrote `specs/ZohoModuleSpec_Quotes_060226.md`; marked the `Contact_Tracking` subform spec superseded; folded v2 into `Zoho_Architecture.md`; logged the decision in `ZohoCRM_Rollout_052126.md`; verified edition = Professional + only 1 custom module live (headroom fine). **Build path is now the `Vendor_Quotes` child module, NOT the subform.**
 >
+> 📋 **Build runbook:** `docs/ZohoBuildWalkthrough_Procurement_060326.md` — tab-by-tab build of all 3 modules + fields + connections + validation/workflow rules + a 3-quote test script + pre-staged MCP payloads. Visual: `infographics/ProcurementProcessV2_RISE8_060326.html` (+ PDF).
+>
 > ⚠️ **Operational hold still applies** (separate from architecture approval): no real data-load, no go-live/onboarding, no live tracker writes, 2FA still open. Held-state build of the approved modules/fields may proceed.
 >
 > ⚠️ **Two items still need Rob before the affected picklist/workflow is built:** (1) **Property `2900`** — not in the 8-property canon; confirm new property vs. typo (do NOT build the value until confirmed). (2) **Stale-bid threshold** — Jefferson says 3 days vs. prior 14; sets the Quote follow-up workflow timer.
@@ -67,6 +69,9 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 10. **[P3]** Replace 20 vendor contact placeholder Last Names (Jefferson follow-up).
 
 **Out of scope this sprint:** Phase 2 sales-team rollout (Bea/Crystal seats + non-profit pipeline; Kate's module-build doesn't trigger this), Phase 3 (Special Projects), Phase 1 email integration (purchasing@ forwarding), Phase 1 Deals-module cleanup (partially obviated by pivot).
+
+**🧪 Sandbox experiments (NOT in the approved plan — do not fold into the architecture):**
+- **Contact Roles evaluation** — `docs/Experiment_ContactRoles_060326.md`. Conclusion: Deals-only, Contacts-not-Vendors, no commercial fields → **does not replace `Vendor_Quotes`**. Parked as a possible Track-3 (Vendor/Professional Selection) tool. Isolated test on the 2 existing test Deals only; touches nothing in procurement.
 
 ---
 
