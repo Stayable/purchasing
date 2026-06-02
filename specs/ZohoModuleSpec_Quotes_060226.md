@@ -29,6 +29,17 @@ Rob's spec and the v2 doc call this "Quotes" colloquially; the **display label c
 
 The rest of this spec uses **`Vendor_Quotes`** as the API name and the field labels Rob specified.
 
+> **✅ DEPLOYED & TESTED 06/02/26.** Module built; 3-quote validation passed (landed-cost formulas + lookups + auto-number confirmed via MCP). **Deployed API names differ from this spec for these fields** (use the deployed names in code/MCP):
+> | Spec name | Deployed API name | Note |
+> |---|---|---|
+> | `MOQ` | `Minimum_Order_Qty` | — |
+> | `Lead_Time_Days` | `Lead_Time_days` | — |
+> | `Sample_Lead_Time_Days` | `Sample_Lead_Time_days` | — |
+> | `Landed_Cost_Per_Unit` | `Landed_Cost_Unit` | formula (Decimal) — verified computing |
+> | `Currency` → `Quote_Currency` | `Currency1` (display label "Quote Currency") | `Currency` was reserved; Zoho auto-suffixed the API to `Currency1`, label corrected to "Quote Currency" |
+> | `Certifications` (Multi-Select) | `Certificates` (**Textarea**) | built as free-text; convert to multi-select picklist if cert filtering is needed |
+> | `Total_Landed_Cost` | `Total_Landed_Cost` | ✓ as specced |
+
 ---
 
 ## Module configuration

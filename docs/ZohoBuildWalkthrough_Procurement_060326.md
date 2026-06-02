@@ -1,6 +1,10 @@
 # Zoho Procurement — Build Walkthrough & Test Runbook
 
-**For:** Kyle (builder) · **Date:** 060326 · **Status:** Build-ready (held-state — no real data load until Rob lifts the operational hold).
+**For:** Kyle (builder) · **Date:** 060326 · **Status:** ✅ **All 3 modules built + 3-quote validation passed 06/02/26** (held-state — no real data load until Rob lifts the operational hold). Remaining: validation-rule gates + award workflow (Deluge).
+
+> **Deployed API names** (differ from the field tables below — use these in MCP/code): `Target_Quantity` (item) · `Minimum_Order_Qty` · `Lead_Time_days` · `Sample_Lead_Time_days` · `Landed_Cost_Unit` · `Currency1` (label "Quote Currency") · `Certificates` (textarea). Module API = `Vendor_Quotes`.
+>
+> **Validation test result (06/02/26):** item TEST_QueenMattress + 3 quotes. Landed Cost/Unit computed **A=57.00 · B=58.00 · C=56.50** — VendorB lowest sticker ($38) but highest landed; VendorC highest sticker ($45) but **wins** on landed cost. Auto-numbers QT-0001/2/3 ✓; both lookups ✓; `Awarded_Vendor` accepted the winning quote ✓. Test records flagged `_DELETE` for manual removal (no MCP delete tool).
 **Architecture of record:** `Zoho_Architecture.md` · `specs/ZohoModuleSpec_Quotes_060226.md` · `specs/ZohoModuleSpec_ProcurementItems_052626.md`
 **Visual:** `infographics/ProcurementProcessV2_RISE8_060326.html` (+ PDF)
 

@@ -45,7 +45,7 @@ Fields are grouped by layout section. Build in this order.
 | API Name | Label | Type | Required | Notes |
 |---|---|---|---|---|
 | `Property_Scope` | Property Scope | Picklist | YES | See picklist values below. |
-| `Target_Qty` | Target Qty | Number (integer) | NO | **[v2]** Intended order quantity. Drives the per-unit landed-cost math on Vendor Quotes (pre-fills each quote's `Order_Quantity`). |
+| `Target_Quantity` | Target Quantity | Number (integer) | NO | **[v2 — deployed 06/02/26 as `Target_Quantity`, label "Target Quantity"]** Intended order quantity. Drives the per-unit landed-cost math on Vendor Quotes (pre-fills each quote's `Order_Quantity`). |
 | `Estimated_Item_Level_Spend` | Estimated Item-Level Spend (USD) | Currency | YES | Drives approval routing. |
 | `US_Baseline_Cost_Unit` | US Baseline Cost / Unit (USD) | Currency | NO | For cost-per-year-of-service comparison at Stage 3 (Level). Not always known at Stage = Spec — kept optional intentionally. |
 | `Approver` | Approver | Picklist | YES | See picklist values below. Set manually based on spend tier. |
