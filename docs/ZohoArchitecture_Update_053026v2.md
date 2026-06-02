@@ -3,7 +3,7 @@
 **To:** Rob Beyer (CEO) · **From:** Kyle Estocapio (Procurement build) · **Date:** 05/30/26
 **Last Updated:** 05/30/26
 
-> 🟡 **STATUS: PROPOSAL — production remains ON HOLD.** This is the recommended final procurement design after reconciling **Rob's 05/30 build spec** against the architecture-of-record. Nothing is built; the held config is unchanged. This file routes to Rob for approval; once approved it folds into `Zoho_Architecture.md` and the decision log in `docs/ZohoCRM_Rollout_052126.md`.
+> 🟢 **STATUS: APPROVED by Rob 06/02/26.** This recommended final procurement design — reconciling **Rob's 05/30 build spec** against the architecture-of-record — is the design of record. Folded into `Zoho_Architecture.md` and logged in `docs/ZohoCRM_Rollout_052126.md` (06/02/26). New module spec written: `specs/ZohoModuleSpec_Quotes_060226.md`. **Architecture approved; the operational hold (real data-load, go-live, 2FA) is a separate decision and still applies until Rob lifts it.** Two items still need Rob: Property `2900` (§5 #3) and the stale-bid threshold.
 
 **Version note:** *v1 = the 05/29 architecture-of-record (`Zoho_Architecture.md`). v2 = this update, incorporating Rob's 05/30 three-module build spec (`docs/ZohoArchitecture_RobFeedback_053026.md`).*
 
@@ -123,7 +123,7 @@ If(${Quotes.Order Quantity} > 0,
 |---|---|
 | `Zoho_Architecture.md` | §5.1 (bidding → Quotes module), §6 (turn native Vendors **On**; note it's already on — the "Off" line is stale), §10/§11 (Vendors module + migration). |
 | `specs/ZohoModuleSpec_ContactTrackingSubform_052926.md` | **Mark superseded** by the Quotes module (it superseded `Vendor_Bids`; v2 reverses to the child-module path). |
-| `specs/ZohoModuleSpec_VendorBids_052926.md` | **Revived & evolved** as the basis for the new `Quotes` spec — write `specs/ZohoModuleSpec_Quotes_053026.md`. |
+| `specs/ZohoModuleSpec_VendorBids_052926.md` | **Revived & evolved** as the basis for the new Quotes spec — ✅ written as `specs/ZohoModuleSpec_Quotes_060226.md` (06/02/26). |
 | `specs/ZohoModuleSpec_ProcurementItems_052626.md` | Add `Target_Qty`; repoint award lookup; retire `Bid_Count`/`Linked Vendors`. |
 | `docs/ZohoCRM_Rollout_052126.md` | New decision-log entry (date 05/30, reasoning, trade-offs) — the audit trail. |
 
@@ -132,6 +132,8 @@ If(${Quotes.Order Quantity} > 0,
 ---
 
 ## 5. Open decisions for Rob
+
+> **Disposition (06/02/26):** #1 Native Vendors — ✅ **approved** (adopt native Vendors; firewall stays for Non-Profit + Track-3). #2 Custom-module count — ✅ **verified** (Professional; 1 custom module live; room for 2–3). #4 `Stage` vs `Sourcing_Status` — ✅ **keep `Stage`** (no `Sourcing_Status`). #5 `Winning_Vendor` — ✅ **add `Awarded_Vendor` (→ Quotes), deprecate `Winning_Vendor`**. #3 Property `2900` — ⚠️ **still open** (Rob to confirm new property vs. typo; not built until confirmed).
 
 1. **Native Vendors vs. Accounts.** Recommend moving procurement suppliers into the native Vendors module (Rob's spec; already enabled). Confirm — this partly retires the 05/29 Accounts firewall *for vendors* (firewall stays for Non-Profit + Track-3).
 2. **Professional custom-module count cap.** We currently have 1 custom module (`Procurement_Items`); Quotes makes 2, Track-3 later makes 3. **Verify** Professional allows this many before building Module 3. *(Not yet confirmed — flagged honestly.)*

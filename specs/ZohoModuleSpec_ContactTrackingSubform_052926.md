@@ -1,5 +1,7 @@
 # Zoho CRM Spec — `Contact_Tracking` Subform on `Procurement_Items`
 
+> ⚠️ **SUPERSEDED 06/02/26** — replaced by the **`Vendor_Quotes` child module** (`specs/ZohoModuleSpec_Quotes_060226.md`). Rob approved the v2 merged architecture (`docs/ZohoArchitecture_Update_053026v2.md`), which reverses the subform decision: his requirements (per-quote spec-sheet attachments, per-quote reporting, landed-cost formula fields, a Kanban, and a per-row award workflow) are exactly the first-class-record capabilities a subform cannot deliver. Multi-vendor bidding is now a child module. This spec is kept for reference only — the trade-offs it documents are why the child module was ultimately chosen. See the decision log in `docs/ZohoCRM_Rollout_052126.md` (06/02/26).
+
 **Purpose:** Inline, per-vendor/per-contact tracking on each Procurement Item — staging, RFQ, quotes, negotiation, award. This is the **chosen design** for the multi-vendor bidding process from the 05/28 meeting. Supersedes the `Vendor_Bids` child-module spec (kept for reference only).
 
 **Owner of build:** Kyle (manual Zoho UI — subforms can't be created via MCP)

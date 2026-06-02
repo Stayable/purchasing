@@ -4,9 +4,11 @@
 
 **Owner of this setup:** Zoho admin (one-time, ~30 min)
 **Date:** 052626
-**Last Updated:** 05/28/26 — API names reconciled to deployed module state. Module is live as of 05/28/26.
+**Last Updated:** 06/02/26 — reconciled to the **v2 approved architecture** (`docs/ZohoArchitecture_Update_053026v2.md`): added `Target_Qty`; added `Awarded_Vendor` (→ Vendor_Quotes) and deprecated `Winning_Vendor`; retired `Bid_Count` + the Linked Vendors related list (superseded by the Vendor Quotes related list). API names previously reconciled 05/28/26.
 
 > **Deployed API names supersede the original spec for 4 fields** (Zoho's 25-char API name cap + system-primary-field convention). All references in code, MCP calls, and the HTML tracker must use the deployed names below. Field labels remain unchanged.
+>
+> **v2 reconciliation (06/02/26):** Multi-vendor bidding moved from the planned `Contact_Tracking` subform to a dedicated **`Vendor_Quotes` child module** (`specs/ZohoModuleSpec_Quotes_060226.md`). The item stays the center of gravity; each vendor offer is a Quote record hanging off it via the **Vendor Quotes** related list. Field changes below are flagged **[v2]**. `Stage` remains the canonical item pipeline — Rob's `Sourcing_Status` is **not** added (it overlaps `Stage`).
 
 ---
 
@@ -43,6 +45,7 @@ Fields are grouped by layout section. Build in this order.
 | API Name | Label | Type | Required | Notes |
 |---|---|---|---|---|
 | `Property_Scope` | Property Scope | Picklist | YES | See picklist values below. |
+| `Target_Qty` | Target Qty | Number (integer) | NO | **[v2]** Intended order quantity. Drives the per-unit landed-cost math on Vendor Quotes (pre-fills each quote's `Order_Quantity`). |
 | `Estimated_Item_Level_Spend` | Estimated Item-Level Spend (USD) | Currency | YES | Drives approval routing. |
 | `US_Baseline_Cost_Unit` | US Baseline Cost / Unit (USD) | Currency | NO | For cost-per-year-of-service comparison at Stage 3 (Level). Not always known at Stage = Spec — kept optional intentionally. |
 | `Approver` | Approver | Picklist | YES | See picklist values below. Set manually based on spend tier. |
@@ -64,8 +67,9 @@ Fields are grouped by layout section. Build in this order.
 |---|---|---|---|---|
 | `Spec_Sheet_Status` | Spec Sheet Status | Picklist | YES | See picklist values below. Must be "COO Signed Off" before Stage advances to Bid. |
 | `Florida_Validation_Status` | Florida Validation Status | Picklist | YES | See picklist values below. Must be "Passed" before Stage advances to Recommend. |
-| `Bid_Count` | Bid Count | Number (integer) | NO | Minimum 3 required to advance past Stage 2 (Bid). Stored as Zoho "Number" field (API data_type = `integer`). |
-| `Winning_Vendor` | Winning Vendor | Lookup → Accounts | NO | Set at Stage 5 (Recommend). Must be populated before Stage = Approved. |
+| `Awarded_Vendor` | Awarded Vendor | Lookup → **Vendor_Quotes** | NO | **[v2]** Set when a quote is awarded. One value = one winning Quote record, structurally enforced. Must be populated before Stage = Approved. Stamped automatically by the award workflow on the Quote (`Quote_Status` → Awarded). |
+| ~~`Bid_Count`~~ | ~~Bid Count~~ | — | — | **[v2] RETIRED.** Bid count = Vendor Quotes related-list row count; no separate field. The "≥3 bids before advancing past Bid" rule is enforced by checking the related list. |
+| ~~`Winning_Vendor`~~ | ~~Winning Vendor~~ | ~~Lookup → Accounts~~ | — | **[v2] DEPRECATED** in favor of `Awarded_Vendor` (→ Vendor_Quotes) for a clean audit trail (award points to the winning *quote*, not just the Account). Leave the existing field hidden/read-only on the layout if removal risks orphaning historical test data; do not maintain both. |
 
 ### Section 5 — Audit trail & decision
 
@@ -79,9 +83,10 @@ Fields are grouped by layout section. Build in this order.
 
 | Related list | Source module | Purpose |
 |---|---|---|
-| Linked Vendors | Accounts | Vendors bidding on this item. Add at first contact in Stage 2 (Bid). |
-| Activities | Notes / Tasks / Calls / Events | Every touchpoint: RFQ sent, bid received, sample requested, audit verified, ImportKey check. |
-| Attachments | Files | Spec sheets, leveled cost models, FL validation checklists, decision summaries. |
+| **Vendor Quotes** | **Vendor_Quotes** | **[v2]** One row per vendor offer (via the `Procurement_Item` lookup). Side-by-side landed-cost comparison + award happen here. **Replaces** Linked Vendors. |
+| ~~Linked Vendors~~ | ~~Accounts~~ | **[v2] RETIRED** — superseded by the Vendor Quotes related list (which carries who's bidding, with first-class per-quote records). |
+| Activities | Notes / Tasks / Calls / Events | Every touchpoint: RFQ sent, bid received, sample requested, audit verified, ImportKey check. Logged at item level (single timeline). |
+| Attachments | Files | Spec sheets, leveled cost models, FL validation checklists, decision summaries. (Per-quote spec sheets attach on the Quote record itself.) |
 
 ---
 
@@ -164,11 +169,11 @@ Fields are grouped by layout section. Build in this order.
 When configuring the standard layout, group fields in this order:
 
 1. **Identification** — Item_Name · Stage · Category · Owner · Tag
-2. **Property & approval** — Property_Scope · Estimated_Item_Level_Spend · US_Baseline_Cost_Per_Unit · Approver · Target_Decision_Date
+2. **Property & approval** — Property_Scope · Target_Qty **[v2]** · Estimated_Item_Level_Spend · US_Baseline_Cost_Per_Unit · Approver · Target_Decision_Date
 3. **Sourcing context** — Source · Original_Retailer_SKU · Original_Retailer_Item_Name · HTS_Code · Estimated_Tariff_Rate
-4. **Workflow status** — Spec_Sheet_Status · Florida_Validation_Status · Bid_Count · Winning_Vendor
-5. **Audit trail & decision** — SharePoint_Folder_Link · Description · Decision_Notes
-6. **Related lists** — Linked Vendors · Activities · Attachments
+4. **Workflow status** — Spec_Sheet_Status · Florida_Validation_Status · Awarded_Vendor **[v2]** (Bid_Count / Winning_Vendor retired/deprecated)
+5. **Audit trail & decision** — SharePoint_Folder_Link · Description · Decision_Notes · PO_Number · PO_Status
+6. **Related lists** — Vendor Quotes **[v2]** · Activities · Attachments
 
 ---
 
@@ -180,7 +185,7 @@ These are Zoho workflow rules that enforce the SOP. Add after the module is live
 |---|---|---|
 | Stage changes to Bid | Spec_Sheet_Status ≠ "COO Signed Off" | Block save, show error: "Spec sheet must be COO signed off before advancing to Bid." |
 | Stage changes to Recommend | Florida_Validation_Status ≠ "Passed" | Block save, show error: "Florida validation must pass before advancing to Recommend." |
-| Stage changes to Approved | Winning_Vendor is blank | Block save, show error: "Winning vendor required before approval." |
+| Stage changes to Approved | Awarded_Vendor is blank | Block save, show error: "Awarded vendor (winning quote) required before approval." **[v2]** — was `Winning_Vendor`. |
 | Stage = Bid for >14 days | — | Email Owner + COO: "Item stuck at Bid for >14 days." |
 | Estimated_Item_Level_Spend changes | — | Auto-suggest Approver based on spend tier (manual confirm). |
 
