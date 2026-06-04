@@ -17,7 +17,7 @@ This is the tab-by-tab build of the approved v2 procurement design: three module
 - **Build order:** Vendors → Vendor Quotes → finish Procurement Items. Quotes looks up to both; the item's `Awarded_Vendor` looks up to Quotes, so Quotes must exist first.
 - **Manual vs. MCP:** modules / fields / picklists / layouts / formulas / validation rules = **manual Zoho UI**. Records + workflow rules = **MCP** (`zoho-crm-data`, `zoho-crm-workflows`).
 - **API name `Vendor_Quotes`, not `Quotes`** — the stock Quotes module already owns `Quotes`.
-- **Do NOT add Property `2900`** — pending Rob's confirmation (new property vs. typo).
+- **Property `2900` = Stayable Gainesville (Alachua County)** — confirmed real by Kyle 06/04/26. **Add** the value to `Property_Scope` in Zoho UI (field-edit is UI-only, no MCP).
 - **Held-state:** build config only; the structural 3-quote test in §6 is sanctioned, the 197/35-item real load is not.
 
 ---
@@ -134,7 +134,7 @@ Full field roster (v2 changes flagged). Most already exist.
 3. Retire `Bid_Count`; hide/read-only `Winning_Vendor`.
 4. Remove the Linked Vendors related list (the Vendor Quotes related list replaces it).
 
-**Key picklists (reference):** `Stage` (10: Spec→…→Need-More-Info) · `Property_Scope` (Portfolio-wide + 8 IDs, **no 2900**) · `Approver` (3 tiers) · `Spec_Sheet_Status` (3) · `Florida_Validation_Status` (4) · `PO_Status` (7).
+**Key picklists (reference):** `Stage` (10: Spec→…→Need-More-Info) · `Property_Scope` (Portfolio-wide + 9 IDs, **incl. 2900 Gainesville**) · `Approver` (3 tiers) · `Spec_Sheet_Status` (3) · `Florida_Validation_Status` (4) · `PO_Status` (7).
 
 ---
 

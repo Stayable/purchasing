@@ -22,7 +22,7 @@ Docs referenced below by bare filename now live in subfolders — resolve them v
 
 > Vercel static deploy depends on `index.html`, `vercel.json`, and `ZohoProcurementTracker_052626.html` staying at root (the `/tracker` rewrite resolves to a root file). Do not move them into subfolders.
 
-Stayable is an extended-stay hotel brand with 8 Florida properties (IDs: 4645, 2295, 6802, 812, 5399, 2535, 44199, 8700). The procurement workflow sources FF&E, OS&E, appliances, building materials, and soft goods overseas and brings recommendations to Rob Beyer (CEO) for approval. Zoho CRM is being reintroduced as the system of record after a prior deployment was abandoned due to module sprawl.
+Stayable is an extended-stay hotel brand with 9 Florida properties (IDs: 4645, 2295, 6802, 812, 5399, 2535, 44199, 8700, 2900). Property `2900` = **Stayable Gainesville** (Alachua County), confirmed by Kyle 06/04/26 — it was Rob's addition in the v2 Property picklist and is a real property, not a typo. The procurement workflow sources FF&E, OS&E, appliances, building materials, and soft goods overseas and brings recommendations to Rob Beyer (CEO) for approval. Zoho CRM is being reintroduced as the system of record after a prior deployment was abandoned due to module sprawl.
 
 ## Project ownership
 

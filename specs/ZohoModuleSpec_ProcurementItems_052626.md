@@ -4,7 +4,7 @@
 
 **Owner of this setup:** Zoho admin (one-time, ~30 min)
 **Date:** 052626
-**Last Updated:** 06/02/26 — reconciled to the **v2 approved architecture** (`docs/ZohoArchitecture_Update_053026v2.md`): added `Target_Qty`; added `Awarded_Vendor` (→ Vendor_Quotes) and deprecated `Winning_Vendor`; retired `Bid_Count` + the Linked Vendors related list (superseded by the Vendor Quotes related list). API names previously reconciled 05/28/26.
+**Last Updated:** 06/04/26 — added Property `2900` (Stayable Gainesville, Alachua) to `Property_Scope` (now 10 values); canon = 9 properties. Prior 06/02/26 — reconciled to the **v2 approved architecture** (`docs/ZohoArchitecture_Update_053026v2.md`): added `Target_Qty`; added `Awarded_Vendor` (→ Vendor_Quotes) and deprecated `Winning_Vendor`; retired `Bid_Count` + the Linked Vendors related list (superseded by the Vendor Quotes related list). API names previously reconciled 05/28/26.
 
 > **Deployed API names supersede the original spec for 4 fields** (Zoho's 25-char API name cap + system-primary-field convention). All references in code, MCP calls, and the HTML tracker must use the deployed names below. Field labels remain unchanged.
 >
@@ -126,8 +126,8 @@ Fields are grouped by layout section. Build in this order.
 - Soft Goods
 - Other
 
-### `Property_Scope` (9 values)
-- Portfolio-wide (all 8 properties)
+### `Property_Scope` (10 values)
+- Portfolio-wide (all 9 properties)
 - Lakeland (4645)
 - Kissimmee East (2295)
 - Jacksonville West (6802)
@@ -136,6 +136,7 @@ Fields are grouped by layout section. Build in this order.
 - St. Augustine (2535)
 - Davenport (44199)
 - Orlando OBT (8700)
+- Gainesville (2900)
 
 ### `Approver` (3 values)
 - COO (under $25K)

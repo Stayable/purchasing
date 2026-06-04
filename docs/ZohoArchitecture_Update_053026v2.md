@@ -45,7 +45,7 @@ The recommended final design **keeps** the SOP scaffolding and Kate-safe item mo
 | **Comparison view** | Subform report + "Stale >14d" view | Grouped report by item, sorted by Landed Cost/Unit + Kanban | Adopt Rob's grouped report + Kanban on Quote Status. | adopt |
 | **PO handling** | `PO_Number` + `PO_Status` on item + attached PDF | Not addressed | Keep field-based PO + attached PDF; native PO module stays off. | keep |
 | **Currency** | USD-only field | Quote in USD or manual USD field | Standardize quotes to USD (or manual USD Unit Price feeding the formula). | adopt |
-| **Property picklist** | 8-property canon + Portfolio-wide | Adds `2900` | 8-property canon; **`2900` = OPEN** (§5.3). | flag |
+| **Property picklist** | 8-property canon + Portfolio-wide | Adds `2900` | 9-property canon + Portfolio-wide; **`2900` = Gainesville, RESOLVED 06/04/26** (§5.3). | ✅ |
 | **Track 3 clone path** | Clone `Procurement_Items` later | 3-module pattern inherently cloneable | Clone the **Item + Quotes** pattern; Track-3 counterparties stay in Accounts (professionals ≠ suppliers). | keep |
 | **Edition / module count** | Professional; `Procurement_Items` live | "Needs Enterprise" (incorrect) | Professional confirmed; Quotes = 2nd custom module (+Track 3 = 3rd). **Verify count cap** (§5.2). | flag |
 
@@ -137,7 +137,7 @@ If(${Quotes.Order Quantity} > 0,
 
 1. **Native Vendors vs. Accounts.** Recommend moving procurement suppliers into the native Vendors module (Rob's spec; already enabled). Confirm — this partly retires the 05/29 Accounts firewall *for vendors* (firewall stays for Non-Profit + Track-3).
 2. **Professional custom-module count cap.** We currently have 1 custom module (`Procurement_Items`); Quotes makes 2, Track-3 later makes 3. **Verify** Professional allows this many before building Module 3. *(Not yet confirmed — flagged honestly.)*
-3. **Property `2900`.** Appears in Rob's Property picklist but is **not** in the 8-property canon (4645, 2295, 6802, 812, 5399, 2535, 44199, 8700). New property or typo? Will not build the value until confirmed.
+3. **Property `2900` — RESOLVED 06/04/26.** Confirmed by Kyle: `2900` = **Stayable Gainesville** (Alachua County), a real 9th property (not a typo). Canon is now 9 properties (4645, 2295, 6802, 812, 5399, 2535, 44199, 8700, 2900). `Gainesville (2900)` to be added to the `Property_Scope` picklist in the Zoho UI.
 4. **`Stage` vs. `Sourcing_Status`.** Rob's 5-value Sourcing Status overlaps our existing 10-value `Stage`. Recommend **keeping `Stage`** as the canonical item pipeline and mapping Rob's report filter to it, rather than maintaining two status fields. Confirm.
 5. **`Winning_Vendor` disposition.** Repoint it to Quotes, or add `Awarded_Vendor` (→ Quotes) and deprecate `Winning_Vendor` (→ Accounts)? Recommend the latter for a clean audit trail.
 
