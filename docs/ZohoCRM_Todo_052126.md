@@ -13,6 +13,11 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 ## Top Priorities — Active Sprint (refreshed 05/29/26)
 
+**Done this session (06/04–06/05/26):**
+- ✅ **Wired the Rob review portal route** — added `/review` → `/RobReviewPortal_Procurement_060326` to `vercel.json`. **Deep-link verified vs live Zoho via MCP:** `Procurement_Items` → `module_name: CustomModule1` (id `…1418753`); the portal's hardcoded `tab/CustomModule1` is correct — that go-live blocker is cleared. **Headless-Chrome QA passed** — all 5 views render, design matches `index.html`, mock banner + timestamp present. Committed `b4a8961`.
+- ✅ **Built Rob-facing operating-model flow one-pager** — `infographics/ProcurementOperatingModel_RISE8_060426.html`: two-tier model (Zoho backend / read-only portal window) + 8-step lifecycle + read-up/deep-link connector + 3 rationale cards. Refined the hero (Rob *can* open Zoho directly anytime) and added an **"automated notifications" callout** (portal+email for Rob; Microsoft Teams for the team). QA-rendered. Commits `503c5d2`, `a6fb65a`. **Not wired to a route** (offered `/model`, awaiting go-ahead).
+- ✅ **Property `2900` RESOLVED = Stayable Gainesville (Alachua County)** — confirmed real 9th property by Kyle (was Rob's v2 picklist addition). Canon 8 → 9 across 12 files (CLAUDE.md, Procurement_Items spec, build walkthrough, `Zoho_Architecture.md`, `Update_053026v2`, Rollout decision log, Todo, `/tracker` dropdown, landing table/stat, humidity-rule doctrine + infographic). Commit `7d100a9`. **Remaining action (Kyle):** add `Gainesville (2900)` to the `Property_Scope` picklist in Zoho UI (field-edit is UI-only, no MCP).
+
 **Done this session (05/30/26):**
 - ✅ Built local orientation infographic `infographics/ProcurementProcessInfographic_RISE8_053026.html` — self-contained HTML one-pager from `Zoho_Architecture.md`: the model, 5-stage workflow, FL gates, roles, built/partial/proposed/on-hold status board. Local learning artifact, **not** a Vercel deploy file. Committed + pushed to `main`.
 - ✅ Reviewed **Rob's 05/30 three-module build spec** (Vendors → Procurement Items → Quotes) against the architecture-of-record; captured verbatim → `docs/ZohoArchitecture_RobFeedback_053026.md`. Finding: Rob's "Quotes" module ≈ the shelved `Vendor_Bids` child module, re-derived + improved (landed-cost formulas, per-quote spec-sheet upload, certifications) → **reopens open decision §13 #1** (subform vs child module).
@@ -72,6 +77,9 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 8. **[P3]** Task 8 — Audit 6 vendor-adjacent Smartsheets (Vendor Relationship Tracker, Overseas Vendor Tracking, Overseas Vendor Progress Report, Vendor Matrix, Vendor Masterlist, Preferred Vendor Matrix) — purely investigative; route findings to Rob.
 9. **[P1]** Phase 1 Security gates: re-open 2FA decision (`admin@`, `jefferson@`) — currently on hold per Rob.
 10. **[P3]** Replace 20 vendor contact placeholder Last Names (Jefferson follow-up).
+11. **[P2]** Add `Gainesville (2900)` to the `Property_Scope` picklist in Zoho UI. Owner: Kyle. ~30 sec — Settings → Procurement Items → Property Scope. Field-edit is UI-only (no MCP). Canon already updated in docs (06/04/26).
+12. **[P3]** Notification workflows (surfaced on the operating-model one-pager as "optional"): (a) **Rob** — alert when an item hits `Stage=Submitted` / spend crosses an Approver tier (portal + email); (b) **team** — Microsoft Teams channel alerts on stage changes, vendor awards, stale quotes. Zoho workflow rule → email/webhook (Teams connector). **Not built.** The stale-quote alert is gated on the open **stale-bid threshold** (3 vs 14 days — Rob's call). Owner: Kyle.
+13. **[P3]** Decide whether to wire the operating-model one-pager (`infographics/ProcurementOperatingModel_RISE8_060426.html`) to a clean route (e.g. `/model`) for sharing with Rob, or keep it local/internal. Owner: Kyle.
 
 **Out of scope this sprint:** Phase 2 sales-team rollout (Bea/Crystal seats + non-profit pipeline; Kate's module-build doesn't trigger this), Phase 3 (Special Projects), Phase 1 email integration (purchasing@ forwarding), Phase 1 Deals-module cleanup (partially obviated by pivot).
 
