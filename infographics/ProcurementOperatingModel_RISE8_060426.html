@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Procurement Operating Model — RISE8 / Stayable</title>
+<!--
+  Rob-facing flow model: the proposed procurement operating model.
+  Zoho = backend system of record (Jefferson + Kyle work here).
+  procurement.rentstayable.com = read-only window (Rob monitors; approves in Zoho under his name).
+  Internal one-pager. Not a Vercel deploy file. Design tokens mirror index.html / the review portal.
+-->
+<style>
+  :root {
+    --ink: #0c1117; --ink-2: #1b232e; --ink-3: #141b24; --line: #2a3441;
+    --muted: #8a96a5; --text: #e7ecf3; --accent: #c8a96a; --accent-dim: #8a7549;
+    --ok: #4ea36a; --warn: #d49a3a; --bad: #c96a5e;
+    --zoho: #3a5cff; --zoho-dim: #2b3f9e;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background:
+      radial-gradient(1200px 700px at 80% -10%, rgba(200,169,106,0.06), transparent 60%),
+      radial-gradient(900px 600px at 0% 110%, rgba(58,92,255,0.05), transparent 55%),
+      var(--ink);
+    color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.55; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 48px 32px 88px; }
+
+  header { border-bottom: 1px solid var(--line); padding-bottom: 30px; margin-bottom: 40px; }
+  .eyebrow { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 14px; }
+  h1 { font-size: 31px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 18px; }
+  .hero { color: var(--text); font-size: 17px; line-height: 1.62; margin: 0; max-width: 76ch; }
+  .hero b { color: var(--text); font-weight: 600; }
+  .hero .z { color: #9fb0ff; font-weight: 600; }
+  .hero .p { color: var(--accent); font-weight: 600; }
+  .hero .name { color: var(--accent); font-weight: 600; }
+
+  .section-label { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin: 0 0 18px; }
+
+  /* ---- TWO-TIER MODEL ---- */
+  .model { display: grid; gap: 0; margin-bottom: 16px; }
+
+  .tier { border: 1px solid var(--line); border-radius: 4px; padding: 20px 22px 22px; position: relative; }
+  .tier .tier-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+  .tier .tier-tag { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700; padding: 3px 9px; border-radius: 2px; }
+  .tier .tier-name { font-size: 18px; font-weight: 600; }
+  .tier .tier-sub { color: var(--muted); font-size: 13px; margin: 4px 0 18px; }
+
+  .tier-portal { border-color: rgba(200,169,106,0.4); background: linear-gradient(180deg, rgba(200,169,106,0.07), rgba(200,169,106,0.02)); }
+  .tier-portal .tier-tag { background: rgba(200,169,106,0.16); color: var(--accent); border: 1px solid rgba(200,169,106,0.35); }
+  .tier-zoho { border-color: rgba(58,92,255,0.38); background: linear-gradient(180deg, rgba(58,92,255,0.07), rgba(58,92,255,0.015)); }
+  .tier-zoho .tier-tag { background: rgba(58,92,255,0.16); color: #9fb0ff; border: 1px solid rgba(58,92,255,0.4); }
+
+  .who { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: var(--muted); }
+  .who b { color: var(--text); font-weight: 600; }
+
+  /* portal view chips */
+  .views { display: flex; flex-wrap: wrap; gap: 8px; }
+  .view-chip { font-size: 12px; color: var(--text); background: var(--ink-2); border: 1px solid var(--line); border-radius: 2px; padding: 8px 12px; }
+  .view-chip span { color: var(--accent); font-weight: 600; }
+
+  /* zoho pipeline */
+  .pipe { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+  .stage { background: var(--ink-2); padding: 12px 10px; }
+  .stage .n { font-size: 9px; letter-spacing: 0.14em; color: var(--muted); }
+  .stage .s { font-size: 13px; font-weight: 600; margin-top: 3px; }
+  .stage .g { font-size: 10px; color: var(--accent-dim); margin-top: 6px; min-height: 26px; line-height: 1.35; }
+  .stage.submit { background: rgba(200,169,106,0.1); }
+  .stage.submit .s { color: var(--accent); }
+
+  /* connector band between tiers */
+  .connect { position: relative; height: 96px; margin: 4px 0; }
+  .connect .lane { position: absolute; top: 0; bottom: 0; width: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+  .connect .lane.up { left: 0; }
+  .connect .lane.down { right: 0; }
+  .arrow-label { font-size: 11px; letter-spacing: 0.04em; text-align: center; padding: 0 12px; }
+  .arrow-label .lead { font-weight: 600; }
+  .lane.up .arrow-label { color: #9fb0ff; }
+  .lane.down .arrow-label { color: var(--accent); }
+  .arrow-label .sub { display: block; color: var(--muted); font-size: 10px; font-weight: 400; margin-top: 2px; letter-spacing: 0.02em; }
+  .stem { width: 0; height: 30px; border-left: 2px dashed; }
+  .lane.up .stem { border-color: rgba(58,92,255,0.55); }
+  .lane.down .stem { border-color: rgba(200,169,106,0.6); }
+  .tip { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; }
+  .lane.up .tip { border-bottom: 8px solid rgba(58,92,255,0.7); }      /* points up */
+  .lane.down .tip-down { border-top: 8px solid rgba(200,169,106,0.75); } /* points down */
+  .connect .divider { position: absolute; left: 50%; top: 8px; bottom: 8px; border-left: 1px solid var(--line); }
+
+  /* ---- LIFECYCLE ---- */
+  .flow { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; margin-bottom: 40px; }
+  .step { background: var(--ink); padding: 16px 18px; display: flex; gap: 14px; align-items: flex-start; }
+  .step .num { flex: 0 0 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; background: var(--ink-2); border: 1px solid var(--line); color: var(--muted); }
+  .step .body .t { font-size: 14px; font-weight: 600; }
+  .step .body .d { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+  .step .body .where { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; margin-top: 7px; }
+  .where.z { color: #9fb0ff; }
+  .where.p { color: var(--accent); }
+  .step.key { background: rgba(200,169,106,0.06); }
+  .step.key .num { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+
+  /* ---- PRINCIPLES ---- */
+  .principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { border: 1px solid var(--line); border-radius: 4px; padding: 18px 18px 20px; background: var(--ink-2); }
+  .card .k { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+  .card .v { font-size: 14px; line-height: 1.5; }
+  .card .v b { color: var(--text); }
+
+  footer { margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+
+  @media (max-width: 720px) {
+    .pipe { grid-template-columns: repeat(2, 1fr); }
+    .flow, .principles { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">RISE8 Companies &nbsp;·&nbsp; Stayable Hotels &nbsp;·&nbsp; Procurement Operating Model</div>
+    <h1>How procurement runs — and how you stay in control</h1>
+    <p class="hero">
+      <span class="z">Zoho CRM</span> is the <b>backend system of record</b> — where <b>Jefferson</b> and <b>Kyle</b> do the work.
+      <span class="p">procurement.rentstayable.com</span> is your <b>read-only window</b> to monitor and approve.
+      You never log into Zoho to <i>see</i> what's happening — but every approval is <b>recorded in Zoho, under your name</b>.
+    </p>
+  </header>
+
+  <p class="section-label">The model — one record, two surfaces</p>
+  <div class="model">
+
+    <!-- TOP TIER: PORTAL -->
+    <div class="tier tier-portal">
+      <div class="tier-head">
+        <span class="tier-tag">The window · read-only</span>
+        <span class="tier-name">procurement.rentstayable.com</span>
+      </div>
+      <div class="tier-sub">
+        <span class="who"><b>Rob</b> — monitor &amp; decide.</span>
+        &nbsp; No data entry. Nothing here can change a record. It reads Zoho and shows you what needs you.
+      </div>
+      <div class="views">
+        <div class="view-chip"><span>Approval Queue</span> — what's waiting on you</div>
+        <div class="view-chip"><span>Status Board</span> — every item, by stage</div>
+        <div class="view-chip"><span>Quote Comparison</span> — vendors by true landed cost</div>
+        <div class="view-chip"><span>Decisions Log</span> — audit trail</div>
+        <div class="view-chip"><span>Spend Rollup</span> — committed vs. pending</div>
+      </div>
+    </div>
+
+    <!-- CONNECTOR -->
+    <div class="connect">
+      <div class="divider"></div>
+      <div class="lane up">
+        <div class="tip"></div>
+        <div class="stem"></div>
+        <div class="arrow-label"><span class="lead">Live read-up</span><span class="sub">Zoho → portal (read-only)</span></div>
+      </div>
+      <div class="lane down">
+        <div class="arrow-label"><span class="lead">Deep-link to approve</span><span class="sub">portal → your Zoho record</span></div>
+        <div class="stem"></div>
+        <div class="tip tip-down"></div>
+      </div>
+    </div>
+
+    <!-- BOTTOM TIER: ZOHO -->
+    <div class="tier tier-zoho">
+      <div class="tier-head">
+        <span class="tier-tag">The backend · system of record</span>
+        <span class="tier-name">Zoho CRM</span>
+      </div>
+      <div class="tier-sub">
+        <span class="who"><b>Jefferson</b> — day-to-day operator.</span> &nbsp;
+        <span class="who"><b>Kyle</b> — admin &amp; build.</span> &nbsp;
+        Every item walks 5 gated stages before it can reach your queue.
+      </div>
+      <div class="pipe">
+        <div class="stage"><div class="n">01</div><div class="s">Spec</div><div class="g">→ Bid needs COO sign-off</div></div>
+        <div class="stage"><div class="n">02</div><div class="s">Bid</div><div class="g">≥ 3 vendor quotes</div></div>
+        <div class="stage"><div class="n">03</div><div class="s">Level</div><div class="g">landed-cost compare</div></div>
+        <div class="stage"><div class="n">04</div><div class="s">FL-Validate</div><div class="g">humidity · salt air · hurricane · 120V/UL</div></div>
+        <div class="stage"><div class="n">05</div><div class="s">Recommend</div><div class="g">decision drafted</div></div>
+        <div class="stage submit"><div class="n">06</div><div class="s">Submitted</div><div class="g">→ surfaces in your queue</div></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-label">The flow, end to end</p>
+  <div class="flow">
+    <div class="step">
+      <div class="num">1</div>
+      <div class="body"><div class="t">Jefferson logs the item</div><div class="d">New procurement item created at Stage = Spec, tied to a property.</div><div class="where z">In Zoho</div></div>
+    </div>
+    <div class="step">
+      <div class="num">2</div>
+      <div class="body"><div class="t">Quotes collected &amp; leveled</div><div class="d">Vendor quotes attached; ranked by <i>true landed cost</i> — freight + duty in, not sticker.</div><div class="where z">In Zoho</div></div>
+    </div>
+    <div class="step">
+      <div class="num">3</div>
+      <div class="body"><div class="t">Florida validation gate</div><div class="d">Must pass humidity, salt air, hurricane code, 120V/UL-ETL before it can advance.</div><div class="where z">In Zoho</div></div>
+    </div>
+    <div class="step">
+      <div class="num">4</div>
+      <div class="body"><div class="t">Recommendation drafted → Submitted</div><div class="d">Operator's pick + rationale recorded; item set to Submitted.</div><div class="where z">In Zoho</div></div>
+    </div>
+    <div class="step key">
+      <div class="num">5</div>
+      <div class="body"><div class="t">It appears in your queue</div><div class="d">Decision-ready item surfaces in the portal with the quote comparison in front of you.</div><div class="where p">On the portal</div></div>
+    </div>
+    <div class="step key">
+      <div class="num">6</div>
+      <div class="body"><div class="t">You review, then click through</div><div class="d">One click deep-links from the portal straight to that record in your Zoho seat.</div><div class="where p">Portal → Zoho</div></div>
+    </div>
+    <div class="step key">
+      <div class="num">7</div>
+      <div class="body"><div class="t">You approve — under your name</div><div class="d">Decision is made in Zoho from your seat, so the audit trail credits <b>you</b>, not a system account.</div><div class="where z">In Zoho (your seat)</div></div>
+    </div>
+    <div class="step">
+      <div class="num">8</div>
+      <div class="body"><div class="t">Item moves to Approved</div><div class="d">PO issued; decision logged. The portal reflects it instantly on the next read.</div><div class="where z">In Zoho</div></div>
+    </div>
+  </div>
+
+  <p class="section-label">Why it's built this way</p>
+  <div class="principles">
+    <div class="card">
+      <div class="k">Read-only by design</div>
+      <div class="v">The portal can't change anything. It's a clean window — <b>zero risk</b> that a glance becomes an accidental edit.</div>
+    </div>
+    <div class="card">
+      <div class="k">Approvals are provably yours</div>
+      <div class="v">Because you approve <b>in Zoho from your own seat</b>, every spend decision is attributed to you in the audit trail — not to a service account.</div>
+    </div>
+    <div class="card">
+      <div class="k">Lowest landed cost wins</div>
+      <div class="v">Quotes are ranked by freight- and duty-loaded cost, so the <b>cheapest sticker doesn't masquerade</b> as the cheapest deal.</div>
+    </div>
+  </div>
+
+  <footer>
+    <div>RISE8 Companies · Boca Raton, FL · Internal — proposed operating model</div>
+    <div>Prepared for R. Beyer · <span id="ts"></span></div>
+  </footer>
+</div>
+<script>document.getElementById("ts").textContent = new Date().toISOString().slice(0,10);</script>
+</body>
+</html>
