@@ -105,6 +105,20 @@
   .card .v { font-size: 14px; line-height: 1.5; }
   .card .v b { color: var(--text); }
 
+  /* ---- NOTIFICATIONS CALLOUT ---- */
+  .notify { margin-top: 36px; border: 1px solid rgba(200,169,106,0.4); border-left: 3px solid var(--accent); border-radius: 4px; background: linear-gradient(180deg, rgba(200,169,106,0.06), rgba(200,169,106,0.015)); padding: 20px 22px; }
+  .notify .k { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 10px; }
+  .notify .lead { font-size: 15px; line-height: 1.55; margin: 0 0 14px; }
+  .notify .lead b { color: var(--text); }
+  .notify .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .notify .opt { background: var(--ink-2); border: 1px solid var(--line); border-radius: 3px; padding: 12px 14px; }
+  .notify .opt .h { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+  .notify .opt .h .tag { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; padding: 2px 7px; border-radius: 2px; margin-left: 8px; vertical-align: middle; }
+  .notify .opt .h .tag.p { background: rgba(200,169,106,0.16); color: var(--accent); }
+  .notify .opt .h .tag.t { background: rgba(58,92,255,0.16); color: #9fb0ff; }
+  .notify .opt .d { font-size: 12.5px; color: var(--muted); }
+  @media (max-width: 720px) { .notify .opts { grid-template-columns: 1fr; } }
+
   footer { margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 
   @media (max-width: 720px) {
@@ -122,7 +136,7 @@
     <p class="hero">
       <span class="z">Zoho CRM</span> is the <b>backend system of record</b> — where <b>Jefferson</b> and <b>Kyle</b> do the work.
       <span class="p">procurement.rentstayable.com</span> is your <b>read-only window</b> to monitor and approve.
-      You never log into Zoho to <i>see</i> what's happening — but every approval is <b>recorded in Zoho, under your name</b>.
+      You don't have to log into Zoho to <i>see</i> what's happening — but you can <b>open the CRM directly anytime you want</b>. Either way, every approval is <b>recorded in Zoho, under your name</b>.
     </p>
   </header>
 
@@ -234,6 +248,21 @@
     <div class="card">
       <div class="k">Lowest landed cost wins</div>
       <div class="v">Quotes are ranked by freight- and duty-loaded cost, so the <b>cheapest sticker doesn't masquerade</b> as the cheapest deal.</div>
+    </div>
+  </div>
+
+  <div class="notify">
+    <div class="k">Optional — automated notifications</div>
+    <p class="lead">Nobody has to remember to check. We can wire <b>workflow-driven alerts</b> so the right person is pinged the moment something needs them — no manual chasing.</p>
+    <div class="opts">
+      <div class="opt">
+        <div class="h">You<span class="tag p">Portal &amp; email</span></div>
+        <div class="d">Alert when an item lands in your approval queue, or when spend crosses a tier threshold that needs your sign-off.</div>
+      </div>
+      <div class="opt">
+        <div class="h">The team<span class="tag t">Microsoft Teams</span></div>
+        <div class="d">Channel notifications on stage changes, vendor awards, or a quote sitting stale too long — so Jefferson and Kyle stay in sync without status meetings.</div>
+      </div>
     </div>
   </div>
 
