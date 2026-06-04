@@ -187,7 +187,7 @@ These are Zoho workflow rules that enforce the SOP. Add after the module is live
 | Stage changes to Bid | Spec_Sheet_Status ≠ "COO Signed Off" | Block save, show error: "Spec sheet must be COO signed off before advancing to Bid." |
 | Stage changes to Recommend | Florida_Validation_Status ≠ "Passed" | Block save, show error: "Florida validation must pass before advancing to Recommend." |
 | Stage changes to Approved | Awarded_Vendor is blank | Block save, show error: "Awarded vendor (winning quote) required before approval." **[v2]** — was `Winning_Vendor`. |
-| Stage = Bid for >14 days | — | Email Owner + COO: "Item stuck at Bid for >14 days." |
+| Stage = Bid for >7 days | — | Email Owner + COO: "Item stuck at Bid for >7 days." (threshold set 06/05/26) |
 | Estimated_Item_Level_Spend changes | — | Auto-suggest Approver based on spend tier (manual confirm). |
 
 ---

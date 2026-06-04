@@ -1,6 +1,6 @@
 # Zoho CRM — Universal Architecture & Proposal (RISE8 Companies / Stayable)
 
-**To:** Rob Beyer, CEO · **From:** Kyle Estocapio (build — Procurement & Vendor Selection) · Kate (build — Non-Profit Sales) · **Date:** 05/29/26 · **Last Updated:** 06/04/26
+**To:** Rob Beyer, CEO · **From:** Kyle Estocapio (build — Procurement & Vendor Selection) · Kate (build — Non-Profit Sales) · **Date:** 05/29/26 · **Last Updated:** 06/05/26
 
 > 🟢 **STATUS: ARCHITECTURE APPROVED (06/02/26).** Rob approved the **v2 merged design** (`docs/ZohoArchitecture_Update_053026v2.md`) — his 05/30 three-module build spec reconciled into the architecture of record. The design below is **frozen**; build proceeds against it. Key change folded in: multi-vendor bidding is now a **`Vendor_Quotes` child module** (not the `Contact_Tracking` subform), and procurement suppliers move to the **native Vendors module**. See the decision log in `docs/ZohoCRM_Rollout_052126.md` (06/02/26).
 >
@@ -189,13 +189,13 @@ Verified against the live org on 05/29/26.
 
 ## 13. Open decisions that need you
 
-1. ✅ **RESOLVED (06/02/26) — Procurement bidding design.** Approved as the **`Vendor_Quotes` child module** (not the subform). Rob's v2 spec requires per-quote spec-sheet attachments, per-quote reporting, landed-cost formulas, a Kanban, and a per-row award workflow — all first-class-record capabilities the subform lacked. The "Stale" follow-up nudge becomes an actual per-row workflow (threshold pending #7). Spec: `ZohoModuleSpec_Quotes_060226.md`.
+1. ✅ **RESOLVED (06/02/26) — Procurement bidding design.** Approved as the **`Vendor_Quotes` child module** (not the subform). Rob's v2 spec requires per-quote spec-sheet attachments, per-quote reporting, landed-cost formulas, a Kanban, and a per-row award workflow — all first-class-record capabilities the subform lacked. The "Stale" follow-up nudge becomes an actual per-row workflow (**threshold = 7 days, set 06/05/26 — #7 resolved**). Spec: `ZohoModuleSpec_Quotes_060226.md`.
 2. ✅ **RESOLVED (06/02/26) — PO in Zoho.** Field-based PO (`PO_Number` + `PO_Status` + attached PDF), **no native PO module**, confirmed under the v2 approval.
 3. **Vendor / Professional Selection timing.** Build later by cloning the Procurement (Item + Quotes) pattern (recommended), or in parallel now? *(Still open — recommend later.)*
 4. **Security: 2FA.** Enabling 2FA on `admin@` and Jefferson's account has been **on hold per you since 05/20**. Super-admin without 2FA is a single point of failure. Re-open before seats / go-live? *(Still open.)*
 5. **Phase-2 trigger.** What signals readiness to add Bea + Crystal — a fixed date, or Jefferson logging procurement daily for 2 weeks first? *(Still open.)*
 6. ✅ **RESOLVED — Property `2900` = Stayable Gainesville (Alachua County).** Confirmed by Kyle 06/04/26 — Rob's v2 addition was a real 9th property, not a typo. Canon is now 9 properties (4645, 2295, 6802, 812, 5399, 2535, 44199, 8700, 2900). `Gainesville (2900)` to be added to the `Property_Scope` picklist in the Zoho UI.
-7. **OPEN — Stale-bid threshold.** Jefferson recommends **3 days** (overseas vendors go quiet fast); the prior default was 14. Sets the Quote follow-up workflow timer. Your call.
+7. ✅ **RESOLVED 06/05/26 — Stale-bid threshold = 7 days** (Kyle). A compromise between Jefferson's recommended 3 (overseas vendors go quiet fast) and the prior default of 14. Sets the Quote follow-up workflow timer. Revisit if Rob objects.
 
 ---
 

@@ -39,13 +39,13 @@ Prepared: 05/30/26 · Last Updated: 2026-05-30
 
 ## R4 — Stuck-at-Bid alert (WORKFLOW RULE)
 - **Object:** Workflow Rule, **time/date-based** trigger + email notification.
-- **Intent:** when an item sits in `Stage` = `Bid` for >14 days, email `Owner` + COO.
+- **Intent:** when an item sits in `Stage` = `Bid` for >7 days, email `Owner` + COO.
 - **Design (Zoho can't natively time "days in current stage"):**
   1. **New field** `Bid_Entered_Date` (Date) — *prerequisite, doesn't exist.*
   2. Workflow A: trigger `field_update` on `Stage` = `Bid` → field-update sets `Bid_Entered_Date` = today.
-  3. Workflow B: `date_or_datetime` trigger, `Bid_Entered_Date` + 14 days → **email notification** to `Owner` + COO, with re-check criteria `Stage` still = `Bid`.
+  3. Workflow B: `date_or_datetime` trigger, `Bid_Entered_Date` + 7 days → **email notification** to `Owner` + COO, with re-check criteria `Stage` still = `Bid`.
 - **Build path:** Workflows A/B via MCP `postWorkflowRule` ✅; **email notification must be pre-created** (`postEmailNotifications`) and referenced by id; **`Bid_Entered_Date` field = manual** (no MCP).
-- **Status:** 🔴 **Blocked on Rob §13 #1** — this is the "stale-bid >14d" alert tied to the bidding-design decision (tracker P6). Don't build until ruling. Also the manual substitute is a saved "Stale >14 days" report view if Rob declines the automated path.
+- **Status:** 🟢 **Threshold = 7 days (set by Kyle 06/05/26).** The bidding-design fork (§13 #1) already resolved 06/02 → `Vendor_Quotes` module, so this is a real per-row workflow, not the old "stale report" substitute. Buildable now except for the operational go-live hold. (Note: the per-quote version of this timer lives in `ZohoModuleSpec_Quotes_060226.md`; this R4 is the item-level Stage=Bid variant — build whichever matches the final follow-up object, not both.)
 
 ## R5 — Spend-tier approver suggestion (WORKFLOW RULE)
 - **Object:** Workflow Rule, `field_update` trigger on `Estimated_Item_Level_Spend`.

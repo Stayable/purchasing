@@ -209,7 +209,7 @@ Configure via `zoho-crm-workflows` MCP **after** the module validates clean.
 |---|---|---|
 | `Quote_Status` → **Awarded** | — | Stamp parent `Procurement_Item.Awarded_Vendor` = this Quote record (structurally one award = one Quote). |
 | `Quote_Status` → **Awarded** | sibling quotes on same item not Declined | (Optional) flip sibling quotes to `Declined`. Decide whether to automate or leave manual so the operator consciously closes losers. |
-| `Quote_Status` = Requested for >N days | `Date_Received` blank | (Optional) email the item owner. **N is pending Rob's stale-bid ruling** — Jefferson recommended 3 days, not 14 (open §13 #1 follow-up in the rollout log). |
+| `Quote_Status` = Requested for >7 days | `Date_Received` blank | Email the item owner. **N = 7 days — set by Kyle 06/05/26** (compromise between Jefferson's recommended 3 and the prior 14). |
 
 ---
 

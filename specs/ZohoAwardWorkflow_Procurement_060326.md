@@ -137,7 +137,7 @@ Re-uses the 06/02 test item + 3 quotes already in the org (flagged `_DELETE`). N
 
 ## Open decision for Kyle
 
-- **Auto-decline siblings?** Default in this scaffold = **manual** (block commented out), matching the Quotes-spec lean toward conscious loser-closure. Uncomment the optional block in Step 1 to automate. *(This is separate from the stale-bid follow-up timer, which is still pending Rob's 3-vs-14-day ruling and is NOT part of this rule.)*
+- **Auto-decline siblings?** Default in this scaffold = **manual** (block commented out), matching the Quotes-spec lean toward conscious loser-closure. Uncomment the optional block in Step 1 to automate. *(This is separate from the stale-bid follow-up timer, which is set to 7 days — Kyle 06/05/26 — and is NOT part of this rule.)*
 
 ## Out of scope here
 - The 3 **validation-rule gates** (Spec→Bid, FL→Recommend, Awarded→Approved) — those are Validation Rules, built separately (Task 10 item **a**).

@@ -32,7 +32,7 @@ Prepared: 05/30/26 · Last Updated: 2026-05-30
 | P | Task | Owner | Status | Risk | Depends on |
 |---|---|---|---|---|---|
 | **P5** | Contact_Tracking subform (multi-vendor bidding) | Kyle | 🔴 | 🟥 | §13 #1 bidding design. Highest rework risk — spec only until ruling. |
-| **P6** | Stage-stuck workflow rule + email notification (SOP rule 4) | Kyle | 🔴 | 🟥 | §13 #1. **Jefferson recommends 3-day threshold (not 14)** — Chat-now, pending Rob; raises report-vs-per-vendor-workflow (the §13 #1 fork). Needs pre-built email notification + `Bid_Entered_Date` field. |
+| **P6** | Stage-stuck workflow rule + email notification (SOP rule 4) | Kyle | 🟢 | 🟥 | **Threshold = 7 days (set by Kyle 06/05/26).** Bidding fork (§13 #1) resolved 06/02 → `Vendor_Quotes`. Needs pre-built email notification + `Bid_Entered_Date` field. Buildable except operational hold. |
 | **P7** | Spend-tier → auto-suggest Approver workflow (SOP rule 5) | Kyle | 🔴 | 🟨 | Spend tiers **don't exist** — Rob/process must define. |
 | **P8** | PO approach confirm (fields built; doc-via-template + PDF) | Rob | 🔴 | 🟨 | §13 #2. Fields already live; just needs his confirm. |
 | **P9** | Validation rules 1–3 (spec-sheet / FL-validation / winning-vendor save gates) | Kyle | 🔴 | 🟨 | Manual Settings (no MCP). Spec gates these "after module live + test batch validates" → effectively waits for hold lift. |

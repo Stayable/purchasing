@@ -79,5 +79,5 @@ Re-uses the 06/02 test item + 3 quotes already in the org. No real data.
 
 ## Out of scope here
 - Award stamp itself → `specs/ZohoAwardWorkflow_Procurement_060326.md` (10b).
-- Stale-bid follow-up timer (pending Rob's 3-vs-14-day ruling) — a time-based **workflow** rule, not a validation rule.
+- Stale-bid follow-up timer (**threshold = 7 days, set by Kyle 06/05/26**) — a time-based **workflow** rule, not a validation rule.
 - Spend-tier Approver auto-suggest — a separate workflow/field-update, not a gate.
