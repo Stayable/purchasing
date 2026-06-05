@@ -1,6 +1,6 @@
 # Zoho CRM — Universal Architecture & Proposal (RISE8 Companies / Stayable)
 
-**To:** Rob Beyer, CEO · **From:** Kyle Estocapio (build — Procurement & Vendor Selection) · Kate (build — Non-Profit Sales) · **Date:** 05/29/26 · **Last Updated:** 06/05/26
+**To:** Rob Beyer, CEO · **From:** Kyle Estocapio (build — Procurement & Vendor Selection) · Kate (build — Non-Profit Sales) · **Date:** 05/29/26 · **Last Updated:** 06/06/26
 
 > 🟢 **STATUS: ARCHITECTURE APPROVED (06/02/26).** Rob approved the **v2 merged design** (`docs/ZohoArchitecture_Update_053026v2.md`) — his 05/30 three-module build spec reconciled into the architecture of record. The design below is **frozen**; build proceeds against it. Key change folded in: multi-vendor bidding is now a **`Vendor_Quotes` child module** (not the `Contact_Tracking` subform), and procurement suppliers move to the **native Vendors module**. See the decision log in `docs/ZohoCRM_Rollout_052126.md` (06/02/26).
 >
@@ -150,7 +150,7 @@ Verified against the live org on 05/29/26.
 | Zoho Professional, 3 seats | ✅ Live | admin@ (super admin), jefferson@, rb@rise8companies.com |
 | Modules active | ✅ Live | Accounts, Contacts, Deals (standard), **Procurement_Items (custom)** |
 | `Procurement_Items` module | ✅ Built | Shell + 19 custom fields + 7 picklists; layout sections + permissions set. **Workflow rules pending.** |
-| `Procurement_Items` records | 🔸 2 (test) | Real 197-item load not yet run |
+| `Procurement_Items` records | 🔸 2 (test) | Real item load not yet run — scope finalized 06/06/26 at **35 items** (Jefferson's staging file; old "197" figure retired) |
 | Accounts | ✅ 21 records | 19 imported Alibaba vendors + 2 (incl. a "Batteries" stub flagged for cleanup) |
 | Contacts | ✅ 20 records | Vendor reps imported 05/26; some placeholder last names pending |
 | `Vendor_Type` field (Accounts) | ✅ Live | Picklist created at import |
@@ -180,7 +180,7 @@ Verified against the live org on 05/29/26.
 | P1c | Quote **landed-cost report** (grouped, sorted by Landed Cost/Unit) + **Kanban** on Quote Status + award-stamping **workflow rule** (via MCP) | Procurement | Kyle |
 | P2 | `PO_Number` + `PO_Status` fields **(✅ built 05/29 as held config)**; PO docs via Jefferson's template (attach PDF) — *approach still pending your §13 #2 confirm* | Procurement | Kyle |
 | P3 | 5 workflow rules on Procurement_Items (stage gates, stuck-item alerts) | Procurement | Kyle |
-| P4 | Real procurement data load (197 historical items) | Procurement | Kyle |
+| P4 | Real procurement data load (**35 staged items** — `jefferson/ItemStaging_Procurement_052926.xlsx`; "197" retired 06/06/26) | Procurement | Kyle |
 | P5 | **Non-Profit Sales** build — Deals pipeline, layouts, 48 partner Accounts + 11 Contacts import | Non-Profit | Kate |
 | P6 | Vendor / Professional Selection module (cloned from Procurement, later) | Vendor Sel. | Kyle |
 | P7 | Phase-2 seats for Bea + Crystal; email integration | Non-Profit | Kyle |
@@ -203,7 +203,7 @@ Verified against the live org on 05/29/26.
 
 Until you approve:
 - **No go-live / no team onboarding** (Bea, Crystal not added; Jefferson not asked to work live).
-- **No real data load** — the 197 procurement items and the 48 non-profit partners stay out.
+- **No real data load** — the 35 staged procurement items (scope finalized 06/06/26; was "197") and the 48 non-profit partners stay out.
 - **No live tracker writes** — the portal stays in demo mode.
 - Build continues only as **held configuration** (modules, fields, layouts) that can still be changed cheaply before data lands.
 

@@ -75,7 +75,7 @@ Zoho CRM  (ZohoCRM.modules.READ only)
 
 ### Gated (NOT today — needs Rob / hold lift)
 
-- [ ] ⛔ **Load real Procurement_Items** — on the operational hold + the 197/35-item source report isn't located. Portal stays near-empty until this lands.
+- [ ] ⛔ **Load real Procurement_Items** — on the operational hold only. Source resolved 06/06/26: **35 items** from `jefferson/ItemStaging_Procurement_052926.xlsx` (the "197" report is retired). Portal stays near-empty until the hold lifts and the load runs.
 - [ ] ⛔ **Go-live to Rob** — sharing the live portal = go-live; gated on Rob lifting the hold (and on his operating-model confirmation).
 - [ ] 🧹 **Delete the 3 test items + 3 test quotes (`_DELETE`)** before real go-live so they don't pollute Rob's view (manual — no MCP delete).
 
