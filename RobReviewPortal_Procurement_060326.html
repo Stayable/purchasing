@@ -80,7 +80,7 @@
     <div class="eyebrow">RISE8 Companies &nbsp;·&nbsp; Stayable Hotels &nbsp;·&nbsp; Executive Review</div>
     <h1>Procurement Review Portal</h1>
     <p class="sub">Read-only window into the Zoho procurement pipeline for CEO review. Approvals are made in Zoho — each item below deep-links to its record, where your decision is recorded under your name.</p>
-    <div class="mock">
+    <div class="mock" id="status-banner">
       <strong>SCAFFOLD — MOCK DATA.</strong> Figures below are illustrative. The portal goes live once a read-only Zoho OAuth self-client is connected and real <code>Procurement_Items</code> exist (currently 0; operational hold). This portal is <strong>read-only by design</strong> and never writes to Zoho.
     </div>
   </header>
@@ -104,7 +104,7 @@
           <th>Awarded Vendor</th><th class="num">Landed/Unit</th><th>Approver Tier</th><th></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="queue-body">
         <tr>
           <td>PTAC9000BTU</td><td>Jacksonville West (6802)</td><td class="num">$48,000</td>
           <td>Ningbo Aux Co. <span class="badge ok">Awarded</span></td><td class="num">$214.00</td>
@@ -125,14 +125,14 @@
         </tr>
       </tbody>
     </table>
-    <p class="note" style="margin-top:10px;">3 items awaiting review · $184,400 pending commitment <span class="badge dim">mock</span></p>
+    <p class="note" style="margin-top:10px;" id="queue-note">3 items awaiting review · $184,400 pending commitment <span class="badge dim">mock</span></p>
   </section>
 
   <!-- VIEW 2 — STATUS BOARD BY STAGE -->
   <section id="board">
     <h2>Status Board</h2>
     <p class="h2note">Live count by pipeline stage. Gates (gold) are enforced in Zoho before an item can advance.</p>
-    <div class="board">
+    <div class="board" id="board-grid">
       <div class="col"><div class="name">Spec</div><div class="gate">→ Bid needs COO sign-off</div><div class="count">7</div></div>
       <div class="col"><div class="name">Bid</div><div class="gate">≥3 vendor quotes</div><div class="count">5</div></div>
       <div class="col"><div class="name">Level</div><div class="gate">landed-cost compare</div><div class="count">4</div></div>
@@ -150,6 +150,7 @@
   <section id="detail">
     <h2>Item Detail — Quote Comparison</h2>
     <p class="h2note">One item, all quotes side-by-side, ranked by landed cost/unit. The leveling principle: lowest sticker ≠ best deal.</p>
+    <div id="detail-wrap">
     <div class="detail-head">
       <div>
         <div class="t">QueenMattress &nbsp;<span class="badge dim">Stage: Submitted</span></div>
@@ -168,6 +169,7 @@
       </tbody>
     </table>
     <p class="note" style="margin-top:10px;">VendorB has the lowest sticker ($38) but the highest landed cost ($58.00). VendorC wins on true landed cost ($56.50); VendorA is within $0.50 with a superior spec — operator's recommendation noted for CEO call. <span class="badge dim">mock — uses validated 06/02 test figures</span></p>
+    </div>
   </section>
 
   <!-- VIEW 4 — DECISIONS LOG -->
@@ -176,7 +178,7 @@
     <p class="h2note">Audit trail of CEO decisions, sourced from <code>Decision_Notes</code> + <code>Stage</code> on each record. Decisions are made and recorded in Zoho.</p>
     <table>
       <thead><tr><th>Date</th><th>Item</th><th>Decision</th><th>Approver</th><th>Note</th></tr></thead>
-      <tbody>
+      <tbody id="decisions-body">
         <tr><td class="id">05/28/26</td><td>ArcWelderAC225S</td><td><span class="badge ok">Approved</span></td><td>R. Beyer</td><td>Riland; landed $148/unit; UL listed.</td></tr>
         <tr><td class="id">05/22/26</td><td>ExtensionLadder40FT</td><td><span class="badge warn">Appr. w/ Cond.</span></td><td>R. Beyer</td><td>Approved pending 2nd inspection sample.</td></tr>
         <tr><td class="id">05/19/26</td><td>PressureWasher4400PSI</td><td><span class="badge bad">Declined</span></td><td>R. Beyer</td><td>120V/UL gap; re-spec and re-bid.</td></tr>
@@ -188,13 +190,13 @@
   <section id="spend">
     <h2>Spend Rollup</h2>
     <p class="h2note">Committed (Approved) vs. pending (Submitted) overseas spend. Tiers drive who must sign.</p>
-    <div class="grid">
+    <div class="grid" id="spend-grid">
       <div class="cell"><div class="k">Pending CEO Review</div><div class="v">$184,400</div></div>
       <div class="cell"><div class="k">Approved YTD</div><div class="v">$1.27M</div></div>
       <div class="cell"><div class="k">Items &gt; $100K (IC + inspection)</div><div class="v">1 <small>pending</small></div></div>
       <div class="cell"><div class="k">Avg. landed savings vs. sticker</div><div class="v">2.6%</div></div>
     </div>
-    <p class="note" style="margin-top:10px;"><span class="badge dim">mock</span> Real rollup computes from <code>Estimated_Item_Level_Spend</code> grouped by <code>Stage</code> / <code>Approver</code> tier once data lands.</p>
+    <p class="note" style="margin-top:10px;" id="spend-note"><span class="badge dim">mock</span> Real rollup computes from <code>Estimated_Item_Level_Spend</code> grouped by <code>Stage</code> / <code>Approver</code> tier once data lands.</p>
   </section>
 
   <footer>
@@ -214,6 +216,116 @@
       alert("SCAFFOLD: live rows deep-link to the Zoho record (" + zohoRecordUrl(a.dataset.zoho) + ") where the CEO approves natively. Disabled on mock data.");
     });
   });
+
+  // --- P1-F: live-data wiring (read-only). Pulls /api/procurement and re-renders all 5 views.
+  // Any failure (env vars not set, Zoho unreachable, offline) leaves the mock scaffold untouched.
+  (function(){
+    var fmtUSD0 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+    var fmtUSD2 = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2});
+    function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+    function fmtDate(s){ if(!s) return '—'; var m=String(s).slice(0,10).split('-'); return m.length===3?(m[1]+'/'+m[2]+'/'+m[0].slice(2)):esc(s); }
+    function approverBadge(a){ a=a||''; if(/IC|inspection|over\s*\$?100/i.test(a)) return 'bad'; if(/CEO/i.test(a)) return 'warn'; return 'dim'; }
+    function stageBadge(s){ s=(s||'').toLowerCase(); if(s.indexOf('approved')===0&&s.indexOf('condition')<0) return 'ok'; if(s.indexOf('approved')===0) return 'warn'; if(s.indexOf('declined')===0) return 'bad'; return 'dim'; }
+    function rurl(id){ return zohoRecordUrl(id); }
+    function reviewLink(id,label){ return '<a class="review" target="_blank" rel="noopener" href="'+rurl(id)+'">'+(label||'Review in Zoho →')+'</a>'; }
+
+    var STAGES=[["Spec","→ Bid needs COO sign-off"],["Bid","≥3 vendor quotes"],["Level","landed-cost compare"],
+      ["FL-Validate","→ Recommend needs FL Passed"],["Recommend","decision drafted"],["Submitted","awaiting CEO"],
+      ["Approved","→ needs Awarded Vendor"],["Approved-with-Conditions","conditional"],
+      ["Declined","—"],["Need-More-Info","back to operator"]];
+    var LABELS={"Approved-with-Conditions":"Appr. w/ Cond.","Need-More-Info":"Need More Info"};
+
+    function setBanner(html, live){
+      var b=document.getElementById('status-banner'); if(!b) return;
+      b.innerHTML=html;
+      if(live){ b.style.borderColor='rgba(78,163,106,0.4)'; b.style.background='rgba(78,163,106,0.08)'; b.style.color='var(--ok)'; }
+    }
+
+    function renderLive(d){
+      var items=d.items||[], quotes=d.quotes||[], qById={};
+      quotes.forEach(function(q){ qById[q.id]=q; });
+      var when=d.generatedAt?(' · refreshed '+esc(d.generatedAt.replace('T',' ').slice(0,16))+' UTC'):'';
+      setBanner('<strong>LIVE — connected to Zoho.</strong> '+(items.length?items.length+' item'+(items.length===1?'':'s')+' in pipeline':'0 procurement items yet (expected during the operational hold)')+when+'. Read-only by design — never writes to Zoho.', true);
+
+      // VIEW 1 — Approval queue
+      var qb=document.getElementById('queue-body');
+      if(qb){
+        var queue=d.queue||[];
+        qb.innerHTML = queue.length ? queue.map(function(it){
+          var aq=it.awardedQuoteId?qById[it.awardedQuoteId]:null;
+          var landed=aq&&aq.landedUnit!=null?fmtUSD2.format(aq.landedUnit):'—';
+          var vend=it.awardedVendorName?esc(it.awardedVendorName)+' <span class="badge ok">Awarded</span>':'<span class="badge dim">none yet</span>';
+          return '<tr><td>'+esc(it.name)+'</td><td>'+esc(it.property||'—')+'</td><td class="num">'+(it.spend!=null?fmtUSD0.format(it.spend):'—')+'</td>'+
+            '<td>'+vend+'</td><td class="num">'+landed+'</td>'+
+            '<td><span class="badge '+approverBadge(it.approver)+'">'+esc(it.approver||'—')+'</span></td>'+
+            '<td>'+reviewLink(it.id)+'</td></tr>';
+        }).join('') : '<tr><td colspan="7" class="note">No items awaiting CEO review.</td></tr>';
+        var qn=document.getElementById('queue-note');
+        if(qn){ var pend=(d.spend&&d.spend.pendingSubmitted)||0; qn.innerHTML=queue.length+' item'+(queue.length===1?'':'s')+' awaiting review · '+fmtUSD0.format(pend)+' pending commitment'; }
+      }
+
+      // VIEW 2 — Status board
+      var bg=document.getElementById('board-grid');
+      if(bg){
+        bg.innerHTML=STAGES.map(function(s){
+          var c=(d.counts&&d.counts[s[0]])||0;
+          return '<div class="col"><div class="name">'+esc(LABELS[s[0]]||s[0])+'</div><div class="gate">'+esc(s[1])+'</div><div class="count'+(c?'':' zero')+'">'+c+'</div></div>';
+        }).join('');
+      }
+
+      // VIEW 3 — Item detail + quote comparison (feature first queued item, else highest-spend)
+      var dw=document.getElementById('detail-wrap');
+      if(dw){
+        var feat=(d.queue&&d.queue[0])||items[0]||null;
+        if(!feat){ dw.innerHTML='<p class="note">No items to display yet.</p>'; }
+        else {
+          var iq=quotes.filter(function(q){return q.itemId===feat.id;})
+            .sort(function(a,b){return (a.landedUnit==null?Infinity:a.landedUnit)-(b.landedUnit==null?Infinity:b.landedUnit);});
+          var head='<div class="detail-head"><div><div class="t">'+esc(feat.name)+' &nbsp;<span class="badge dim">Stage: '+esc(feat.stage||'—')+'</span></div>'+
+            '<div class="m">'+esc(feat.property||'—')+' · Target qty '+(feat.targetQty!=null?feat.targetQty:'—')+' · Est. spend '+(feat.spend!=null?fmtUSD0.format(feat.spend):'—')+' · FL: '+esc(feat.flStatus||'—')+' · Spec: '+esc(feat.specStatus||'—')+'</div></div>'+
+            reviewLink(feat.id,'Review &amp; approve in Zoho →')+'</div>';
+          var rows=iq.length ? iq.map(function(q){
+            var win=(feat.awardedQuoteId&&q.id===feat.awardedQuoteId);
+            return '<tr'+(win?' class="win"':'')+'><td class="id">'+esc(q.name||'—')+'</td><td>'+esc(q.vendorName||'—')+'</td>'+
+              '<td class="num">'+(q.unitPrice!=null?q.unitPrice.toFixed(2):'—')+'</td><td class="num">'+(q.qty!=null?q.qty:'—')+'</td>'+
+              '<td class="num">'+(q.freight!=null?q.freight.toLocaleString():'—')+'</td><td class="num">'+(q.duty!=null?q.duty.toLocaleString():'—')+'</td>'+
+              '<td class="num">'+(q.landedUnit!=null?q.landedUnit.toFixed(2):'—')+'</td><td>'+esc(q.incoterm||'—')+'</td>'+
+              '<td>'+(q.leadDays!=null?q.leadDays+'d':'—')+'</td><td>'+esc(q.specMatch||'—')+'</td>'+
+              '<td'+(win?' class="flag"':'')+'>'+(win?'awarded':esc(q.status||'—'))+'</td></tr>';
+          }).join('') : '<tr><td colspan="11" class="note">No quotes recorded for this item yet.</td></tr>';
+          dw.innerHTML=head+'<table><thead><tr><th>Quote</th><th>Vendor</th><th class="num">Unit $</th><th class="num">Qty</th><th class="num">Freight</th><th class="num">Duty</th><th class="num">Landed/Unit</th><th>Incoterm</th><th>Lead</th><th>Spec</th><th class="flag">Status</th></tr></thead><tbody>'+rows+'</tbody></table>';
+        }
+      }
+
+      // VIEW 4 — Decisions log
+      var db=document.getElementById('decisions-body');
+      if(db){
+        var dec=d.decisions||[];
+        db.innerHTML = dec.length ? dec.map(function(x){
+          return '<tr><td class="id">'+fmtDate(x.date)+'</td><td>'+esc(x.name)+'</td>'+
+            '<td><span class="badge '+stageBadge(x.stage)+'">'+esc(x.stage||'—')+'</span></td>'+
+            '<td>'+esc(x.approver||'—')+'</td><td>'+esc(x.note||'—')+'</td></tr>';
+        }).join('') : '<tr><td colspan="5" class="note">No decisions recorded yet.</td></tr>';
+      }
+
+      // VIEW 5 — Spend rollup
+      var sg=document.getElementById('spend-grid');
+      if(sg && d.spend){
+        sg.innerHTML=
+          '<div class="cell"><div class="k">Pending CEO Review</div><div class="v">'+fmtUSD0.format(d.spend.pendingSubmitted||0)+'</div></div>'+
+          '<div class="cell"><div class="k">Approved (total)</div><div class="v">'+fmtUSD0.format(d.spend.approvedTotal||0)+'</div></div>'+
+          '<div class="cell"><div class="k">Items &gt; $100K pending (IC + inspection)</div><div class="v">'+(d.spend.overHundredK||0)+' <small>pending</small></div></div>'+
+          '<div class="cell"><div class="k">Items in pipeline</div><div class="v">'+items.length+'</div></div>';
+        var sn=document.getElementById('spend-note'); if(sn) sn.innerHTML='Computed live from <code>Estimated_Item_Level_Spend</code> grouped by <code>Stage</code>.';
+      }
+    }
+
+    var key=new URLSearchParams(location.search).get('key');
+    fetch('/api/procurement', key?{headers:{'x-portal-key':key}}:{})
+      .then(function(r){ if(!r.ok) throw new Error('http '+r.status); return r.json(); })
+      .then(function(d){ if(d && d.live) renderLive(d); /* otherwise: keep mock scaffold */ })
+      .catch(function(){ /* not yet connected / offline — mock scaffold stays */ });
+  })();
 </script>
 </body>
 </html>
