@@ -201,7 +201,7 @@
 
   <footer>
     <div>RISE8 Companies · Boca Raton, FL · Internal use only · Read-only review portal</div>
-    <div>Scaffold built: <span id="ts"></span></div>
+    <div id="who">Scaffold built: <span id="ts"></span></div>
   </footer>
 </div>
 <script>
@@ -246,6 +246,14 @@
       quotes.forEach(function(q){ qById[q.id]=q; });
       var when=d.generatedAt?(' · refreshed '+esc(d.generatedAt.replace('T',' ').slice(0,16))+' UTC'):'';
       setBanner('<strong>LIVE — connected to Zoho.</strong> '+(items.length?items.length+' item'+(items.length===1?'':'s')+' in pipeline':'0 procurement items yet (expected during the operational hold)')+when+'. Read-only by design — never writes to Zoho.', true);
+
+      // signed-in indicator + sign out (only when auth is enabled and a viewer is present)
+      var whoEl=document.getElementById('who');
+      if(whoEl && d.viewer){
+        whoEl.innerHTML='Signed in as '+esc(d.viewer)+' · <a href="#" id="signout">Sign out</a>';
+        var so=document.getElementById('signout');
+        if(so) so.addEventListener('click', function(e){ e.preventDefault(); fetch('/api/auth/logout',{method:'POST'}).then(function(){ location.reload(); }); });
+      }
 
       // VIEW 1 — Approval queue
       var qb=document.getElementById('queue-body');
@@ -321,11 +329,57 @@
       }
     }
 
-    var key=new URLSearchParams(location.search).get('key');
-    fetch('/api/procurement', key?{headers:{'x-portal-key':key}}:{})
-      .then(function(r){ if(!r.ok) throw new Error('http '+r.status); return r.json(); })
-      .then(function(d){ if(d && d.live) renderLive(d); /* otherwise: keep mock scaffold */ })
-      .catch(function(){ /* not yet connected / offline — mock scaffold stays */ });
+    function hideLogin(){ var o=document.getElementById('login-overlay'); if(o) o.style.display='none'; }
+    function showLogin(msg){
+      var o=document.getElementById('login-overlay');
+      if(!o){
+        o=document.createElement('div'); o.id='login-overlay';
+        o.style.cssText='position:fixed;inset:0;background:rgba(8,12,17,0.93);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px;';
+        o.innerHTML='<div style="background:var(--ink-2);border:1px solid var(--line);border-radius:4px;max-width:380px;width:100%;padding:28px 26px;">'+
+          '<div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:10px;">RISE8 &middot; Stayable</div>'+
+          '<div style="font-size:20px;font-weight:600;margin-bottom:4px;">Procurement Review — Sign in</div>'+
+          '<div style="color:var(--muted);font-size:13px;margin-bottom:20px;">Authorized reviewers only.</div>'+
+          '<label style="display:block;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Email</label>'+
+          '<select id="li-email" style="width:100%;padding:10px;margin-bottom:14px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:3px;font-size:14px;">'+
+            '<option value="rb@rise8companies.com">rb@rise8companies.com (Rob)</option>'+
+            '<option value="jefferson@rentstayable.com">jefferson@rentstayable.com</option>'+
+            '<option value="admin@rentstayable.com">admin@rentstayable.com</option>'+
+          '</select>'+
+          '<label style="display:block;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Password</label>'+
+          '<input id="li-pw" type="password" autocomplete="current-password" style="width:100%;padding:10px;margin-bottom:16px;background:var(--ink);color:var(--text);border:1px solid var(--line);border-radius:3px;font-size:14px;" />'+
+          '<button id="li-go" style="width:100%;padding:11px;background:var(--accent);color:var(--ink);border:none;border-radius:3px;font-weight:600;font-size:14px;cursor:pointer;">Sign in</button>'+
+          '<div id="li-err" style="color:var(--bad);font-size:13px;margin-top:12px;min-height:18px;"></div>'+
+        '</div>';
+        document.body.appendChild(o);
+        var submit=function(){
+          var em=document.getElementById('li-email').value, pw=document.getElementById('li-pw').value;
+          var err=document.getElementById('li-err'), btn=document.getElementById('li-go');
+          err.textContent=''; btn.disabled=true; btn.textContent='Signing in…';
+          fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,password:pw})})
+            .then(function(r){ return r.json().then(function(j){ return {ok:r.ok,j:j}; }, function(){ return {ok:r.ok,j:{}}; }); })
+            .then(function(x){ if(x.ok){ hideLogin(); loadData(); } else { err.textContent='Invalid email or password.'; btn.disabled=false; btn.textContent='Sign in'; } })
+            .catch(function(){ err.textContent='Network error — try again.'; btn.disabled=false; btn.textContent='Sign in'; });
+        };
+        o.querySelector('#li-go').addEventListener('click', submit);
+        o.querySelector('#li-pw').addEventListener('keydown', function(e){ if(e.key==='Enter') submit(); });
+      }
+      o.style.display='flex';
+      if(msg){ var e=document.getElementById('li-err'); if(e) e.textContent=msg; }
+    }
+
+    function loadData(){
+      var key=new URLSearchParams(location.search).get('key');
+      return fetch('/api/procurement', key?{headers:{'x-portal-key':key}}:{})
+        .then(function(r){
+          if(r.status===401){ showLogin(); return null; }   // auth required -> login (not mock)
+          if(!r.ok) throw new Error('http '+r.status);
+          return r.json();
+        })
+        .then(function(d){ if(d && d.live){ hideLogin(); renderLive(d); } })
+        .catch(function(){ /* offline / not connected — mock scaffold stays */ });
+    }
+
+    loadData();
   })();
 </script>
 </body>

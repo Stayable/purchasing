@@ -20,6 +20,8 @@
 //                                     (primary guard should still be Vercel
 //                                      Deployment Protection — see runbook P1-D)
 
+const auth = require("./_auth.js");
+
 const ACCOUNTS = process.env.ZOHO_ACCOUNTS_DOMAIN || "https://accounts.zoho.com";
 const API = process.env.ZOHO_API_DOMAIN || "https://www.zohoapis.com";
 
@@ -72,11 +74,19 @@ async function coql(query, retry = true) {
 const num = (v) => (v == null ? null : Number(v));
 
 module.exports = async (req, res) => {
-  // App-level guard (defense in depth; platform protection is the real gate).
-  const need = process.env.PORTAL_SHARED_SECRET;
-  if (need) {
-    const got = req.headers["x-portal-key"] || (req.query && req.query.key);
-    if (got !== need) return res.status(401).json({ error: "unauthorized" });
+  // Primary guard: signed session cookie (set by /api/auth/login). Enabled only when
+  // SESSION_SECRET is configured — until then the portal keeps its prior open behavior.
+  let viewer = null;
+  if (auth.authEnabled()) {
+    viewer = auth.sessionEmail(req);
+    if (!viewer) return res.status(401).json({ error: "auth_required" });
+  } else {
+    // Legacy fallback guard (defense in depth) only when auth isn't configured.
+    const need = process.env.PORTAL_SHARED_SECRET;
+    if (need) {
+      const got = req.headers["x-portal-key"] || (req.query && req.query.key);
+      if (got !== need) return res.status(401).json({ error: "unauthorized" });
+    }
   }
 
   try {
@@ -165,6 +175,7 @@ module.exports = async (req, res) => {
     return res.status(200).json({
       generatedAt: new Date().toISOString(),
       live: true,
+      viewer,
       counts,
       queue,
       items,
