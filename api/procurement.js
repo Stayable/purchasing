@@ -80,13 +80,13 @@ module.exports = async (req, res) => {
       coql(
         "SELECT Name, Stage, Property_Scope, Estimated_Item_Level_Spend, Approver, " +
         "Target_Decision_Date, Target_Quantity, Florida_Validation_Status, Spec_Sheet_Status, " +
-        "Decision_Notes, Awarded_Vendor.id, Owner.name, id " +
+        "Decision_Notes, Awarded_Vendor.id, id " +
         "FROM Procurement_Items WHERE Stage is not null ORDER BY Estimated_Item_Level_Spend desc LIMIT 200"
       ),
       coql(
         "SELECT Name, Unit_Price, Order_Quantity, Freight_Cost, Duty_Tariff, Landed_Cost_Unit, " +
         "Total_Landed_Cost, Incoterm, Lead_Time_days, Spec_Match, Quote_Status, Date_Received, " +
-        "Currency1, Vendor.Name, Procurement_Item.id, id " +
+        "Currency1, Vendor.Vendor_Name, Procurement_Item.id, id " +
         "FROM Vendor_Quotes WHERE Procurement_Item is not null LIMIT 200"
       ),
     ]);
@@ -94,7 +94,7 @@ module.exports = async (req, res) => {
     // quote id -> vendor name (to resolve an item's Awarded_Vendor quote into a vendor)
     const quoteVendor = {};
     const quotes = quoteRows.map((q) => {
-      const vn = q["Vendor.Name"] || null;
+      const vn = q["Vendor.Vendor_Name"] || null;
       quoteVendor[q.id] = vn;
       return {
         id: q.id,
@@ -130,7 +130,6 @@ module.exports = async (req, res) => {
         flStatus: it.Florida_Validation_Status || null,
         specStatus: it.Spec_Sheet_Status || null,
         decisionNotes: it.Decision_Notes || null,
-        owner: it["Owner.name"] || null,
         awardedQuoteId,
         awardedVendorName: awardedQuoteId ? quoteVendor[awardedQuoteId] || null : null,
       };
