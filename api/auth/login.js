@@ -3,6 +3,7 @@
 // Auth disabled (no SESSION_SECRET) -> 404, so the endpoint is inert until configured.
 
 const auth = require("../_auth.js");
+const dbm = require("../_db.js");
 
 module.exports = async (req, res) => {
   if (!auth.authEnabled()) return res.status(404).json({ error: "auth_disabled" });
@@ -11,13 +12,16 @@ module.exports = async (req, res) => {
   const { email, password } = await auth.readJson(req);
   const who = auth.norm(email);
 
-  if (!auth.verifyPassword(email, password)) {
+  const ok = await auth.verifyLogin(email, password);
+  if (!ok) {
     // Single generic failure (no email enumeration); log the attempt.
     console.log(JSON.stringify({ evt: "login_failed", email: who || null, ts: new Date().toISOString() }));
+    await dbm.audit("login_failed", who, null);
     return res.status(401).json({ error: "invalid_credentials" });
   }
 
   res.setHeader("Set-Cookie", auth.cookie("portal_session", auth.makeSession(who), auth.SESSION_TTL_SEC));
   console.log(JSON.stringify({ evt: "login", email: who, ts: new Date().toISOString() }));
+  await dbm.audit("login", who, null);
   return res.status(200).json({ ok: true, email: who });
 };

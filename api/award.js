@@ -21,6 +21,7 @@
 // INVALID_DATA error which is surfaced to the caller.
 
 const auth = require("./_auth.js");
+const dbm = require("./_db.js");
 
 const ACCOUNTS = process.env.ZOHO_ACCOUNTS_DOMAIN || "https://accounts.zoho.com";
 const API = process.env.ZOHO_API_DOMAIN || "https://www.zohoapis.com";
@@ -83,6 +84,7 @@ module.exports = async (req, res) => {
       return res.status(502).json({ error: "zoho_write_failed", detail: row || j });
     }
     console.log(JSON.stringify({ evt: "portal_decision", action, stage, itemId, by: viewer, ts: new Date().toISOString() }));
+    await dbm.audit("portal_decision", viewer, { itemId: String(itemId), action, stage, quoteId: quoteId ? String(quoteId) : null });
     return res.status(200).json({ ok: true, itemId, stage, by: viewer });
   } catch (err) {
     const msg = String(err.message || err);

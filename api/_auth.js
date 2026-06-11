@@ -21,6 +21,7 @@
 //   PORTAL_ALLOWED_EMAILS  optional CSV override of the allowlist (defaults below)
 
 const crypto = require("crypto");
+const dbm = require("./_db.js");
 
 const DEFAULT_ALLOWED = [
   "jefferson@rentstayable.com",
@@ -66,13 +67,39 @@ function safeEqual(a, b) {
   return crypto.timingSafeEqual(ba, bb);
 }
 
-// --- password check (constant-time) ---
+// --- scrypt password hashing (for the Neon-backed user store) ---
+function hashPassword(password) {
+  const salt = crypto.randomBytes(16);
+  const key = crypto.scryptSync(String(password), salt, 64);
+  return salt.toString("hex") + ":" + key.toString("hex");
+}
+function verifyHash(password, stored) {
+  if (!stored || typeof stored !== "string" || stored.indexOf(":") < 0) return false;
+  const parts = stored.split(":");
+  let key;
+  try { key = crypto.scryptSync(String(password), Buffer.from(parts[0], "hex"), 64); } catch { return false; }
+  const expected = Buffer.from(parts[1], "hex");
+  if (key.length !== expected.length) return false;
+  return crypto.timingSafeEqual(key, expected);
+}
+
+// --- env-var password check (fallback when no DB) ---
 function verifyPassword(email, password) {
   if (!isAllowed(email)) return false;
   const envKey = PW_ENV[norm(email)];
   const expected = envKey ? process.env[envKey] : null;
   if (!expected || !password) return false;
   return safeEqual(password, expected);
+}
+
+// --- login check: DB-backed when DATABASE_URL is set, else env-var fallback ---
+async function verifyLogin(email, password) {
+  if (dbm.dbEnabled()) {
+    const u = await dbm.getUser(email);            // only active users returned
+    if (!u) return false;
+    return verifyHash(password, u.password_hash);
+  }
+  return verifyPassword(email, password);
 }
 
 // --- signed session token ---
@@ -92,10 +119,13 @@ function verify(token) {
 function makeSession(email) {
   return sign({ t: "sess", email: norm(email), iat: nowSec(), exp: nowSec() + SESSION_TTL_SEC });
 }
-// returns the session email if valid + still allowed, else null
+// returns the session email if the token is valid + unexpired, else null.
+// In DB mode the users table is the source of truth (the signed token was only issued
+// after a DB login), so we trust the signature; in env mode we also enforce the allowlist.
 function sessionEmail(req) {
   const p = verify(parseCookies(req)["portal_session"]);
-  if (!p || p.t !== "sess" || !isAllowed(p.email)) return null;
+  if (!p || p.t !== "sess") return null;
+  if (!dbm.dbEnabled() && !isAllowed(p.email)) return null;
   return p.email;
 }
 
@@ -127,6 +157,7 @@ async function readJson(req) {
 
 module.exports = {
   authEnabled, isAllowed, allowedEmails, norm,
-  verifyPassword, makeSession, sessionEmail,
+  verifyPassword, verifyLogin, hashPassword, verifyHash,
+  makeSession, sessionEmail,
   cookie, parseCookies, readJson, nowSec, SESSION_TTL_SEC,
 };
