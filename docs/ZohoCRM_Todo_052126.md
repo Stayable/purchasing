@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 06/11/26
+**Last Updated:** 06/12/26
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -13,9 +13,15 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 ## Top Priorities — Active Sprint (refreshed 05/29/26)
 
-**Done this session (06/11/26):**
+**Done this session (06/12/26):**
+- ✅ **Portal login BUILT (per-user password + 30-day signed session) — `16018c4`.** Server-side gate for `/review`: `api/_auth.js` (HMAC-signed HttpOnly+Secure cookie, constant-time password check, allowlist `jefferson@`/`admin@`/`rb@`), `api/auth/login.js` (+ logs `login`/`login_failed` for the access audit), `api/auth/logout.js`; `api/procurement.js` requires a valid session when `SESSION_SECRET` is set; portal login overlay on 401 + "signed in as / sign out". Verified `node --check` + **10/10 auth unit tests**. **INERT until `SESSION_SECRET` is set** (portal stays open/live until then — no regression). **This RESOLVES P1-D** — once activated the endpoint is no longer world-open; no Vercel Pro / password-protection needed. **OTP via Resend = the planned next layer** (plumbing built to accept it; user said "do not do OTP yet").
+  - 🔲 **ACTIVATION PENDING (Kyle, ~5 min):** set 4 Vercel env vars — `SESSION_SECRET` (long random) + `PORTAL_PW_JEFFERSON` / `PORTAL_PW_ADMIN` / `PORTAL_PW_ROB` — then Redeploy. Then Claude verifies 401-without-session + login render. *(Kyle said "you can add them yourself + make it changeable" — I can't write Vercel env from here, no CLI/MCP; passwords must NOT go in the repo. They're already changeable via the dashboard. Resolve how he wants the values set.)*
+- ✅ **Landing page (`index.html`) — `9d5c51b`:** added **Executive Review (Rob) → `/review`** CTA (was missing), removed the **GitHub "Documentation Repo"** link (no public repo pointer from a world-reachable page).
+- ✅ **Ran the `/tracker` pipeline prompt live via MCP (one-off):** 3 active items, all at Spec, all flagged ⚠ STUCK (≥7d) — but stale test data, not a real backlog. **Gap found:** module has **no stage-entry timestamp** → "days at current stage" can only be approximated from `Modified_Time`. If an accurate stuck-clock is wanted, spec a `Stage_Entered_Date` field stamped by a workflow rule. *(`/tracker` itself is still the LLM-prompt demo; real `/api/pipeline` wire-up is the gated Phase 0.5 decision.)*
+
+**Done prior session (06/11/26):**
 - ✅ **PORTAL IS LIVE ON REAL ZOHO DATA — P1-A/B/C/E/F + P2-A/B/D done.** `/review` renders live Procurement_Items + Vendor_Quotes through the read-only Vercel proxy, verified by headless render (banner "LIVE"; board Spec=3; detail shows QT-0001/2/3 landed 56.50/57.00/58.00; mock fully replaced; 0 secrets in browser). **Two runbook corrections, now canon:** (1) OAuth scope = `ZohoCRM.coql.READ,ZohoCRM.modules.READ` (modules.READ alone → `OAUTH_SCOPE_MISMATCH`; `modules.all.READ` rejected by console); (2) COQL vendor name = `Vendor.Vendor_Name`, and `Owner.*` not selectable (dropped). Proxy field-name + portal detail-selection fixes committed (`b387c1e`→head).
-- 🔲 **P1-D (Kyle) is now the top open item** — choose the `/api` access guard: Vercel Password Protection (needs Pro) **or** shared-secret stopgap. **Endpoint is world-open** until decided and now serves real test data. Then P2-C (apply + re-test rejection) + delete the 3 `_DELETE` test records before any real-data load.
+- ✅ **P1-D access guard — SOLVED 06/12 by the portal login** (see this-session block). No Vercel Pro needed. Remaining: **activate it** (Kyle sets the 4 env vars) + delete the 3 `_DELETE` test records before any real-data load.
 
 **Done prior session (06/09/26):**
 - ✅ **#11 — `Gainesville (2900)` added to `Property_Scope` (Kyle, confirmed via MCP `getFields` 06/09/26).** Picklist now carries all 9 properties + Portfolio-wide + None. **Verified it lives on `Procurement_Items` only** — `Vendor_Quotes` and `Vendors` have no property field (quotes read property up through the item lookup; vendors are global). **⚠️ Leftover (Kyle, ~10 sec):** the `Portfolio-wide (all 8 properties)` option label still says **8** — relabel to **9** next time in that screen.
