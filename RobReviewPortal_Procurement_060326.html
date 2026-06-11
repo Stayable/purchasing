@@ -276,7 +276,8 @@
       // VIEW 3 — Item detail + quote comparison (feature first queued item, else highest-spend)
       var dw=document.getElementById('detail-wrap');
       if(dw){
-        var feat=(d.queue&&d.queue[0])||items[0]||null;
+        var withQuotes=items.filter(function(it){return quotes.some(function(q){return q.itemId===it.id;});});
+        var feat=(d.queue&&d.queue[0])||withQuotes[0]||items[0]||null;
         if(!feat){ dw.innerHTML='<p class="note">No items to display yet.</p>'; }
         else {
           var iq=quotes.filter(function(q){return q.itemId===feat.id;})
