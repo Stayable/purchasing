@@ -69,6 +69,16 @@
   .detail-head .t { font-size: 17px; font-weight: 600; }
   .detail-head .m { font-size: 13px; color: var(--muted); margin-top: 4px; }
   .note { color: var(--muted); font-size: 13px; }
+  .detail-layout { display: grid; grid-template-columns: 290px 1fr; gap: 16px; align-items: start; }
+  .detail-list { border: 1px solid var(--line); border-radius: 3px; max-height: 560px; overflow-y: auto; background: var(--ink-2); }
+  .ditem { display: block; width: 100%; text-align: left; background: transparent; border: none; border-bottom: 1px solid var(--line); padding: 11px 13px; cursor: pointer; color: var(--text); font-family: inherit; }
+  .ditem:last-child { border-bottom: none; }
+  .ditem:hover { background: var(--ink-3); }
+  .ditem.sel { background: rgba(200,169,106,0.10); border-left: 3px solid var(--accent); padding-left: 10px; }
+  .di-name { display: block; font-weight: 600; font-size: 13px; margin-bottom: 5px; }
+  .di-meta { display: block; font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .detail-panel { min-width: 0; overflow-x: auto; }
+  @media (max-width: 760px) { .detail-layout { grid-template-columns: 1fr; } .detail-list { max-height: 260px; } }
   footer { margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
   footer a { color: var(--muted); }
   @media (max-width: 760px) { .board { grid-template-columns: repeat(2, 1fr); } nav.tabs { flex-wrap: wrap; } nav.tabs a { flex: 1 1 40%; } }
@@ -149,7 +159,7 @@
   <!-- VIEW 3 — ITEM DETAIL + SIDE-BY-SIDE QUOTE COMPARISON -->
   <section id="detail">
     <h2>Item Detail — Quote Comparison</h2>
-    <p class="h2note">One item, all quotes side-by-side, ranked by landed cost/unit. The leveling principle: lowest sticker ≠ best deal.</p>
+    <p class="h2note">Select an item from the list to see all its quotes side-by-side, ranked by landed cost/unit. The leveling principle: lowest sticker ≠ best deal.</p>
     <div id="detail-wrap">
     <div class="detail-head">
       <div>
@@ -281,13 +291,16 @@
         }).join('');
       }
 
-      // VIEW 3 — Item detail + quote comparison (feature first queued item, else highest-spend)
+      // VIEW 3 — Item detail: selectable/scrollable item list + per-item quote comparison
       var dw=document.getElementById('detail-wrap');
       if(dw){
+        var STAGE_ORDER={Spec:1,Bid:2,Level:3,"FL-Validate":4,Recommend:5,Submitted:6,Approved:7,"Approved-with-Conditions":8,Declined:9,"Need-More-Info":10};
         var withQuotes=items.filter(function(it){return quotes.some(function(q){return q.itemId===it.id;});});
-        var feat=(d.queue&&d.queue[0])||withQuotes[0]||items[0]||null;
-        if(!feat){ dw.innerHTML='<p class="note">No items to display yet.</p>'; }
-        else {
+        var listItems=items.slice().sort(function(a,b){return ((STAGE_ORDER[a.stage]||99)-(STAGE_ORDER[b.stage]||99))||((b.spend||0)-(a.spend||0));});
+        var defaultFeat=(d.queue&&d.queue[0])||withQuotes[0]||items[0]||null;
+
+        function detailPanel(feat){
+          if(!feat) return '<p class="note">Select an item from the list.</p>';
           var iq=quotes.filter(function(q){return q.itemId===feat.id;})
             .sort(function(a,b){return (a.landedUnit==null?Infinity:a.landedUnit)-(b.landedUnit==null?Infinity:b.landedUnit);});
           var head='<div class="detail-head"><div><div class="t">'+esc(feat.name)+' &nbsp;<span class="badge dim">Stage: '+esc(feat.stage||'—')+'</span></div>'+
@@ -302,7 +315,32 @@
               '<td>'+(q.leadDays!=null?q.leadDays+'d':'—')+'</td><td>'+esc(q.specMatch||'—')+'</td>'+
               '<td'+(win?' class="flag"':'')+'>'+(win?'awarded':esc(q.status||'—'))+'</td></tr>';
           }).join('') : '<tr><td colspan="11" class="note">No quotes recorded for this item yet.</td></tr>';
-          dw.innerHTML=head+'<table><thead><tr><th>Quote</th><th>Vendor</th><th class="num">Unit $</th><th class="num">Qty</th><th class="num">Freight</th><th class="num">Duty</th><th class="num">Landed/Unit</th><th>Incoterm</th><th>Lead</th><th>Spec</th><th class="flag">Status</th></tr></thead><tbody>'+rows+'</tbody></table>';
+          return head+'<table><thead><tr><th>Quote</th><th>Vendor</th><th class="num">Unit $</th><th class="num">Qty</th><th class="num">Freight</th><th class="num">Duty</th><th class="num">Landed/Unit</th><th>Incoterm</th><th>Lead</th><th>Spec</th><th class="flag">Status</th></tr></thead><tbody>'+rows+'</tbody></table>';
+        }
+        function listRow(it,selId){
+          var qn=quotes.filter(function(q){return q.itemId===it.id;}).length;
+          return '<button type="button" class="ditem'+(it.id===selId?' sel':'')+'" data-id="'+it.id+'">'+
+            '<span class="di-name">'+esc(it.name)+'</span>'+
+            '<span class="di-meta"><span class="badge dim">'+esc(it.stage||'—')+'</span> &nbsp;'+esc(it.property||'—')+'</span>'+
+            '<span class="di-meta">'+(it.spend!=null?fmtUSD0.format(it.spend):'—')+' · '+qn+' quote'+(qn===1?'':'s')+(it.awardedVendorName?' · awarded '+esc(it.awardedVendorName):'')+'</span>'+
+            '</button>';
+        }
+
+        if(!listItems.length){ dw.innerHTML='<p class="note">No items to display yet.</p>'; }
+        else {
+          var selId=defaultFeat?defaultFeat.id:null;
+          dw.innerHTML='<div class="detail-layout"><div class="detail-list" id="detail-list">'+
+            listItems.map(function(it){return listRow(it,selId);}).join('')+
+            '</div><div class="detail-panel" id="detail-panel">'+detailPanel(defaultFeat)+'</div></div>';
+          var listEl=document.getElementById('detail-list');
+          listEl.querySelectorAll('.ditem').forEach(function(btn){
+            btn.addEventListener('click', function(){
+              listEl.querySelectorAll('.ditem').forEach(function(b){ b.classList.remove('sel'); });
+              btn.classList.add('sel');
+              var it=items.filter(function(x){return x.id===btn.getAttribute('data-id');})[0];
+              document.getElementById('detail-panel').innerHTML=detailPanel(it);
+            });
+          });
         }
       }
 
