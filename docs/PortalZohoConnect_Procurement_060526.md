@@ -5,7 +5,19 @@
 
 ---
 
-## Confidence: ~90% (NOT 100%)
+## ✅ CONNECTED + VERIFIED LIVE — 06/11/26
+
+Portal at `/review` renders live Zoho data through the read-only proxy end-to-end (banner = "LIVE", board Spec=3, detail quote-comparison shows QT-0001/2/3 with landed 56.50/57.00/58.00, mock fully replaced). Two corrections were needed vs. this runbook's original instructions — **use these going forward**:
+
+- **OAuth scope:** `ZohoCRM.coql.READ,ZohoCRM.modules.READ` — *not* `ZohoCRM.modules.READ` alone (that returns `OAUTH_SCOPE_MISMATCH` on the `/coql` endpoint). `ZohoCRM.modules.all.READ` is rejected by the self-client console as invalid.
+- **COQL field names:** vendor name is `Vendor.Vendor_Name` (not `Vendor.Name`); `Owner.*` is not selectable via COQL (dropped — unused by the views).
+
+**Done:** P1-A, P1-B, P1-C, P1-E, P1-F, P2-A, P2-B, P2-D (proxy already retries once on 401).
+**Still open:** **P1-D access guard (endpoint is currently world-open and now serving real test data), P2-C (apply the guard), P2-E (drop mock banner — auto-handled: live render replaces it).** Plus the gated items below (real-data load, go-live, delete `_DELETE` test records).
+
+---
+
+## Confidence: ~90% (NOT 100%) — [historical, pre-connection]
 
 The pattern (Vercel serverless function + Zoho read-only OAuth self-client) is standard and well-documented. Honest risk lives in three places:
 1. **OAuth self-client refresh-token generation** — Zoho's grant→refresh exchange is fiddly the first time (10-min grant-token expiry, exact scope string, DC domain). Mitigation: do it once via curl, store the refresh token; it's long-lived.

@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 06/09/26
+**Last Updated:** 06/11/26
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -13,7 +13,11 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 ## Top Priorities — Active Sprint (refreshed 05/29/26)
 
-**Done this session (06/09/26):**
+**Done this session (06/11/26):**
+- ✅ **PORTAL IS LIVE ON REAL ZOHO DATA — P1-A/B/C/E/F + P2-A/B/D done.** `/review` renders live Procurement_Items + Vendor_Quotes through the read-only Vercel proxy, verified by headless render (banner "LIVE"; board Spec=3; detail shows QT-0001/2/3 landed 56.50/57.00/58.00; mock fully replaced; 0 secrets in browser). **Two runbook corrections, now canon:** (1) OAuth scope = `ZohoCRM.coql.READ,ZohoCRM.modules.READ` (modules.READ alone → `OAUTH_SCOPE_MISMATCH`; `modules.all.READ` rejected by console); (2) COQL vendor name = `Vendor.Vendor_Name`, and `Owner.*` not selectable (dropped). Proxy field-name + portal detail-selection fixes committed (`b387c1e`→head).
+- 🔲 **P1-D (Kyle) is now the top open item** — choose the `/api` access guard: Vercel Password Protection (needs Pro) **or** shared-secret stopgap. **Endpoint is world-open** until decided and now serves real test data. Then P2-C (apply + re-test rejection) + delete the 3 `_DELETE` test records before any real-data load.
+
+**Done prior session (06/09/26):**
 - ✅ **#11 — `Gainesville (2900)` added to `Property_Scope` (Kyle, confirmed via MCP `getFields` 06/09/26).** Picklist now carries all 9 properties + Portfolio-wide + None. **Verified it lives on `Procurement_Items` only** — `Vendor_Quotes` and `Vendors` have no property field (quotes read property up through the item lookup; vendors are global). **⚠️ Leftover (Kyle, ~10 sec):** the `Portfolio-wide (all 8 properties)` option label still says **8** — relabel to **9** next time in that screen.
 - ✅ **#4 — Stray "Batteries" Account inspected (Claude, MCP).** Confirmed orphan: id `…1418001`, `Vendor_Type` null, created 05/26 14:51:48 (2.5 hr after the 12:24:20 bulk import), **0 linked Contacts**, distinct from `GP Batteries Inc` (`…1416034`). Safe to delete. **No MCP delete tool exists** → 30-sec UI delete remains Kyle's (Accounts → Batteries → Delete).
 - ✅ **13a P1-F DONE — portal wired to live Zoho (Claude).** `RobReviewPortal_Procurement_060326.html` now fetches `/api/procurement` on load and re-renders all 5 views (queue, board, detail+quote-compare, decisions, spend) from live JSON, with **mock scaffold as fallback** (any fetch/auth/Zoho failure leaves the mock untouched) and an explicit **empty-state** ("LIVE — 0 items, expected during hold"). Reads optional `?key=` → `x-portal-key` header for shared-secret guard. Stage labels mapped exact-to-live (`Spec…Need-More-Info`); approver-tier badge derived from the live `Approver` picklist. Inline JS syntax-checked (`node --check`). **Renders mock until Kyle's env vars (P1-A/B/C) land — then it lights up automatically.** Next: P2-A verify on a protected Preview against the 3 test records once env vars are set.

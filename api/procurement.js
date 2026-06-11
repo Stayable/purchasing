@@ -4,7 +4,11 @@
 // and returns JSON shaped for the portal's 5 views. NEVER writes to Zoho.
 // Secrets live in Vercel env vars (server-side only) — nothing sensitive reaches the browser.
 //
-// Field API names verified against the live org via getFields on 06/05/26.
+// Field API names verified LIVE via COQL on 06/11/26 (both queries return 200):
+//   - vendor name lookup is Vendor.Vendor_Name (NOT Vendor.Name)
+//   - Owner.* is not selectable in COQL and is unused by the views (dropped)
+// OAuth scope required for these COQL reads: "ZohoCRM.coql.READ,ZohoCRM.modules.READ"
+//   (modules.READ alone returns OAUTH_SCOPE_MISMATCH on the /coql endpoint).
 // Datacenter: US org -> accounts.zoho.com / www.zohoapis.com (override via env if it ever moves).
 //
 // Env vars required (set in Vercel project settings):
