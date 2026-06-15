@@ -171,7 +171,10 @@ module.exports = async (req, res) => {
       overHundredK: queue.filter((it) => (it.spend || 0) > 100000).length,
     };
 
-    res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=120");
+    // Per-user, auth-gated payload — must NOT be shared-cached at the CDN, or one
+    // user's authenticated 200 gets served to anonymous/other callers (data leak).
+    res.setHeader("Cache-Control", "private, no-store, max-age=0");
+    res.setHeader("Vary", "Cookie");
     return res.status(200).json({
       generatedAt: new Date().toISOString(),
       live: true,

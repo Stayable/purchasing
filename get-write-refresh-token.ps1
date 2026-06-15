@@ -1,21 +1,31 @@
 # get-write-refresh-token.ps1 — one-time WRITE-scoped Zoho refresh-token generation.
-# Twin of get-refresh-token.ps1, but for the portal award/approve write path (api/award.js).
-# Prompts for the 3 values so NOTHING secret is stored in this file or in the repo.
-# It only prints the refresh token to the screen; copy it straight into Vercel.
+# For the portal award/approve write path (api/award.js). Prompts for the 3 values so
+# NOTHING secret is stored in this file or the repo; it only prints the refresh token.
 #
-# RUN (paste this one line into PowerShell, in the repo folder):
+# RUN THIS IN A REAL POWERSHELL WINDOW (not the Claude `!` prefix — Read-Host needs a
+# keyboard). Right-click the file -> Run with PowerShell, or in a PowerShell window:
 #   powershell -ExecutionPolicy Bypass -File .\get-write-refresh-token.ps1
 #
-# Datacenter = US (accounts.zoho.com). In the Zoho Self Client, generate the grant code with
-# SCOPE: ZohoCRM.modules.ALL   (read+write on records — required for the award PUT).
-# Generate a FRESH grant code right before running (it expires in ~3 min and is single-use).
+# GET A GRANT CODE FIRST (Zoho Self Client, US datacenter):
+#   1. https://api-console.zoho.com  ->  your Self Client  ->  "Generate Code"
+#   2. Scope:  ZohoCRM.modules.ALL     (read+write — required for the award PUT;
+#              the read token's modules.READ is NOT enough)
+#   3. Pick any duration; copy the code. It expires in ~3 min and is single-use,
+#      so generate it right before running this.
 #
-# IMPORTANT: this token is the WRITE token. Paste it into Vercel as  ZOHO_WRITE_REFRESH_TOKEN
-# (a DISTINCT env var from the read-only ZOHO_REFRESH_TOKEN — do NOT overwrite that one).
+# RESULT: paste the printed token into Vercel as  ZOHO_WRITE_REFRESH_TOKEN  (Production
+# scope) — a DISTINCT env var from the read-only ZOHO_REFRESH_TOKEN. Do NOT overwrite that.
 
 $clientId     = (Read-Host 'Client ID').Trim()
 $clientSecret = (Read-Host 'Client Secret').Trim()
 $code         = (Read-Host 'Grant code (scope ZohoCRM.modules.ALL; use within 3 min)').Trim()
+
+if (-not $clientId -or -not $clientSecret -or -not $code) {
+  Write-Host ''
+  Write-Host 'All three values are required. Nothing was entered — aborting.' -ForegroundColor Red
+  Read-Host 'Press Enter to close'
+  exit 1
+}
 
 $body = @{
   grant_type    = 'authorization_code'
@@ -29,19 +39,27 @@ try {
 } catch {
   Write-Host ''
   Write-Host "Request failed: $($_.Exception.Message)" -ForegroundColor Red
+  Read-Host 'Press Enter to close'
   exit 1
 }
 
 Write-Host ''
 if ($resp.refresh_token) {
-  Write-Host '=== WRITE REFRESH TOKEN — paste into Vercel  ZOHO_WRITE_REFRESH_TOKEN ===' -ForegroundColor Green
+  Write-Host '=== WRITE REFRESH TOKEN — paste into Vercel  ZOHO_WRITE_REFRESH_TOKEN (Production) ===' -ForegroundColor Green
   Write-Host $resp.refresh_token
-  Write-Host '======================================================================='
-  Write-Host '(Then: Vercel -> Settings -> Environment Variables -> add ZOHO_WRITE_REFRESH_TOKEN -> Redeploy)'
+  Write-Host '====================================================================================='
+  Write-Host 'Next: Vercel -> purchasing -> Settings -> Environment Variables -> add'
+  Write-Host '      ZOHO_WRITE_REFRESH_TOKEN (Production) -> Redeploy.'
   Write-Host 'Do NOT reuse the read-only ZOHO_REFRESH_TOKEN slot.' -ForegroundColor Yellow
 } else {
   Write-Host 'No refresh_token in the response. Full response below:' -ForegroundColor Yellow
   $resp | ConvertTo-Json
   Write-Host ''
-  Write-Host 'Common causes: "invalid_code" = grant code expired/used (regenerate); scope missing modules.ALL = regenerate the code with the write scope.' -ForegroundColor Yellow
+  Write-Host 'Common causes:' -ForegroundColor Yellow
+  Write-Host '  invalid_code   -> grant code expired/used; generate a fresh one and retry.'
+  Write-Host '  invalid_client -> Client ID/Secret wrong, or code is from a different self-client.'
+  Write-Host '  scope error    -> regenerate the code with scope ZohoCRM.modules.ALL.'
 }
+
+Write-Host ''
+Read-Host 'Press Enter to close'
