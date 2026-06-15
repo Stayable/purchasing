@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 06/15/26
+**Last Updated:** 06/16/26
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -12,6 +12,18 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 ---
 
 ## Top Priorities — Active Sprint (refreshed 05/29/26)
+
+**Done this session (06/16/26):**
+- ✅ **PORTAL WRITE-PATH IS LIVE + VERIFIED — resolves the 06/15 ACTIVATION steps below.** Kyle set the Production Vercel env (`SESSION_SECRET`, `ZOHO_WRITE_REFRESH_TOKEN`; `DATABASE_URL` was already present → login reads the Neon `portal_users` table, so `PORTAL_PW_*` are **unused**) and created `Portal_Approved_By` (text) + `Portal_Approved_At` (Date) on Procurement_Items. Verified end-to-end on the live custom domain `procurement.rentstayable.com`: anon `/api/procurement` → **401**, `rb@` login → session cookie, real `/api/award` → **200** writing `Stage`/`Awarded_Vendor`/`Portal_Approved_By`/`Portal_Approved_At` back to Zoho (confirmed via COQL). **This supersedes the 06/15 ⚠️ "fields absent" + 🔲 "activation pending" notes below.**
+- ✅ **Data-leak FIXED (`95fc1a5`).** `/api/procurement` was sending CDN-shared `s-maxage=60` while auth-gated, so the Vercel edge cached one logged-in user's payload and served it to anonymous + other users (verified: anon got `x-vercel-cache: HIT` with full data; an `rb@` login showed `viewer=admin@`). Now `Cache-Control: private, no-store` + `Vary: Cookie`; a cache-buster request already returned 401, and post-fix anon → 401.
+- ✅ **`Portal_Approved_At` date-type FIX (`4b95f24`).** The field was created as **Date** (not datetime), so `award.js`'s full ISO timestamp returned `INVALID_DATA`. Now sends `YYYY-MM-DD`. Real award click verified writing successfully after this.
+- ✅ **Demo data reduced to exactly 2 sets** (both DEMO-tagged in `Description`): `Bath Towels 600GSM` (`…543008`, Approved/awarded, `Portal_Approved_By=rb@`) + `Queen Mattresses` (`…543002`, needs approval). The other **11 items + 24 quotes were renamed `Test_Delete`** to make UI bulk-deletion easy (MCP has **no** delete op).
+  - 🔲 **Kyle:** in the Zoho UI, sort by Name and bulk-delete the `Test_Delete` records in **Procurement_Items** (11) + **Vendor_Quotes** (24); optionally the 3 `TEST_Vendor*_DELETE` Accounts. Keep the 2 sets + their 6 quotes (`QT-0007/8/9`, `QT-0023/24/25`). One of the deletables (`PTAC Units`, now Stage=Approved from the write test) is intentionally in the delete set.
+- ⚠️ **Shared portal password.** All 3 users (`rb@`/`admin@`/`jefferson@`) were seeded in Neon with the same password `StayableProcess`. 🔲 **Kyle:** set **unique** passwords before this is the real approval record — a shared password lets anyone approve as anyone, defeating the per-user `Portal_Approved_By` attribution. Rerun `db/setup.js` (no redeploy needed).
+- 📋 **BACKLOG — portal flow enhancements (Kyle/Claude, "work later or tomorrow"):**
+  - 🔲 **(1) Approve/Decline Notes input** — let the approver enter a justification **before submission** in the portal → write it to Zoho `Decision_Notes`.
+  - 🔲 **(2) Award = pick-a-quote-first** — require the user to **click a quotation, then Approve** (so the awarded quote is explicit), and allow **adding notes after** the decision that also write back to Zoho.
+  - *(Org rule routes action items to the Smartsheet Action Items Staging Sheet `1981210199805828`; no Smartsheet connector in this session — mirror these two there manually / in a connected session.)*
 
 **Decided this session (06/15/26):**
 - ✅ **Portal-side award/approve ENABLED as the model (Kyle).** Rob approves/awards in `/review`, not in Zoho — goal is to minimize Rob's Zoho interaction. **Reverses the 06/03 read-only decision** (attribution trade-off accepted: Zoho native `Modified_By` = service user; real person captured app-side via `Portal_Approved_By` + Neon audit). Decision logged in `ZohoCRM_Rollout_052126.md` (06/15). Activation spec: `specs/PortalAwardWrite_Procurement_061526.md`. Write-token helper: `get-write-refresh-token.ps1`.
