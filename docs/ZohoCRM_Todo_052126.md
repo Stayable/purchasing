@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 06/12/26
+**Last Updated:** 06/15/26
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -12,6 +12,12 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 ---
 
 ## Top Priorities — Active Sprint (refreshed 05/29/26)
+
+**Decided this session (06/15/26):**
+- ✅ **Portal-side award/approve ENABLED as the model (Kyle).** Rob approves/awards in `/review`, not in Zoho — goal is to minimize Rob's Zoho interaction. **Reverses the 06/03 read-only decision** (attribution trade-off accepted: Zoho native `Modified_By` = service user; real person captured app-side via `Portal_Approved_By` + Neon audit). Decision logged in `ZohoCRM_Rollout_052126.md` (06/15). Activation spec: `specs/PortalAwardWrite_Procurement_061526.md`. Write-token helper: `get-write-refresh-token.ps1`.
+- ⚠️ **CORRECTION — `Portal_Approved_By` / `Portal_Approved_At` do NOT exist on `Procurement_Items`.** Verified via MCP `getFields` 06/15 (40 fields; only `Approver` + `Awarded_Vendor` related). Kyle believed he created them Fri 06/12 — he did not (under any name). They must be created before the write path works (else Zoho `INVALID_DATA`).
+- 📋 **Logged the two Fri 06/12 commits** that post-dated the prior Todo: `e64bacd` (award buttons + `/api/award`) + `fa0fbcc` (Neon auth + audit log) — both inert at commit, now sanctioned.
+  - 🔲 **ACTIVATION (Kyle, ~3 steps, none MCP-doable):** (1) create the 2 fields above in Zoho UI; (2) mint a write-scoped (`ZohoCRM.modules.ALL`) token via `get-write-refresh-token.ps1` → `ZOHO_WRITE_REFRESH_TOKEN`; (3) set Vercel env vars (`SESSION_SECRET` + 3 `PORTAL_PW_*` + write token) + Redeploy. Then Claude verifies: `getFields` shows the 2 fields, logged-out `/api/award`→401, logged-in approve on a **demo** item→200 + `getRecord` confirms the stamps. Operational hold still bars real-data writes — demo/`_DELETE` records only.
 
 **Done this session (06/12/26):**
 - ✅ **Demo data loaded for portal QA** (`outputs/DemoData_Procurement_061226.md` = full manifest + cleanup tag `DEMO 061226`): 10 vendors, 10 Procurement_Items spanning all 9 stages/properties/approver tiers, 27 Vendor_Quotes with computed landed cost; awarded the true lowest-landed quote on the 6 decided/recommended items. Portal now fills every view (queue 3, decisions 3, spend pending $196.4K / approved $79K / 1 over $100K). **Delete before real go-live** (UI-only; manifest has all IDs; also clear the 3 older `_DELETE`/Test records).
