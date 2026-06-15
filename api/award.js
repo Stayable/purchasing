@@ -66,7 +66,7 @@ module.exports = async (req, res) => {
     id: String(itemId),
     Stage: stage,
     Portal_Approved_By: viewer,
-    Portal_Approved_At: new Date().toISOString(),
+    Portal_Approved_At: new Date().toISOString().slice(0, 10), // Date field in Zoho (YYYY-MM-DD), not datetime
   };
   // Award the winning quote on an approval (not on decline).
   if (action !== "decline" && quoteId) record.Awarded_Vendor = { id: String(quoteId) };
