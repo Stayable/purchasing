@@ -33,6 +33,42 @@ const ACTION_STAGE = {
   decline: "Declined",
 };
 
+/**
+ * Build the Zoho record object for a portal decision or note-only update.
+ *
+ * @param {string} itemId   - Procurement_Items record ID
+ * @param {string} action   - "approve" | "approve_conditions" | "decline" | "note"
+ * @param {string|null} quoteId  - Vendor_Bids record ID to award (ignored on decline/note)
+ * @param {string} note     - Decision note text (optional for decision actions; required semantically for note action)
+ * @param {string} viewer   - Email of the logged-in portal user making the decision
+ * @param {string} today    - Date string in YYYY-MM-DD format (Portal_Approved_At)
+ * @returns {object} Zoho record payload (without the outer { data: [...] } wrapper)
+ */
+function buildRecord(itemId, action, quoteId, note, viewer, today) {
+  const id = String(itemId);
+
+  // Note-only action: touch only Decision_Notes, leave Stage/award/approver unchanged.
+  if (action === "note") {
+    return { id, Decision_Notes: note || "" };
+  }
+
+  const stage = ACTION_STAGE[action];
+  const record = {
+    id,
+    Stage: stage,
+    Portal_Approved_By: viewer,
+    Portal_Approved_At: today, // Date field in Zoho (YYYY-MM-DD), not datetime
+  };
+
+  // Only write Decision_Notes when a note is provided.
+  if (note) record.Decision_Notes = note;
+
+  // Award the winning quote on an approval (not on decline).
+  if (action !== "decline" && quoteId) record.Awarded_Vendor = { id: String(quoteId) };
+
+  return record;
+}
+
 let cachedToken = null, cachedExp = 0;
 async function getWriteToken() {
   const now = Date.now();
@@ -50,7 +86,7 @@ async function getWriteToken() {
   return cachedToken;
 }
 
-module.exports = async (req, res) => {
+const handler = async (req, res) => {
   // Must be logged in (so the approval is attributable to a person).
   if (!auth.authEnabled()) return res.status(401).json({ error: "auth_required" });
   const viewer = auth.sessionEmail(req);
@@ -58,18 +94,22 @@ module.exports = async (req, res) => {
   if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
   if (!process.env.ZOHO_WRITE_REFRESH_TOKEN) return res.status(503).json({ error: "writes_not_configured" });
 
-  const { itemId, action, quoteId } = await auth.readJson(req);
-  const stage = ACTION_STAGE[action];
-  if (!itemId || !stage) return res.status(400).json({ error: "bad_request", detail: "need itemId and a valid action" });
+  const { itemId, action, quoteId, note } = await auth.readJson(req);
 
-  const record = {
-    id: String(itemId),
-    Stage: stage,
-    Portal_Approved_By: viewer,
-    Portal_Approved_At: new Date().toISOString().slice(0, 10), // Date field in Zoho (YYYY-MM-DD), not datetime
-  };
-  // Award the winning quote on an approval (not on decline).
-  if (action !== "decline" && quoteId) record.Awarded_Vendor = { id: String(quoteId) };
+  // Validate action is one of the four allowed values.
+  const validActions = { approve: true, approve_conditions: true, decline: true, note: true };
+  if (!itemId || !validActions[action]) {
+    return res.status(400).json({ error: "bad_request", detail: "need itemId and a valid action" });
+  }
+
+  // For the three decision actions, a Stage must resolve — a "note" action deliberately has none.
+  const stage = ACTION_STAGE[action];
+  if (action !== "note" && !stage) {
+    return res.status(400).json({ error: "bad_request", detail: "unrecognized decision action" });
+  }
+
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD, date-only field
+  const record = buildRecord(itemId, action, quoteId, note, viewer, today);
 
   try {
     const token = await getWriteToken();
@@ -83,12 +123,15 @@ module.exports = async (req, res) => {
     if (!r.ok || !row || row.code !== "SUCCESS") {
       return res.status(502).json({ error: "zoho_write_failed", detail: row || j });
     }
-    console.log(JSON.stringify({ evt: "portal_decision", action, stage, itemId, by: viewer, ts: new Date().toISOString() }));
-    await dbm.audit("portal_decision", viewer, { itemId: String(itemId), action, stage, quoteId: quoteId ? String(quoteId) : null });
-    return res.status(200).json({ ok: true, itemId, stage, by: viewer });
+    console.log(JSON.stringify({ evt: "portal_decision", action, stage: stage || null, itemId, by: viewer, ts: new Date().toISOString() }));
+    await dbm.audit("portal_decision", viewer, { itemId: String(itemId), action, stage: stage || null, quoteId: quoteId ? String(quoteId) : null, note: note || null });
+    return res.status(200).json({ ok: true, itemId, stage: stage || null, by: viewer });
   } catch (err) {
     const msg = String(err.message || err);
     const code = msg === "writes_not_configured" ? 503 : 502;
     return res.status(code).json({ error: msg });
   }
 };
+
+module.exports = handler;
+module.exports.buildRecord = buildRecord;
