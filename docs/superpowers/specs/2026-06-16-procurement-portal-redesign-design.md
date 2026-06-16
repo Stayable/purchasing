@@ -42,9 +42,9 @@ The Vercel project currently serves static files (`index.html`, `ZohoProcurement
 - `/api/*` → serverless functions (unchanged).
 - `/review` and `/review/(.*)` → SPA `index.html` (client-side routing fallback).
 - `/`, `/tracker`, infographics → existing static files (unchanged).
-- Vercel **Build Command** runs the Vite build; root static files are preserved in the output.
+- ~~Vercel **Build Command** runs the Vite build~~ — **superseded, see RESOLVED below.**
 
-**Validate early:** confirm a single Vercel project can run the Vite build AND keep serving the root static files + `/api` functions. If it can't be made clean, fallback is a separate Vercel project/subdomain for the SPA (e.g. `review.procurement…`) — decide before building.
+**RESOLVED 06/16/26 (Task 1, verified on preview):** the Vercel-build approach failed — setting a `buildCommand` (or even just a root `build` script, which Vercel auto-runs) triggers Vercel's single-output-directory model, which errors on this hybrid static-site+`/api` repo (`No Output Directory named "public"`). **Final approach: commit the Vite build output (`review/`) as static files; NO Vercel build.** The root build script is renamed `build:portal` (so Vercel does NOT auto-build and stays a zero-build static deploy serving root files + `review/` + `/api` functions, exactly as before). Rebuild locally with `npm run build:portal` (or `npm --prefix portal run build`) and commit the regenerated `review/` whenever the SPA changes. `vercel.json` only adds the `/review` + `/review/(.*)` → `/review/index.html` rewrites. Proven on the `portal-redesign` preview: `/review` serves the SPA, `/tracker` serves the static tracker, `/api` functions deploy.
 
 ## 5. Layout (approved: A+B combined)
 
