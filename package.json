@@ -3,6 +3,7 @@
   "name": "stayable-procurement-portal",
   "description": "Static procurement portal + read-only Zoho proxy + Neon-backed portal auth (Vercel serverless).",
   "scripts": {
+    "build:portal": "cd portal && npm install && npm run build",
     "db:setup": "node db/setup.js",
     "db:seed": "node db/setup.js --seed"
   },

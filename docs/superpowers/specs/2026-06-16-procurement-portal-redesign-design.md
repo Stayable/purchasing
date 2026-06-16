@@ -42,9 +42,9 @@ The Vercel project currently serves static files (`index.html`, `ZohoProcurement
 - `/api/*` → serverless functions (unchanged).
 - `/review` and `/review/(.*)` → SPA `index.html` (client-side routing fallback).
 - `/`, `/tracker`, infographics → existing static files (unchanged).
-- Vercel **Build Command** runs the Vite build; root static files are preserved in the output.
+- ~~Vercel **Build Command** runs the Vite build~~ — **superseded, see RESOLVED below.**
 
-**Validate early:** confirm a single Vercel project can run the Vite build AND keep serving the root static files + `/api` functions. If it can't be made clean, fallback is a separate Vercel project/subdomain for the SPA (e.g. `review.procurement…`) — decide before building.
+**RESOLVED 06/16/26 (Task 1, verified on preview):** the Vercel-build approach failed — setting a `buildCommand` (or even just a root `build` script, which Vercel auto-runs) triggers Vercel's single-output-directory model, which errors on this hybrid static-site+`/api` repo (`No Output Directory named "public"`). **Final approach: commit the Vite build output (`review/`) as static files; NO Vercel build.** The root build script is renamed `build:portal` (so Vercel does NOT auto-build and stays a zero-build static deploy serving root files + `review/` + `/api` functions, exactly as before). Rebuild locally with `npm run build:portal` (or `npm --prefix portal run build`) and commit the regenerated `review/` whenever the SPA changes. `vercel.json` only adds the `/review` + `/review/(.*)` → `/review/index.html` rewrites. Proven on the `portal-redesign` preview: `/review` serves the SPA, `/tracker` serves the static tracker, `/api` functions deploy.
 
 ## 5. Layout (approved: A+B combined)
 
@@ -76,6 +76,14 @@ Detail pane shows: item header (name, Stage badge, property, target qty, est. sp
 **On confirm, writes to Zoho:** `Stage` → Approved / Approved-with-Conditions / Declined; `Awarded_Vendor` → selected quote (not on Decline); `Decision_Notes` → the note; `Portal_Approved_By` → session user; `Portal_Approved_At` → today (Date).
 
 **Notes after the fact:** from the Decisions view, edit a decided item's note → note-only write to `Decision_Notes` (reuses the write path; see §7).
+
+## 6b. Approval-age display + ≥7-day stale filter (added 06/16, Kyle)
+
+Requirement: in the portal, show **when an item entered the approval queue** ("moved to For Approval" = Stage `Submitted`), and provide a **filter/sort/flag for items awaiting approval ≥7 days** (ties to the 06/05 stale-bid threshold of 7 days).
+
+**Data gap (honest):** `Procurement_Items` has **no stage-entry timestamp**. The only available date is `Modified_Time` (approximate — bumps on any edit). So:
+- **Interim (built now):** the read proxy exposes `modifiedAt` (= `Modified_Time`); the portal computes `daysAwaiting` from it for `Submitted` items and shows "In approval queue ~since <date> · N days" + a **"≥7 days" filter/toggle** in QueueView that filters/sorts/flags stale ones. Labeled **approximate**.
+- **Proper fix (deferred, Kyle/Jefferson — Zoho UI):** add a `Submitted_Date` (Date) field + a workflow rule stamping it on Stage→`Submitted`; proxy then returns that; portal swaps the calc to exact (no UI change). Logged in the Todo.
 
 ## 7. Backend (reused; one additive change)
 
