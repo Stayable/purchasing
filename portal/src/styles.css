@@ -1011,6 +1011,143 @@ h1, h2, h3 { margin: 0; }
   white-space: nowrap;
 }
 
+/* ---------- DecisionModal ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 24px;
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.1);
+  border: 1px solid #e2e8f0;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-head {
+  font-size: 17px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.3px;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.modal-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-foot {
+  padding: 16px 24px 20px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  background: #f8fafc;
+}
+
+/* Award summary block */
+.award-summary {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.award-summary-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #0369a1;
+  margin-bottom: 2px;
+}
+
+.award-summary-vendor {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.award-summary-details {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.5;
+}
+
+/* Required note label */
+.req {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+}
+
+.req-star {
+  color: #dc2626;
+  font-style: normal;
+}
+
+/* Modal textarea */
+.modal-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #0f172a;
+  background: #fff;
+  resize: vertical;
+  min-height: 96px;
+  transition: border-color 0.12s, box-shadow 0.12s;
+  outline: none;
+  line-height: 1.5;
+}
+
+.modal-textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+}
+
+.modal-textarea::placeholder { color: #94a3b8; }
+
+/* Solid decline variant for the confirm button */
+.btn-danger--solid {
+  background: #dc2626;
+  color: #fff;
+  border-color: #dc2626;
+}
+.btn-danger--solid:hover:not(:disabled) {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+.btn-danger--solid:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1024px) {
   .kpi-row { grid-template-columns: repeat(2, 1fr); }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import StageBadge from "./StageBadge.jsx";
 import QuoteTable from "./QuoteTable.jsx";
+import DecisionModal from "./DecisionModal.jsx";
 import { formatUSD } from "../money.js";
 import { daysSince } from "../days.js";
 
@@ -30,6 +31,7 @@ export default function ItemDetail({ item, quotes, reload }) {
 
   const defaultQuoteId = lowestLandedId(quotes);
   const [selectedQuoteId, setSelectedQuoteId] = useState(defaultQuoteId);
+  const [modal, setModal] = useState(null); // { action, quote } or null
 
   if (!item) {
     return (
@@ -39,10 +41,12 @@ export default function ItemDetail({ item, quotes, reload }) {
     );
   }
 
-  // Stub action handler — modal wired in Task 7
   function onAction(action) {
-    // TODO Task 7: open DecisionModal
-    console.log("action stub:", action, "quoteId:", selectedQuoteId);
+    const quote =
+      action !== "decline"
+        ? (quotes || []).find((q) => q.id === selectedQuoteId) || null
+        : null;
+    setModal({ action, quote });
   }
 
   return (
@@ -145,6 +149,16 @@ export default function ItemDetail({ item, quotes, reload }) {
             </button>
           </div>
         </>
+      )}
+
+      {modal && (
+        <DecisionModal
+          item={item}
+          action={modal.action}
+          quote={modal.quote}
+          onClose={() => setModal(null)}
+          onDone={() => { setModal(null); reload(); }}
+        />
       )}
     </div>
   );
