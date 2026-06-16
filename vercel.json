@@ -2,7 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
-  "buildCommand": "npm run build",
   "rewrites": [
     { "source": "/tracker", "destination": "/ZohoProcurementTracker_052626" },
     { "source": "/review", "destination": "/review/index.html" },
