@@ -77,6 +77,14 @@ Detail pane shows: item header (name, Stage badge, property, target qty, est. sp
 
 **Notes after the fact:** from the Decisions view, edit a decided item's note → note-only write to `Decision_Notes` (reuses the write path; see §7).
 
+## 6b. Approval-age display + ≥7-day stale filter (added 06/16, Kyle)
+
+Requirement: in the portal, show **when an item entered the approval queue** ("moved to For Approval" = Stage `Submitted`), and provide a **filter/sort/flag for items awaiting approval ≥7 days** (ties to the 06/05 stale-bid threshold of 7 days).
+
+**Data gap (honest):** `Procurement_Items` has **no stage-entry timestamp**. The only available date is `Modified_Time` (approximate — bumps on any edit). So:
+- **Interim (built now):** the read proxy exposes `modifiedAt` (= `Modified_Time`); the portal computes `daysAwaiting` from it for `Submitted` items and shows "In approval queue ~since <date> · N days" + a **"≥7 days" filter/toggle** in QueueView that filters/sorts/flags stale ones. Labeled **approximate**.
+- **Proper fix (deferred, Kyle/Jefferson — Zoho UI):** add a `Submitted_Date` (Date) field + a workflow rule stamping it on Stage→`Submitted`; proxy then returns that; portal swaps the calc to exact (no UI change). Logged in the Todo.
+
 ## 7. Backend (reused; one additive change)
 
 - **`GET /api/procurement`** — unchanged. Returns `{generatedAt, live, viewer, counts, queue[], items[], quotes[], decisions[], spend{}}`. The SPA renders entirely from this shape.
