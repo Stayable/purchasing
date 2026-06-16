@@ -4,3 +4,5 @@ node_modules/
 *.local
 .vercel
 .superpowers/
+/review/
+portal/node_modules/
