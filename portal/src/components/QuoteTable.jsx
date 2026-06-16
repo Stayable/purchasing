@@ -23,7 +23,7 @@ export default function QuoteTable({ quotes, selectedQuoteId, onSelect }) {
             <th>Vendor</th>
             <th>Landed / Unit</th>
             <th>Total Landed</th>
-            <th>Lead</th>
+            <th>Lead time</th>
             <th>Spec Match</th>
           </tr>
         </thead>
@@ -63,7 +63,7 @@ export default function QuoteTable({ quotes, selectedQuoteId, onSelect }) {
                 </td>
                 <td className="mono">{formatUSD(q.landedUnit)}</td>
                 <td className="mono bold">{formatUSD(q.totalLanded)}</td>
-                <td className="mono">{q.leadDays != null ? `${q.leadDays}d` : "—"}</td>
+                <td className="mono">{q.leadDays != null ? `${q.leadDays} days` : "—"}</td>
                 <td>
                   <span
                     className={

@@ -32,10 +32,10 @@ function NoteEditor({ item, onSave, onCancel }) {
       />
       {error && <div className="note-editor-error">{error}</div>}
       <div className="note-editor-actions">
-        <button className="btn btn--primary btn--sm" onClick={handleSave} disabled={saving}>
+        <button className="btn-primary btn-primary--sm" onClick={handleSave} disabled={saving}>
           {saving ? "Saving…" : "Save"}
         </button>
-        <button className="btn btn--ghost btn--sm" onClick={onCancel} disabled={saving}>
+        <button className="btn-ghost btn-ghost--sm" onClick={onCancel} disabled={saving}>
           Cancel
         </button>
       </div>
@@ -49,11 +49,13 @@ export default function DecisionsView({ data, reload }) {
   const decided = (data?.items ?? [])
     .filter((item) => DECIDED_STAGES.has(item.stage))
     .sort((a, b) => {
-      // Newest first; nulls last
-      if (!a.decisionDate && !b.decisionDate) return 0;
-      if (!a.decisionDate) return 1;
-      if (!b.decisionDate) return -1;
-      return new Date(b.decisionDate) - new Date(a.decisionDate);
+      // Sort by actual decided date (approvedAt), falling back to decisionDate; nulls last
+      const aDate = a.approvedAt ?? a.decisionDate;
+      const bDate = b.approvedAt ?? b.decisionDate;
+      if (!aDate && !bDate) return 0;
+      if (!aDate) return 1;
+      if (!bDate) return -1;
+      return new Date(bDate) - new Date(aDate);
     });
 
   if (decided.length === 0) {
@@ -91,9 +93,11 @@ export default function DecisionsView({ data, reload }) {
                 {item.approver && (
                   <span className="decision-entry-approver">{item.approver}</span>
                 )}
-                {item.decisionDate && (
-                  <span className="decision-entry-date">{item.decisionDate}</span>
-                )}
+                {item.approvedAt ? (
+                  <span className="decision-entry-date">Decided {item.approvedAt}</span>
+                ) : item.decisionDate ? (
+                  <span className="decision-entry-date">Target {item.decisionDate}</span>
+                ) : null}
               </div>
             </div>
 
@@ -115,7 +119,7 @@ export default function DecisionsView({ data, reload }) {
                   <div className="decision-entry-note">{item.decisionNotes}</div>
                 )}
                 <button
-                  className="btn btn--ghost btn--sm note-edit-btn"
+                  className="btn-ghost btn-ghost--sm note-edit-btn"
                   onClick={() => setEditing(item.id)}
                 >
                   Edit note
