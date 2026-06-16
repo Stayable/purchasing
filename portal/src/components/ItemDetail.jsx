@@ -2,6 +2,7 @@ import { useState } from "react";
 import StageBadge from "./StageBadge.jsx";
 import QuoteTable from "./QuoteTable.jsx";
 import { formatUSD } from "../money.js";
+import { daysSince } from "../days.js";
 
 const TERMINAL_STAGES = new Set(["Approved", "Approved-with-Conditions", "Declined"]);
 
@@ -13,7 +14,19 @@ function lowestLandedId(quotes) {
 }
 
 export default function ItemDetail({ item, quotes, reload }) {
+  const isSubmitted = (item?.stage || "").toLowerCase() === "submitted";
   const isTerminal = TERMINAL_STAGES.has(item?.stage);
+
+  const daysAwaiting = isSubmitted ? daysSince(item?.modifiedAt) : null;
+  const approvalAgeLine = (() => {
+    if (!isSubmitted || daysAwaiting == null || !item?.modifiedAt) return null;
+    const since = new Date(item.modifiedAt).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+    return `For Approval ~since ${since} · ${daysAwaiting}d (approx.)`;
+  })();
 
   const defaultQuoteId = lowestLandedId(quotes);
   const [selectedQuoteId, setSelectedQuoteId] = useState(defaultQuoteId);
@@ -59,6 +72,12 @@ export default function ItemDetail({ item, quotes, reload }) {
             </span>
           )}
         </div>
+        {approvalAgeLine && (
+          <div className={"approval-age-line" + (daysAwaiting >= 7 ? " approval-age-line--stale" : "")}>
+            {daysAwaiting >= 7 && <span className="approval-age-stale-icon">⚠</span>}
+            {approvalAgeLine}
+          </div>
+        )}
       </div>
 
       {isTerminal ? (

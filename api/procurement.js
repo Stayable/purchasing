@@ -94,7 +94,7 @@ module.exports = async (req, res) => {
       coql(
         "SELECT Name, Stage, Property_Scope, Estimated_Item_Level_Spend, Approver, " +
         "Target_Decision_Date, Target_Quantity, Florida_Validation_Status, Spec_Sheet_Status, " +
-        "Decision_Notes, Awarded_Vendor.id, id " +
+        "Decision_Notes, Awarded_Vendor.id, Modified_Time, id " +
         "FROM Procurement_Items WHERE Stage is not null ORDER BY Estimated_Item_Level_Spend desc LIMIT 200"
       ),
       coql(
@@ -146,6 +146,7 @@ module.exports = async (req, res) => {
         decisionNotes: it.Decision_Notes || null,
         awardedQuoteId,
         awardedVendorName: awardedQuoteId ? quoteVendor[awardedQuoteId] || null : null,
+        modifiedAt: it.Modified_Time || null,
       };
     });
 
