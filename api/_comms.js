@@ -47,4 +47,22 @@ function rollupItemAttention(states) {
   return best;
 }
 
-module.exports = { STALE_DAYS, normAddr, msgAddresses, matchMessageToVendor, classifyDirection, deriveAttention, rollupItemAttention };
+function vendorsFromRows(quoteRows, contactRows) {
+  const byAccount = {};
+  for (const ct of contactRows || []) {
+    const acc = ct["Account_Name.id"];
+    const email = normAddr(ct.Email);
+    if (!acc || !email) continue;
+    (byAccount[acc] = byAccount[acc] || []).push(email);
+  }
+  return (quoteRows || []).map((q) => ({
+    quoteId: q.id,
+    quoteName: q.Name || null,
+    vendorName: q["Vendor.Vendor_Name"] || null,
+    vendorAccountId: q["Vendor.id"] || null,
+    itemId: q["Procurement_Item.id"] || null,
+    addresses: byAccount[q["Vendor.id"]] || [],
+  }));
+}
+
+module.exports = { STALE_DAYS, normAddr, msgAddresses, matchMessageToVendor, classifyDirection, deriveAttention, rollupItemAttention, vendorsFromRows };

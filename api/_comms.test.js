@@ -64,3 +64,27 @@ test("rollupItemAttention picks most urgent", () => {
   assert.equal(c.rollupItemAttention(["none", "none"]), "none");
   assert.equal(c.rollupItemAttention([]), "none");
 });
+
+test("vendorsFromRows joins quote vendors to their contact emails", () => {
+  const quotes = [
+    { id: "q1", Name: "QT-0007", "Vendor.Vendor_Name": "Walrus", "Vendor.id": "v1", "Procurement_Item.id": "i1" },
+    { id: "q2", Name: "QT-0008", "Vendor.Vendor_Name": "Mesa", "Vendor.id": "v2", "Procurement_Item.id": "i1" },
+  ];
+  const contacts = [
+    { Email: "Sales@Walrus.com", "Account_Name.id": "v1" },
+    { Email: "jess@walrus.com", "Account_Name.id": "v1" },
+    { Email: "info@mesa.com", "Account_Name.id": "v2" },
+  ];
+  const v = c.vendorsFromRows(quotes, contacts);
+  assert.equal(v.length, 2);
+  assert.deepEqual(v[0], {
+    quoteId: "q1", quoteName: "QT-0007", vendorName: "Walrus", vendorAccountId: "v1",
+    itemId: "i1", addresses: ["sales@walrus.com", "jess@walrus.com"],
+  });
+  assert.deepEqual(v[1].addresses, ["info@mesa.com"]);
+});
+
+test("vendorsFromRows: vendor with no contacts -> empty addresses", () => {
+  const v = c.vendorsFromRows([{ id: "q1", Name: "QT", "Vendor.id": "v9", "Procurement_Item.id": "i1" }], []);
+  assert.deepEqual(v[0].addresses, []);
+});
