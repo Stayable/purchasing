@@ -28,3 +28,39 @@ test("classifyDirection: from one of our mailboxes is outbound", () => {
   assert.equal(c.classifyDirection({ from: "purchasing@rentstayable.com" }, ours), "outbound");
   assert.equal(c.classifyDirection({ from: "sales@walrus.com" }, ours), "inbound");
 });
+
+const DAY = 86400000;
+const NOW = Date.UTC(2026, 5, 20); // 2026-06-20
+
+test("deriveAttention: no messages -> none", () => {
+  const r = c.deriveAttention([], NOW);
+  assert.equal(r.attentionState, "none");
+  assert.equal(r.daysSinceLastMessage, null);
+});
+
+test("deriveAttention: last message inbound -> awaiting-our-reply", () => {
+  const msgs = [
+    { direction: "outbound", receivedAt: new Date(NOW - 5 * DAY).toISOString() },
+    { direction: "inbound", receivedAt: new Date(NOW - 1 * DAY).toISOString() },
+  ];
+  const r = c.deriveAttention(msgs, NOW);
+  assert.equal(r.attentionState, "awaiting-our-reply");
+  assert.equal(r.daysSinceLastMessage, 1);
+});
+
+test("deriveAttention: last outbound and >=7 days silent -> stale", () => {
+  const msgs = [{ direction: "outbound", receivedAt: new Date(NOW - 9 * DAY).toISOString() }];
+  assert.equal(c.deriveAttention(msgs, NOW).attentionState, "stale");
+});
+
+test("deriveAttention: last outbound and recent -> ok", () => {
+  const msgs = [{ direction: "outbound", receivedAt: new Date(NOW - 2 * DAY).toISOString() }];
+  assert.equal(c.deriveAttention(msgs, NOW).attentionState, "ok");
+});
+
+test("rollupItemAttention picks most urgent", () => {
+  assert.equal(c.rollupItemAttention(["ok", "stale", "awaiting-our-reply"]), "awaiting-our-reply");
+  assert.equal(c.rollupItemAttention(["ok", "stale", "none"]), "stale");
+  assert.equal(c.rollupItemAttention(["none", "none"]), "none");
+  assert.equal(c.rollupItemAttention([]), "none");
+});
