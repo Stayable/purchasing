@@ -65,4 +65,54 @@ function vendorsFromRows(quoteRows, contactRows) {
   }));
 }
 
-module.exports = { STALE_DAYS, normAddr, msgAddresses, matchMessageToVendor, classifyDirection, deriveAttention, rollupItemAttention, vendorsFromRows };
+function tagAndGroup(vendors, messages, ourAddresses) {
+  const ours = new Set((ourAddresses || []).map(normAddr));
+  const byQuote = {};
+  for (const v of vendors) byQuote[v.quoteId] = [];
+  for (const m of messages || []) {
+    const v = matchMessageToVendor(m, vendors);
+    if (!v) continue;
+    byQuote[v.quoteId].push({ ...m, direction: classifyDirection(m, ours) });
+  }
+  for (const k of Object.keys(byQuote)) {
+    byQuote[k].sort((a, b) => new Date(a.receivedAt) - new Date(b.receivedAt));
+  }
+  return byQuote;
+}
+
+function buildItemPayload({ itemId, vendors, messages, ourAddresses, nowMs }) {
+  const byQuote = tagAndGroup(vendors, messages, ourAddresses);
+  const outVendors = vendors.map((v) => {
+    const msgs = byQuote[v.quoteId] || [];
+    const att = deriveAttention(msgs, nowMs);
+    return {
+      quoteId: v.quoteId, quoteName: v.quoteName, vendorName: v.vendorName,
+      matchedAddresses: v.addresses, messageCount: msgs.length,
+      lastMessageAt: att.lastMessageAt, lastDirection: att.lastDirection,
+      attentionState: att.attentionState, daysSinceLastMessage: att.daysSinceLastMessage,
+      messages: msgs,
+    };
+  });
+  return {
+    itemId, configured: true, attributionMode: "vendor", coverage: "email-only",
+    itemAttention: rollupItemAttention(outVendors.map((v) => v.attentionState)),
+    vendors: outVendors,
+  };
+}
+
+function buildAttentionSweep({ itemsVendors, messages, ourAddresses, nowMs }) {
+  const byItem = {};
+  for (const v of itemsVendors) (byItem[v.itemId] = byItem[v.itemId] || []).push(v);
+  const items = Object.keys(byItem).map((itemId) => {
+    const vendors = byItem[itemId];
+    const byQuote = tagAndGroup(vendors, messages, ourAddresses);
+    const vendorStates = vendors.map((v) => {
+      const att = deriveAttention(byQuote[v.quoteId] || [], nowMs);
+      return { quoteId: v.quoteId, attentionState: att.attentionState, daysSinceLastMessage: att.daysSinceLastMessage };
+    });
+    return { itemId, itemAttention: rollupItemAttention(vendorStates.map((s) => s.attentionState)), vendors: vendorStates };
+  });
+  return { configured: true, coverage: "email-only", items };
+}
+
+module.exports = { STALE_DAYS, normAddr, msgAddresses, matchMessageToVendor, classifyDirection, deriveAttention, rollupItemAttention, vendorsFromRows, buildItemPayload, buildAttentionSweep };

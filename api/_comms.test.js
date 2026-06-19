@@ -88,3 +88,41 @@ test("vendorsFromRows: vendor with no contacts -> empty addresses", () => {
   const v = c.vendorsFromRows([{ id: "q1", Name: "QT", "Vendor.id": "v9", "Procurement_Item.id": "i1" }], []);
   assert.deepEqual(v[0].addresses, []);
 });
+
+const OURS = ["purchasing@rentstayable.com"];
+function mkMsg(o) {
+  return Object.assign(
+    { id: "m" + Math.round(new Date(o.receivedAt).getTime() / 1000), conversationId: "conv1",
+      to: [], cc: [], subject: "Quote", preview: "...", hasAttachments: false, webLink: "https://o" }, o);
+}
+
+test("buildItemPayload threads + attention per vendor", () => {
+  const vendors = [{ quoteId: "q1", quoteName: "QT-0007", vendorName: "Walrus", vendorAccountId: "v1", itemId: "i1", addresses: ["sales@walrus.com"] }];
+  const messages = [
+    mkMsg({ from: "purchasing@rentstayable.com", to: ["sales@walrus.com"], receivedAt: new Date(NOW - 4 * DAY).toISOString() }),
+    mkMsg({ from: "sales@walrus.com", to: ["purchasing@rentstayable.com"], receivedAt: new Date(NOW - 1 * DAY).toISOString() }),
+    mkMsg({ from: "noise@other.com", to: ["x@y.com"], receivedAt: new Date(NOW).toISOString() }),
+  ];
+  const p = c.buildItemPayload({ itemId: "i1", vendors, messages, ourAddresses: OURS, nowMs: NOW });
+  assert.equal(p.configured, true);
+  assert.equal(p.coverage, "email-only");
+  assert.equal(p.vendors.length, 1);
+  assert.equal(p.vendors[0].messageCount, 2);          // noise excluded
+  assert.equal(p.vendors[0].attentionState, "awaiting-our-reply");
+  assert.equal(p.vendors[0].messages[0].direction, "outbound"); // chronological
+  assert.equal(p.itemAttention, "awaiting-our-reply");
+});
+
+test("buildAttentionSweep rolls up many items, no message bodies", () => {
+  const itemsVendors = [
+    { quoteId: "q1", itemId: "i1", addresses: ["sales@walrus.com"] },
+    { quoteId: "q2", itemId: "i2", addresses: ["info@mesa.com"] },
+  ];
+  const messages = [mkMsg({ from: "purchasing@rentstayable.com", to: ["info@mesa.com"], receivedAt: new Date(NOW - 10 * DAY).toISOString() })];
+  const s = c.buildAttentionSweep({ itemsVendors, messages, ourAddresses: OURS, nowMs: NOW });
+  const i2 = s.items.find((x) => x.itemId === "i2");
+  const i1 = s.items.find((x) => x.itemId === "i1");
+  assert.equal(i2.itemAttention, "stale");
+  assert.equal(i1.itemAttention, "none");
+  assert.equal(s.items[0].vendors[0].messages, undefined); // sweep carries no bodies
+});
