@@ -1236,3 +1236,7 @@ h1, h2, h3 { margin: 0; }
 .comms-msg--outbound .comms-dir{color:#7aa7ff}.comms-msg--inbound .comms-dir{color:#ffd27a}
 .comms-preview{grid-column:2 / -1;color:#9a9a9a;font-size:.75rem}
 .comms-coverage{font-size:.7rem;color:#8a8a8a;margin-top:.4rem}
+
+/* cross-item attention badges (queue/list) */
+.attn-badge{font-size:.7rem;font-weight:600;padding:.05rem .4rem;border-radius:999px;margin-left:.4rem}
+.attn-badge--reply{background:#5a3a00;color:#ffd27a}.attn-badge--stale{background:#3a3a3a;color:#cfcfcf}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import ItemList from "../components/ItemList.jsx";
 import ItemDetail from "../components/ItemDetail.jsx";
 import { daysSince } from "../days.js";
+import { useAttentionSweep } from "../useAttentionSweep.js";
 
 const STALE_THRESHOLD = 7;
 
@@ -9,6 +10,7 @@ export default function QueueView({ data, reload }) {
   const queue = data?.queue ?? [];
   const quotes = data?.quotes ?? [];
 
+  const { byItem } = useAttentionSweep();
   const [showStaleOnly, setShowStaleOnly] = useState(false);
 
   // Enrich each queue item with daysAwaiting
@@ -70,6 +72,7 @@ export default function QueueView({ data, reload }) {
             selectedId={selectedId}
             onSelect={setSelectedId}
             quotes={quotes}
+            byItem={byItem}
           />
         </div>
         <div className="two-pane-detail">

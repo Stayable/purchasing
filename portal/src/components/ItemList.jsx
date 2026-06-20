@@ -1,4 +1,5 @@
 import StageBadge from "./StageBadge.jsx";
+import AttentionBadge from "./AttentionBadge.jsx";
 import { formatUSD } from "../money.js";
 
 const STALE_THRESHOLD = 7;
@@ -15,7 +16,7 @@ function approvalAgeLabel(item) {
   return `~since ${since} · ${item.daysAwaiting}d (approx.)`;
 }
 
-export default function ItemList({ items, selectedId, onSelect, quotes = [] }) {
+export default function ItemList({ items, selectedId, onSelect, quotes = [], byItem = {} }) {
   if (!items || items.length === 0) {
     return <div className="item-list-empty">No items.</div>;
   }
@@ -47,6 +48,7 @@ export default function ItemList({ items, selectedId, onSelect, quotes = [] }) {
             <div className="item-row-top">
               <span className="item-row-name">{item.name}</span>
               <div className="item-row-badges">
+                <AttentionBadge state={byItem[item.id]} />
                 {isStale && (
                   <span className="stale-badge" title="Awaiting approval for 7+ days (approx.)">
                     ⚠ {item.daysAwaiting}d
