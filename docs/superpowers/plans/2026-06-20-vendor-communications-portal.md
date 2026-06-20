@@ -756,7 +756,7 @@ git commit -m "feat(comms): /api/communications endpoint (item threads + attenti
 
 - [ ] **Step 1: Run the whole API test suite**
 
-Run: `node --test api/`
+Run: `node --test api/*.test.js`  (note: `node --test api/` fails on some Node versions — it tries to load `api` as a module; list the test files/glob explicitly)
 Expected: PASS — all `_comms`, `_graph`, `communications`, and existing `award.note` tests green.
 
 - [ ] **Step 2: Confirm inert behavior reasoning**

@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 06/17/26
+**Last Updated:** 06/20/26
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -13,14 +13,23 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 ## Top Priorities — Active Sprint (refreshed 05/29/26)
 
+**Done this session (06/20/26):**
+- ✅ **VENDOR-COMMUNICATIONS MONITOR BUILT + MERGED TO `main` (Phases 1–2 of the plan).** Surfaces vendor email threads (inbound + our replies) per quote on each Procurement Item, + a cross-item attention signal (badges: "⚠ awaiting reply" / "⏳ silent ≥7d") so Rob can monitor what's at risk. Spec `docs/superpowers/specs/2026-06-19-vendor-communications-portal-design.md`; plan `docs/superpowers/plans/2026-06-20-vendor-communications-portal.md`. **Backend:** `api/_comms.js` (pure matching/attention logic), `api/_graph.js` (Graph app-only client), `api/communications.js` (`?itemId=`→per-quote threads, no-arg→attention sweep). **UI:** `CommsPanel`, `AttentionBadge`, `useCommunications`, `useAttentionSweep`, wired into `ItemDetail`/`QuoteTable`/`QueueView`/`ItemList`. **24 API + 15 portal tests green**; fast-forwarded `comms-monitor`→`main` (`2dc8a4a`→`523f6c4`), branch deleted. Built `review/` committed.
+  - ✅ **Inert until configured** — `/api/communications` returns `{configured:false}` and never calls Graph/Zoho until the 3 `GRAPH_*` env vars exist. Zero regression to the live `/review`.
+  - 🔲 **NOT PUSHED** — `main` is local-ahead of `origin` (14 commits, incl. the 06/19–06/20 spec/plan). Push when Kyle gives the go-ahead (one `git push origin main` sends the set).
+  - 🔲 **Phase 3 (Kyle, Azure admin, ~1 hr, none MCP/CLI-doable):** Entra app registration → `Mail.Read` **application** permission + admin consent → client secret → **mandatory mailbox scoping** (`New-DistributionGroup` + `New-ApplicationAccessPolicy` for `purchasing@`+`jefferson@`) → set `GRAPH_TENANT_ID`/`GRAPH_CLIENT_ID`/`GRAPH_CLIENT_SECRET`(+optional `GRAPH_MAILBOXES`) in Vercel → redeploy. Steps spelled out in the plan's Phase 3.
+  - 🔲 **Phase 4 (Claude, after Phase 3):** verify `configured:true`, a known thread renders on the right item, attention badges correct, anon→401, edge cache `private, no-store`.
+  - 📋 **Phase 5 (deferred, spec'd not built):** attribution model B (subject-token `[PI-<id>]` for exact item precision), manual "it's in Alibaba chat" note, AI thread summarization, portal IA restructure.
+  - ⚠️ **Plan-doc fix made:** the Task 7 gate command `node --test api/` fails on this Node version (loads `api` as a module) — corrected to listing `api/*.test.js` files explicitly.
+
 **Done this session (06/17/26):**
 - ✅ **Portal redesign MERGED TO PRODUCTION** (`portal-redesign` → `main`, merge `cb6a008`; rollback = branch `backup/main-pre-portal-redesign-061726` or Vercel Instant Rollback). New React SPA live at `procurement.rentstayable.com/review`; smoke-verified anon→401, `rb@` login→render (13 items/2 queue), `/`+`/tracker` 200.
 - ✅ **Polish shipped + verified** (`2aa0ecb`): full-width balanced layout · Lead-time column shows "{n} days" · Decisions "edit note" button themed · Decisions date now = actual `Portal_Approved_At` ("Decided …", "Target …" fallback; proxy returns `approvedAt`).
 - ✅ **Demo cleanup started:** Kyle deleted the `Test_Delete` Procurement_Items. 🔲 **Still delete 24 orphaned Vendor_Quotes** — filter "Procurement Item is empty" (QT-0001–0006, 0010–0022, 0026–0030). KEEP QT-0007/8/9 (Queen Mattresses) + 0023/24/25 (Bath Towels). ⚠️ Quote `Name` is an auto-number (`QT-{0000}`) so the earlier "Test_Delete" rename did NOT stick on quotes — delete via the empty-parent filter. 🔲 Also delete 3 `TEST_Vendor*_DELETE` Accounts.
 - 🔲 **PENDING build — inline editable quote notes:** Kyle to create `Quote_Notes` (textarea) on Vendor_Quotes; then build editable cell + save endpoint + proxy read. **Do NOT add `Quote_Notes` to the proxy COQL before the field exists** (would break the live read). Backlog idea: same inline-notes for Queue items ("Queue notes").
-- ⏸️ **PARKED — 2 decisions that route through Rob (do not change unilaterally):**
+- ⏸️ **PARKED — 1 decision that routes through Rob (do not change unilaterally):**
   1. **Stage-model reconciliation.** Jefferson's 11-step lifecycle (Request → Specs → decision-maker approval → quote collection → 3 quotes/negotiate → sample request → sample approval → PO → payment → delivery → QC-vs-sample) vs the current decision-centric `Stage` picklist. Genuine divergences: **approval timing** (Jefferson = early greenlight + sample approval; current = late award/spend approval) and **lifecycle scope** (current stops at the decision — no intake / PO / payment / delivery / QC stages; PO is fields only; FL-Validate is Stayable-specific and absent from Jefferson's list). Offered to draft a unified stage model one-pager for Rob + decision-log entry.
-  2. **Vendor communications in the portal via M365.** Feasible: backend → Microsoft Graph (Azure AD app reg + `Mail.Read` + admin consent) fetches emails by the vendor email addresses linked to the item; optional single Claude API call to fuzzy-match/summarize; render a "Communications by vendor" panel on item detail. Caveats: **email only — Alibaba chat still unsyncable**; mailbox-scope + privacy/governance; a real integration project. Offered a PoC search via this session's M365 connector + a design spec.
+- ✅ **RESOLVED (was parked) — Vendor communications in the portal via M365.** No longer a proposal — **built + merged this session** (see the 06/20 block above). Approach landed as specced: Graph app-only `Mail.Read` + mandatory mailbox scoping, per-quote threads + cross-item attention monitor, email-only coverage labeled (Alibaba chat still unsyncable). Now gated only on Kyle's Phase 3 Azure setup, not on a decision.
 - 🔲 Carry-forward: add `Submitted_Date` field + workflow (exact approval-age, replaces the `Modified_Time` approximation); set **unique** portal passwords (3 users currently share `StayableProcess`).
 
 **Done this session (06/16/26):**
