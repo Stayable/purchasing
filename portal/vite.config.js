@@ -5,5 +5,5 @@ export default defineConfig({
   plugins: [react()],
   build: { outDir: "../review", emptyOutDir: true },
   server: { proxy: { "/api": "http://localhost:3000" } },
-  test: { environment: "jsdom", globals: true, setupFiles: [] },
+  test: { environment: "jsdom", globals: true, setupFiles: ["./src/setupTests.js"] },
 });
