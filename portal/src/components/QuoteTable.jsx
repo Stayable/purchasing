@@ -1,4 +1,6 @@
+import { Fragment } from "react";
 import { formatUSD } from "../money.js";
+import CommsPanel from "./CommsPanel.jsx";
 
 function lowestLandedId(quotes) {
   if (!quotes || quotes.length === 0) return null;
@@ -7,7 +9,7 @@ function lowestLandedId(quotes) {
   ).id;
 }
 
-export default function QuoteTable({ quotes, selectedQuoteId, onSelect }) {
+export default function QuoteTable({ quotes, selectedQuoteId, onSelect, vendorByQuote }) {
   if (!quotes || quotes.length === 0) {
     return <p className="muted">No quotes on file for this item.</p>;
   }
@@ -31,9 +33,10 @@ export default function QuoteTable({ quotes, selectedQuoteId, onSelect }) {
           {quotes.map((q) => {
             const isRecommended = q.id === recommendedId;
             const isSelected = q.id === selectedQuoteId;
+            const vendor = vendorByQuote && vendorByQuote[q.id];
             return (
+              <Fragment key={q.id}>
               <tr
-                key={q.id}
                 className={
                   "quote-row" +
                   (isSelected ? " quote-row--selected" : "") +
@@ -75,6 +78,12 @@ export default function QuoteTable({ quotes, selectedQuoteId, onSelect }) {
                   </span>
                 </td>
               </tr>
+              {isSelected && vendor && (
+                <tr className="comms-row">
+                  <td colSpan={6}><CommsPanel vendor={vendor} /></td>
+                </tr>
+              )}
+              </Fragment>
             );
           })}
         </tbody>

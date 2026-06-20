@@ -4,6 +4,8 @@ import QuoteTable from "./QuoteTable.jsx";
 import DecisionModal from "./DecisionModal.jsx";
 import { formatUSD } from "../money.js";
 import { daysSince } from "../days.js";
+import { useCommunications } from "../useCommunications.js";
+import { attentionLabel } from "./CommsPanel.jsx";
 
 const TERMINAL_STAGES = new Set(["Approved", "Approved-with-Conditions", "Declined"]);
 
@@ -32,6 +34,10 @@ export default function ItemDetail({ item, quotes, reload }) {
   const defaultQuoteId = lowestLandedId(quotes);
   const [selectedQuoteId, setSelectedQuoteId] = useState(defaultQuoteId);
   const [modal, setModal] = useState(null); // { action, quote } or null
+
+  const { data: comms } = useCommunications(item?.id);
+  const vendorByQuote = {};
+  for (const v of comms?.vendors || []) vendorByQuote[v.quoteId] = v;
 
   if (!item) {
     return (
@@ -73,6 +79,11 @@ export default function ItemDetail({ item, quotes, reload }) {
           {item.flStatus && (
             <span className={"meta-chip meta-chip--fl" + (item.flStatus === "Pass" ? " pass" : item.flStatus === "Fail" ? " fail" : "")}>
               FL: {item.flStatus}
+            </span>
+          )}
+          {comms?.configured && comms.itemAttention && comms.itemAttention !== "none" && (
+            <span className={"meta-chip meta-chip--attn meta-chip--" + comms.itemAttention}>
+              {attentionLabel(comms.itemAttention, null)}
             </span>
           )}
         </div>
@@ -124,6 +135,7 @@ export default function ItemDetail({ item, quotes, reload }) {
               quotes={quotes}
               selectedQuoteId={selectedQuoteId}
               onSelect={setSelectedQuoteId}
+              vendorByQuote={vendorByQuote}
             />
           </div>
 
