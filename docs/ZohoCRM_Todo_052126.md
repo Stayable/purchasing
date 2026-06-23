@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 06/22/26
+**Last Updated:** 06/23/26
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -16,7 +16,7 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 **Done this session (06/20/26):**
 - ✅ **VENDOR-COMMUNICATIONS MONITOR BUILT + MERGED TO `main` (Phases 1–2 of the plan).** Surfaces vendor email threads (inbound + our replies) per quote on each Procurement Item, + a cross-item attention signal (badges: "⚠ awaiting reply" / "⏳ silent ≥7d") so Rob can monitor what's at risk. Spec `docs/superpowers/specs/2026-06-19-vendor-communications-portal-design.md`; plan `docs/superpowers/plans/2026-06-20-vendor-communications-portal.md`. **Backend:** `api/_comms.js` (pure matching/attention logic), `api/_graph.js` (Graph app-only client), `api/communications.js` (`?itemId=`→per-quote threads, no-arg→attention sweep). **UI:** `CommsPanel`, `AttentionBadge`, `useCommunications`, `useAttentionSweep`, wired into `ItemDetail`/`QuoteTable`/`QueueView`/`ItemList`. **24 API + 15 portal tests green**; fast-forwarded `comms-monitor`→`main` (`2dc8a4a`→`523f6c4`), branch deleted. Built `review/` committed.
   - ✅ **Inert until configured** — `/api/communications` returns `{configured:false}` and never calls Graph/Zoho until the 3 `GRAPH_*` env vars exist. Zero regression to the live `/review`.
-  - 🔲 **NOT PUSHED** — `main` is local-ahead of `origin` (14 commits, incl. the 06/19–06/20 spec/plan). Push when Kyle gives the go-ahead (one `git push origin main` sends the set).
+  - ✅ **PUSHED 06/23/26** — `git push origin main` (Kyle go-ahead); local `HEAD` = `origin/main` = `ac3e3e1`, tree clean. The comms-monitor set + 06/19–20 spec/plan are on origin. Still inert in production until the 3 `GRAPH_*` env vars land (Phase 3).
   - 🔲 **Phase 3 (Kyle, Azure admin, ~1 hr, none MCP/CLI-doable):** Entra app registration → `Mail.Read` **application** permission + admin consent → client secret → **mandatory mailbox scoping** (`New-DistributionGroup` + `New-ApplicationAccessPolicy` for `purchasing@`+`jefferson@`) → set `GRAPH_TENANT_ID`/`GRAPH_CLIENT_ID`/`GRAPH_CLIENT_SECRET`(+optional `GRAPH_MAILBOXES`) in Vercel → redeploy. Steps spelled out in the plan's Phase 3.
   - 🔲 **Phase 4 (Claude, after Phase 3):** verify `configured:true`, a known thread renders on the right item, attention badges correct, anon→401, edge cache `private, no-store`.
   - 📋 **Phase 5 (deferred, spec'd not built):** attribution model B (subject-token `[PI-<id>]` for exact item precision), manual "it's in Alibaba chat" note, AI thread summarization, portal IA restructure.
