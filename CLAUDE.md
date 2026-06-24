@@ -12,15 +12,16 @@ Docs referenced below by bare filename now live in subfolders — resolve them v
 
 | Location | Contents |
 |---|---|
-| **root** | Deploy + entry files only: `index.html`, `vercel.json`, `ZohoProcurementTracker_052626.html` (Vercel static deploy — must stay at root), `CLAUDE.md`, `start-claude.bat`, and `Zoho_Architecture.md` (the canonical architecture + CEO proposal, single Rob-facing file) |
+| **root** | Deploy + entry files only: `vercel.json`, `CLAUDE.md`, `start-claude.bat`, and `Zoho_Architecture.md` (the canonical architecture + CEO proposal, single Rob-facing file). **As of 06/25/26 the production site is the React SPA in `portal/` (built into `review/`), served at the site root** — the old static `index.html`, `ZohoProcurementTracker_052626.html`, `RobReviewPortal_*.html`, and the `infographics/*.html` one-pagers were removed and rebuilt as in-app pages. |
 | **`docs/`** | Planning & process: `ZohoCRM_Rollout_052126.md`, `ZohoCRM_Todo_052126.md`, `ProjectInstructions_OverseasProc_052626.md`, `ZohoProcurementProcessGuide_RISE8_052926.md`, `ZohoBuildTracker_NonProfitSales_Kate_052926.md`, `ZohoTaskUpdate_RISE8_052726.md` |
 | **`specs/`** | Module specs: `ZohoModuleSpec_ProcurementItems_052626.md`, `ZohoModuleSpec_ContactTrackingSubform_052926.md`, `ZohoModuleSpec_VendorBids_052926.md` |
 | **`reference/`** | Source inputs & reference: `chart 1.jpg`, `ZohoCRM_VendorList_052626.xlsx`, `NonProfitPartners_ImportSource_053026.csv`, `ProcurementItemsModuleLayout_052826.png` |
 | **`outputs/`** | Zoho import files (org `/outputs` convention) |
-| **`infographics/`** | Standalone HTML visual one-pagers (internal, `noindex`, **not** Vercel deploy files): `ProcurementProcessInfographic_RISE8_053026.html`, `ArchitectureComparison_CurrentVsRob_053026.html` |
+| **`portal/`** | The React SPA (Vite). Source of the production site; built into `review/` (committed) and served at the root URL. |
+| **`infographics/`** | (Emptied 06/25/26 — the HTML one-pagers were rebuilt as in-app `/how-it-works` + `/architecture` pages.) |
 | **`jefferson/`** | Procurement handback materials from Jefferson (05/29): `IntlVendorContacts_RISE8_052926.md`, `ItemStaging_Procurement_052926.xlsx`, `JeffersonHandback_052926.md` |
 
-> Vercel static deploy depends on `index.html`, `vercel.json`, and `ZohoProcurementTracker_052626.html` staying at root (the `/tracker` rewrite resolves to a root file). Do not move them into subfolders.
+> **Deploy (updated 06/25/26):** the site is the SPA. `portal/` builds (base `/review/`) into `review/` (committed, no Vercel build step). `vercel.json` serves `review/index.html` for every non-`/api`, non-`/review` path (react-router owns client routing, `basename="/"`), redirects old `/review` links to `/`, and excludes `/api/*` (the serverless functions). The whole app is login-gated (the `useProcurement` 401 → login screen gate covers all routes). To change the UI, edit `portal/src`, run `npm run build:portal`, and commit both `portal/` and `review/`.
 
 Stayable is an extended-stay hotel brand with 9 Florida properties (IDs: 4645, 2295, 6802, 812, 5399, 2535, 44199, 8700, 2900). Property `2900` = **Stayable Gainesville** (Alachua County), confirmed by Kyle 06/04/26 — it was Rob's addition in the v2 Property picklist and is a real property, not a typo. The procurement workflow sources FF&E, OS&E, appliances, building materials, and soft goods overseas and brings recommendations to Rob Beyer (CEO) for approval. Zoho CRM is being reintroduced as the system of record after a prior deployment was abandoned due to module sprawl.
 

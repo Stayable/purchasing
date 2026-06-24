@@ -2,10 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/review", "destination": "/", "permanent": true },
+    { "source": "/review/((?!assets/).*)", "destination": "/", "permanent": true }
+  ],
   "rewrites": [
-    { "source": "/tracker", "destination": "/ZohoProcurementTracker_052626" },
-    { "source": "/review", "destination": "/review/index.html" },
-    { "source": "/review/(.*)", "destination": "/review/index.html" }
+    { "source": "/((?!api/|review/).*)", "destination": "/review/index.html" }
   ],
   "headers": [
     { "source": "/(.*)", "headers": [

@@ -5,5 +5,5 @@ import App from "./App.jsx";
 import "./styles.css";
 
 createRoot(document.getElementById("root")).render(
-  <BrowserRouter basename="/review"><App /></BrowserRouter>
+  <BrowserRouter basename="/"><App /></BrowserRouter>
 );

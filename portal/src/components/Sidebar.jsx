@@ -2,11 +2,17 @@ import { NavLink } from "react-router-dom";
 import { logout } from "../api.js";
 
 const NAV = [
+  { to: "/",          label: "Home",      icon: "⌂", end: true },
   { to: "/queue",     label: "Queue",     icon: "◎" },
   { to: "/board",     label: "Board",     icon: "⊞" },
   { to: "/items",     label: "Items",     icon: "≡" },
+  { to: "/tracker",   label: "Tracker",   icon: "↻" },
   { to: "/decisions", label: "Decisions", icon: "✓" },
   { to: "/spend",     label: "Spend",     icon: "$" },
+];
+const NAV_ABOUT = [
+  { to: "/how-it-works", label: "How it works", icon: "◷" },
+  { to: "/architecture", label: "Architecture", icon: "▤" },
 ];
 
 export default function Sidebar({ viewer, onSignOut }) {
@@ -28,7 +34,21 @@ export default function Sidebar({ viewer, onSignOut }) {
 
       <nav className="sidebar-nav">
         <div className="sidebar-section-label">Views</div>
-        {NAV.map(({ to, label, icon }) => (
+        {NAV.map(({ to, label, icon, end }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={end}
+            className={({ isActive }) =>
+              "sidebar-link" + (isActive ? " active" : "")
+            }
+          >
+            <span className="sidebar-icon">{icon}</span>
+            {label}
+          </NavLink>
+        ))}
+        <div className="sidebar-section-label">About</div>
+        {NAV_ABOUT.map(({ to, label, icon }) => (
           <NavLink
             key={to}
             to={to}
