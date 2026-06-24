@@ -3,8 +3,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/review", "destination": "/", "permanent": true },
-    { "source": "/review/((?!assets/).*)", "destination": "/", "permanent": true }
+    { "source": "/review", "destination": "/", "permanent": true }
   ],
   "rewrites": [
     { "source": "/", "destination": "/review/index.html" },
