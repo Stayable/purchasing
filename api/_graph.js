@@ -58,7 +58,10 @@ async function fetchFolder(mailbox, folder, token, sinceIso, top) {
     + `?$select=${SELECT}&$top=${top}&$orderby=receivedDateTime desc`
     + `&$filter=receivedDateTime ge ${sinceIso}`;
   const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-  if (!r.ok) throw new Error(`graph_fetch_failed:${mailbox}:${folder}:${r.status}`);
+  if (!r.ok) {
+    const body = await r.text().catch(() => "");
+    throw new Error(`graph_fetch_failed:${mailbox}:${folder}:${r.status}:${body.slice(0, 300)}`);
+  }
   const j = await r.json().catch(() => ({}));
   return (j.value || []).map(normalizeGraphMessage);
 }
