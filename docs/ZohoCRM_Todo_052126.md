@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 06/23/26
+**Last Updated:** 06/24/26
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -12,6 +12,14 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 ---
 
 ## Top Priorities — Active Sprint (refreshed 05/29/26)
+
+**Done this session (06/24/26) — comms monitor Phase 3 Azure setup + resolver fix:**
+- ✅ **Phase 3 Azure/Graph setup DONE + verified.** Entra app `06a4fa09-b75c-4d2c-a97a-b49474f3b9b8` (`Mail.Read` **Application**, admin-consented — green "Granted for RISE8 COMPANIES"); client secret created; Exchange **ApplicationAccessPolicy** `RestrictAccess` scoped to mail-enabled security group `ProcurementCommsScope@leadmanagement.onmicrosoft.com` (members `purchasing@`+`jefferson@`). `Test-ApplicationAccessPolicy` verified: purchasing@ **Granted**, jefferson@ **Granted**, admin@ **Denied**. `Get-ApplicationAccessPolicy` shows our single policy, no conflicting DenyAccess. **Admin is `kate@rentstayable.com`** (Entra directory + Exchange super admin) — consent/scoping required her sign-in, not admin@.
+- ✅ **Vercel `GRAPH_*` env set + redeployed** — `configured:false` → past it (endpoint now reaches Graph). Anon `/api/communications`→401, `/review`→200, `/api/procurement`→401 (no regression).
+- ⚠️ **BLOCKED on `[RAOP]` propagation (not a misconfig).** Live call returns `graph_fetch_failed:…:403:{"code":"ErrorAccessDenied","message":"Access to OData is disabled: [RAOP] : Blocked by tenant configured AppOnly AccessPolicy settings."}`. Diagnosis: policy/group-membership enforcement plane hasn't propagated (Test=Granted but enforcement lags; can exceed 1 hr). **Next session:** retry the URL logged-in; if `configured:true`+items → run Phase 4 verify. **If still `[RAOP]` with only our policy present → switch from classic ApplicationAccessPolicy to RBAC for Applications** (effective in minutes). Timer routine `trig_01WLJiarM14jYRrx1d7Kjgt6` fired 14:16 UTC.
+- ✅ **RESOLVER BUG FOUND + FIXED (`df31801`).** `Vendor_Quotes.Vendor` is a lookup to the custom **Vendors** module (verified via getFields), which stores email on `Vendors.Email` (no linked Contacts). The comms resolver's `Contacts WHERE Account_Name.id IN (Vendor ids)` join never matched → empty comms regardless of Graph state. Now `buildQuoteQuery` selects `Vendor.Email`, `vendorsFromRows` builds addresses from it, `buildContactQuery` removed. **24/24 api tests green.** Corrects the 06/24 coverage note (emails live on `Vendors.Email`, not a Contact). Limitation: one address per vendor (extendable later).
+- ⚠️ **Diagnostic commit `6b22873` (surface Graph error body in `detail`) — REVERT after the 403 is resolved.** Harmless (auth-gated, no secrets) but temporary.
+- ✅ **End-to-end test chain created in Zoho** (all tagged `DELETE … 062426`): Procurement Item **TEST Comms Item 062426** `…1613001` (Stage=Bid); Vendors **TEST Comms Vendor A** `…1614001` + **B** `…1614002`; 2 linking Vendor_Quotes `…1612002/…1612003` w/ cost data. 🔲 **Jefferson:** set the **Email** field on TEST Comms Vendor A/B to a real vendor address that has corresponded with `purchasing@`/`jefferson@` (last ~120d). 🔲 **Cleanup after test:** delete the Item + 2 Vendors + 2 quotes.
 
 **Done this session (06/20/26):**
 - ✅ **VENDOR-COMMUNICATIONS MONITOR BUILT + MERGED TO `main` (Phases 1–2 of the plan).** Surfaces vendor email threads (inbound + our replies) per quote on each Procurement Item, + a cross-item attention signal (badges: "⚠ awaiting reply" / "⏳ silent ≥7d") so Rob can monitor what's at risk. Spec `docs/superpowers/specs/2026-06-19-vendor-communications-portal-design.md`; plan `docs/superpowers/plans/2026-06-20-vendor-communications-portal.md`. **Backend:** `api/_comms.js` (pure matching/attention logic), `api/_graph.js` (Graph app-only client), `api/communications.js` (`?itemId=`→per-quote threads, no-arg→attention sweep). **UI:** `CommsPanel`, `AttentionBadge`, `useCommunications`, `useAttentionSweep`, wired into `ItemDetail`/`QuoteTable`/`QueueView`/`ItemList`. **24 API + 15 portal tests green**; fast-forwarded `comms-monitor`→`main` (`2dc8a4a`→`523f6c4`), branch deleted. Built `review/` committed.
