@@ -1232,9 +1232,14 @@ h1, h2, h3 { margin: 0; }
 .comms-attn--ok{background:#103a1a;color:#7ad29a}
 .comms-attn--none{background:#2a2a2a;color:#9a9a9a}
 .comms-thread{list-style:none;margin:.5rem 0;padding:0;display:flex;flex-direction:column;gap:.35rem}
-.comms-msg{display:grid;grid-template-columns:auto 1fr auto;gap:.5rem;align-items:baseline;font-size:.8rem}
+.comms-msg{display:flex;flex-direction:column;gap:.2rem;font-size:.8rem}
+.comms-msg-head{display:grid;grid-template-columns:auto auto 1fr auto;gap:.5rem;align-items:baseline}
 .comms-msg--outbound .comms-dir{color:#7aa7ff}.comms-msg--inbound .comms-dir{color:#ffd27a}
-.comms-preview{grid-column:2 / -1;color:#9a9a9a;font-size:.75rem}
+.comms-preview{color:#9a9a9a;font-size:.75rem;padding-left:1.4rem}
+.comms-expand{background:none;border:none;color:#9a9a9a;cursor:pointer;font-size:.85rem;padding:0;line-height:1}
+.comms-expand:hover{color:#ddd}
+.comms-body{width:100%;min-height:180px;max-height:420px;border:1px solid var(--border,#2a2a2a);border-radius:6px;background:#fff;margin:.25rem 0}
+.comms-body-status{padding-left:1.4rem;font-size:.75rem}
 .comms-coverage{font-size:.7rem;color:#8a8a8a;margin-top:.4rem}
 
 /* cross-item attention badges (queue/list) */

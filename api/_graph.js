@@ -18,9 +18,10 @@ function scopedMailboxes() {
 function addrList(arr) {
   return (arr || []).map((r) => (r.emailAddress && r.emailAddress.address) || "").filter(Boolean);
 }
-function normalizeGraphMessage(raw) {
+function normalizeGraphMessage(raw, mailbox) {
   return {
     id: raw.id,
+    mailbox: mailbox || null,
     conversationId: raw.conversationId || null,
     from: (raw.from && raw.from.emailAddress && raw.from.emailAddress.address) || "",
     to: addrList(raw.toRecipients),
@@ -63,7 +64,22 @@ async function fetchFolder(mailbox, folder, token, sinceIso, top) {
     throw new Error(`graph_fetch_failed:${mailbox}:${folder}:${r.status}:${body.slice(0, 300)}`);
   }
   const j = await r.json().catch(() => ({}));
-  return (j.value || []).map(normalizeGraphMessage);
+  return (j.value || []).map((m) => normalizeGraphMessage(m, mailbox));
+}
+
+// Single-message full body, fetched lazily when a message is expanded in the UI.
+function buildMessageBodyUrl(mailbox, id) {
+  return `${GRAPH}/users/${encodeURIComponent(mailbox)}/messages/${encodeURIComponent(id)}?$select=id,body`;
+}
+async function fetchMessageBody(mailbox, id) {
+  const token = await getGraphToken();
+  const r = await fetch(buildMessageBodyUrl(mailbox, id), { headers: { Authorization: `Bearer ${token}` } });
+  if (!r.ok) {
+    const body = await r.text().catch(() => "");
+    throw new Error(`graph_body_failed:${mailbox}:${r.status}:${body.slice(0, 300)}`);
+  }
+  const j = await r.json().catch(() => ({}));
+  return { id: j.id || id, bodyHtml: (j.body && j.body.content) || "", contentType: (j.body && j.body.contentType) || "text" };
 }
 async function fetchRecentMessages(mailbox, opts = {}) {
   const sinceDays = opts.sinceDays || 120, top = opts.top || 50;
@@ -76,4 +92,4 @@ async function fetchRecentMessages(mailbox, opts = {}) {
   return inbox.concat(sent);
 }
 
-module.exports = { graphConfigured, scopedMailboxes, normalizeGraphMessage, getGraphToken, fetchRecentMessages };
+module.exports = { graphConfigured, scopedMailboxes, normalizeGraphMessage, getGraphToken, fetchRecentMessages, buildMessageBodyUrl, fetchMessageBody };

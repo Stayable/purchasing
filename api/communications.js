@@ -70,6 +70,22 @@ async function handler(req, res) {
   if (!graph.graphConfigured()) {
     return res.status(200).json({ configured: false, coverage: "email-only" });
   }
+
+  // Lazy single-message body fetch (expand-to-read). Scope-guard the mailbox so a
+  // logged-in user can't read an arbitrary mailbox by passing the param.
+  const messageId = req.query && req.query.messageId;
+  if (messageId) {
+    const mailbox = (req.query && req.query.mailbox) || "";
+    if (!graph.scopedMailboxes().includes(mailbox)) {
+      return res.status(400).json({ error: "mailbox_out_of_scope" });
+    }
+    try {
+      return res.status(200).json(await graph.fetchMessageBody(mailbox, messageId));
+    } catch (err) {
+      return res.status(502).json({ error: "comms_body_failed", detail: String(err.message || err) });
+    }
+  }
+
   try {
     const itemId = (req.query && req.query.itemId) || null;
     const ourAddresses = graph.scopedMailboxes();

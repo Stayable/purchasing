@@ -1,12 +1,22 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import CommsPanel, { attentionLabel } from "./CommsPanel.jsx";
+import CommsPanel, { attentionLabel, buildEmailSrcdoc } from "./CommsPanel.jsx";
 
 describe("attentionLabel", () => {
   it("maps states to human text", () => {
     expect(attentionLabel("awaiting-our-reply", 3)).toMatch(/awaiting our reply/i);
     expect(attentionLabel("stale", 9)).toMatch(/silent 9/i);
     expect(attentionLabel("none", null)).toMatch(/no email/i);
+  });
+});
+
+describe("buildEmailSrcdoc", () => {
+  it("wraps the body in a locked-down CSP sandbox document", () => {
+    const doc = buildEmailSrcdoc("<p>Hello <b>quote</b></p>");
+    expect(doc).toMatch(/Content-Security-Policy/);
+    expect(doc).toMatch(/default-src 'none'/);
+    expect(doc).toMatch(/img-src data:/);
+    expect(doc).toMatch(/Hello <b>quote<\/b>/);
   });
 });
 

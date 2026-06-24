@@ -22,10 +22,18 @@ test("normalizeGraphMessage maps Graph fields", () => {
     toRecipients: [{ emailAddress: { address: "purchasing@rentstayable.com" } }],
     ccRecipients: [],
   };
-  const m = g.normalizeGraphMessage(raw);
+  const m = g.normalizeGraphMessage(raw, "purchasing@rentstayable.com");
   assert.equal(m.from, "sales@walrus.com");
   assert.deepEqual(m.to, ["purchasing@rentstayable.com"]);
   assert.equal(m.conversationId, "AAQk");
   assert.equal(m.preview, "hi");
   assert.equal(m.hasAttachments, true);
+  assert.equal(m.mailbox, "purchasing@rentstayable.com");
+});
+
+test("buildMessageBodyUrl selects body and encodes mailbox + id", () => {
+  const u = g.buildMessageBodyUrl("purchasing@rentstayable.com", "AAMk=Id/With+Chars");
+  assert.match(u, /\/users\/purchasing%40rentstayable\.com\/messages\//);
+  assert.match(u, /\$select=id,body/);
+  assert.match(u, /AAMk%3DId%2FWith%2BChars/);
 });
