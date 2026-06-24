@@ -11,12 +11,8 @@ const ACCOUNTS = process.env.ZOHO_ACCOUNTS_DOMAIN || "https://accounts.zoho.com"
 
 function buildQuoteQuery(itemId) {
   const where = itemId ? `Procurement_Item = ${itemId}` : "Procurement_Item is not null";
-  return "SELECT Name, Vendor.Vendor_Name, Vendor.id, Procurement_Item.id, id "
+  return "SELECT Name, Vendor.Vendor_Name, Vendor.id, Vendor.Email, Procurement_Item.id, id "
     + `FROM Vendor_Quotes WHERE ${where} LIMIT 200`;
-}
-function buildContactQuery(accountIds) {
-  const ids = accountIds.filter(Boolean).join(",");
-  return `SELECT Email, Account_Name.id FROM Contacts WHERE Account_Name.id in (${ids}) LIMIT 200`;
 }
 
 // --- Zoho read (mirrors api/procurement.js token+coql pattern) ---
@@ -48,9 +44,7 @@ async function coql(query) {
 
 async function resolveVendors(itemId) {
   const quotes = await coql(buildQuoteQuery(itemId));
-  const accIds = [...new Set(quotes.map((q) => q["Vendor.id"]).filter(Boolean))];
-  const contacts = accIds.length ? await coql(buildContactQuery(accIds)) : [];
-  return comms.vendorsFromRows(quotes, contacts);
+  return comms.vendorsFromRows(quotes);
 }
 
 // in-memory mailbox sweep cache (per warm instance, ~60s)
@@ -93,4 +87,3 @@ async function handler(req, res) {
 
 module.exports = handler;
 module.exports.buildQuoteQuery = buildQuoteQuery;
-module.exports.buildContactQuery = buildContactQuery;

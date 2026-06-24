@@ -7,14 +7,13 @@ test("buildQuoteQuery filters by item when given", () => {
   assert.match(q, /WHERE Procurement_Item = 123/);
   assert.match(q, /Vendor\.id/);
 });
+test("buildQuoteQuery selects the vendor email for matching", () => {
+  const q = mod.buildQuoteQuery("123");
+  assert.match(q, /Vendor\.Email/);
+});
 test("buildQuoteQuery without item selects all linked quotes", () => {
   const q = mod.buildQuoteQuery(null);
   assert.match(q, /WHERE Procurement_Item is not null/);
-});
-test("buildContactQuery builds an IN list over account ids", () => {
-  const q = mod.buildContactQuery(["v1", "v2"]);
-  assert.match(q, /FROM Contacts/);
-  assert.match(q, /Account_Name\.id in \(v1,v2\)/);
 });
 test("handler returns configured:false when Graph unset", async () => {
   delete process.env.GRAPH_TENANT_ID; delete process.env.SESSION_SECRET; // auth disabled -> no 401
