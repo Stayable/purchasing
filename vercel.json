@@ -7,7 +7,8 @@
     { "source": "/review/((?!assets/).*)", "destination": "/", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/((?!api/|review/).*)", "destination": "/review/index.html" }
+    { "source": "/", "destination": "/review/index.html" },
+    { "source": "/((?!api/).*)", "destination": "/review/index.html" }
   ],
   "headers": [
     { "source": "/(.*)", "headers": [
