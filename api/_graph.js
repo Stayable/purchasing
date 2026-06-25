@@ -82,7 +82,11 @@ async function fetchMessageBody(mailbox, id) {
   return { id: j.id || id, bodyHtml: (j.body && j.body.content) || "", contentType: (j.body && j.body.contentType) || "text" };
 }
 async function fetchRecentMessages(mailbox, opts = {}) {
-  const sinceDays = opts.sinceDays || 120, top = opts.top || 50;
+  // NOTE: "recent N per folder" only — on a busy mailbox an older vendor thread
+  // scrolls out of this window and shows as "none" instead of "stale". Raised to
+  // 200 (env-overridable) as a stopgap; the durable fix is a per-vendor $search.
+  const sinceDays = opts.sinceDays || 120;
+  const top = opts.top || Number(process.env.GRAPH_FETCH_TOP) || 200;
   const token = await getGraphToken();
   const sinceIso = new Date(Date.now() - sinceDays * 86400000).toISOString();
   const [inbox, sent] = await Promise.all([
