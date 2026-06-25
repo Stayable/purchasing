@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { logout } from "../api.js";
+import logo from "../stayable-logo-white.png";
 
 const NAV = [
   { to: "/",          label: "Home",      icon: "⌂", end: true },
@@ -25,11 +26,8 @@ export default function Sidebar({ viewer, onSignOut }) {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <div className="sidebar-brand-mark">S8</div>
-        <div className="sidebar-brand-text">
-          <div className="sidebar-brand-name">Stayable</div>
-          <div className="sidebar-brand-sub">Procurement</div>
-        </div>
+        <img src={logo} alt="Stayable" />
+        <span className="sidebar-brand-sub">Procurement</span>
       </div>
 
       <nav className="sidebar-nav">

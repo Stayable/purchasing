@@ -1,16 +1,26 @@
-const COLORS = {
-  Submitted:                ["#fef3c7", "#92400e"],
-  Approved:                 ["#dcfce7", "#166534"],
-  "Approved-with-Conditions": ["#dbeafe", "#1e40af"],
-  Declined:                 ["#fee2e2", "#991b1b"],
-  "Need-More-Info":         ["#fde8d8", "#9a3412"],
+/* ----------------------------------------------------------------------------
+   StageBadge.jsx — REDESIGN drop-in replacement for portal/src/components/StageBadge.jsx
+   Maps each stage to ONE status intent (neutral / info / ok / warn / bad) via a
+   CSS class, instead of inline hex colors. The colors then live in styles.css
+   and stay consistent with every other badge in the app.
+   ---------------------------------------------------------------------------- */
+
+const INTENT = {
+  // pipeline (in-progress)
+  Spec:          "neutral",
+  Bid:           "info",
+  Level:         "info",
+  "FL-Validate": "info",
+  Recommend:     "info",
+  Submitted:     "info",
+  // terminal
+  Approved:                   "ok",
+  "Approved-with-Conditions": "ok",
+  Declined:                   "bad",
+  "Need-More-Info":           "warn",
 };
 
 export default function StageBadge({ stage }) {
-  const [bg, fg] = COLORS[stage] || ["#f1f5f9", "#475569"];
-  return (
-    <span className="badge" style={{ background: bg, color: fg }}>
-      {stage}
-    </span>
-  );
+  const intent = INTENT[stage] || "neutral";
+  return <span className={"badge badge--" + intent}>{stage}</span>;
 }
