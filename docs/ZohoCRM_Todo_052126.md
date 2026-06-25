@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 06/24/26
+**Last Updated:** 06/26/26
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -12,6 +12,12 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 ---
 
 ## Top Priorities — Active Sprint (refreshed 05/29/26)
+
+**Done this session (06/26/26) — Alibaba tracking spec'd + portal access:**
+- ✅ **Rob committed to this portal as the system of record — dropped the third-party-system search (06/25/26).** Raises the bar: reliability, data quality, Jefferson's daily use now matter more. (Rob: "that looks amazing.")
+- ✅ **Alibaba comms tracking design spec written** — `docs/superpowers/specs/2026-06-26-alibaba-comms-tracking-design.md`. Decision: build **A** (capture Alibaba *email notifications* automatically, if they reach the mailbox) **+ B** (structured manual "Log Alibaba message" in the portal → Zoho → merged into the per-quote comms timeline + attention signal); **defer C** (browser scraping — brittle + ToS). 🔲 **Gated on Kyle's Jefferson meeting (06/27)** — 6 open questions in the spec (do Alibaba notifications email the mailbox? what to capture? log granularity? volume?). Build A+B right after with his answers.
+- ✅ **Portal access:** both `rb@rise8companies.com` + `jefferson@rentstayable.com` are already in the `api/_auth.js` allowlist (no code change). 🔲 **Kyle confirming** they can log in with the shared `StayableProcess`; if not, reseed via `db/hash-password.js` UPSERT → Neon. **Recommended:** set *unique* passwords now (resolves the long-standing shared-password flag — more important now Rob's committed + per-user `Portal_Approved_By` attribution).
+- 🔲 **Comms fetch-window caveat (live stopgap):** `GRAPH_FETCH_TOP` raised 50→200 so day-old vendor threads stay matched; **durable fix = per-vendor `$search`** (so a vendor silent for weeks isn't wrongly shown "none"/missed on busy mailboxes). Build after the presentation/meeting.
 
 **Done this session (06/25/26) — portal unified into a single SPA at root + expand-to-read:**
 - ✅ **Expand-to-read full email body inline** (`65ea29c`). Each comms message has an expand toggle → lazily fetches the full body via `GET /api/communications?messageId=&mailbox=` (mailbox **scope-guarded**) → renders in an `<iframe sandbox>` with strict inner CSP (scripts blocked, remote images/trackers blocked). No new dep.
