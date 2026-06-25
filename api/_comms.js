@@ -74,7 +74,8 @@ function tagAndGroup(vendors, messages, ourAddresses) {
     byQuote[v.quoteId].push({ ...m, direction: classifyDirection(m, ours) });
   }
   for (const k of Object.keys(byQuote)) {
-    byQuote[k].sort((a, b) => new Date(a.receivedAt) - new Date(b.receivedAt));
+    // newest first for display (attention logic re-sorts its own copy)
+    byQuote[k].sort((a, b) => new Date(b.receivedAt) - new Date(a.receivedAt));
   }
   return byQuote;
 }

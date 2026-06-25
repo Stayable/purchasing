@@ -104,7 +104,8 @@ test("buildItemPayload threads + attention per vendor", () => {
   assert.equal(p.vendors.length, 1);
   assert.equal(p.vendors[0].messageCount, 2);          // noise excluded
   assert.equal(p.vendors[0].attentionState, "awaiting-our-reply");
-  assert.equal(p.vendors[0].messages[0].direction, "outbound"); // chronological
+  assert.equal(p.vendors[0].messages[0].direction, "inbound");  // newest first
+  assert.equal(p.vendors[0].messages[1].direction, "outbound"); // older below
   assert.equal(p.itemAttention, "awaiting-our-reply");
 });
 
