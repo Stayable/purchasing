@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 06/26/26 (procurement modules cleared for real-data load)
+**Last Updated:** 06/27/26 (comms 7-day window; in-app rebuild spec drafted)
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -12,6 +12,11 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 ---
 
 ## Top Priorities — Active Sprint (refreshed 05/29/26)
+
+**Done this session (06/27/26) — comms thread filter + in-app rebuild spec:**
+- ✅ **Comms panel: rolling 7-day thread window** (`ab1b44c`, supersedes `646119e`). `CommsPanel` opens on the most recent **7 days** of each vendor conversation (window anchored on the **newest message, not "now"** — so a long-silent vendor still shows its latest mail by default). **"Show 7 more days"** extends the window +7 per click; **"— No older messages —"** end marker when exhausted; no control when the thread already fits in 7 days. Client-side only, no Graph fetch-window change. `withinWindow()` + `WINDOW_DAYS` exported. **23/23 portal tests green**, `review/` rebuilt.
+  - 🔲 **NOT PUSHED** — 2 commits unpushed (`646119e` superseded latest-5 version + `ab1b44c`). Pushing `main` auto-deploys to production (`procurement.rentstayable.com`, Rob-facing). **Kyle to OK the push/deploy** (offered to hold with the weekend batch).
+  - 📋 Easy later tweaks: change `WINDOW_DAYS` (currently 7); the previous count-based "latest 5" approach is in `646119e` if preferred.
 
 **Done this session (06/26/26) — ALL DEMO/TEST DATA CLEARED for Jefferson's real load:**
 - ✅ **Three procurement modules emptied — confirmed 0 records in Procurement_Items, Vendor_Quotes, Vendors.** Cleared the last demo/test data (4 Procurement_Items incl. the 2 DEMO sets + TV + TEST Comms Item; 9 Vendor_Quotes; 16 Vendors incl. 10 demo vendors, 3 TEST_*_DELETE, 2 TEST Comms, Guangzhou Lighting Fair). Process: Claude stamped every record `DELETE_062626` via MCP (Name prefix on Items/Vendors; `Risk_Notes` on Quotes since Name is a locked auto-number) → Kyle select-all-deleted in each Zoho UI list view (no MCP delete op). Verified empty via COQL.
