@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import CommsPanel, { attentionLabel, buildEmailSrcdoc, DEFAULT_VISIBLE } from "./CommsPanel.jsx";
+import CommsPanel, { attentionLabel, buildEmailSrcdoc, WINDOW_DAYS } from "./CommsPanel.jsx";
 
 describe("attentionLabel", () => {
   it("maps states to human text", () => {
@@ -38,25 +38,35 @@ describe("CommsPanel", () => {
     render(<CommsPanel vendor={{ vendorName: "Mesa", attentionState: "none", messageCount: 0, messages: [] }} />);
     expect(screen.getByText(/communicating via Alibaba chat/i)).toBeInTheDocument();
   });
-  it("shows no limit control when messages fit within the default window", () => {
+  it("shows no window control when the whole thread fits in the first window", () => {
+    // fixture spans 3 days (06-16 → 06-19), inside the 7-day default window
     render(<CommsPanel vendor={vendor} />);
-    expect(screen.queryByRole("button", { name: /older|show latest/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /more days/i })).not.toBeInTheDocument();
+    expect(screen.queryByText(/no older messages/i)).not.toBeInTheDocument();
   });
-  it("collapses to the latest N and toggles to show older", () => {
-    const many = Array.from({ length: 8 }, (_, i) => ({
-      direction: i % 2 ? "inbound" : "outbound",
-      subject: `Msg ${i}`, preview: "p",
-      receivedAt: `2026-06-${String(20 - i).padStart(2, "0")}T00:00:00Z`,
-      webLink: `https://o${i}`,
-    }));
-    render(<CommsPanel vendor={{ vendorName: "Walrus", attentionState: "ok", messageCount: 8, messages: many }} />);
-    // only the latest DEFAULT_VISIBLE render initially (newest-first → Msg 0..4)
+  it("opens on the latest 7 days, extends +7 per click, then shows the end marker", () => {
+    // newest-first; offsets in days from the newest message (2026-06-20)
+    const at = (d) => `2026-06-${String(20 - d).padStart(2, "0")}T00:00:00Z`;
+    const messages = [
+      { direction: "inbound",  subject: "Msg 0", preview: "p", receivedAt: at(0),  webLink: "https://o0" }, // 0d
+      { direction: "outbound", subject: "Msg 1", preview: "p", receivedAt: at(5),  webLink: "https://o1" }, // 5d  (≤7)
+      { direction: "inbound",  subject: "Msg 2", preview: "p", receivedAt: at(9),  webLink: "https://o2" }, // 9d  (≤14)
+      { direction: "outbound", subject: "Msg 3", preview: "p", receivedAt: at(15), webLink: "https://o3" }, // 15d (≤21)
+    ];
+    render(<CommsPanel vendor={{ vendorName: "Walrus", attentionState: "ok", messageCount: 4, messages }} />);
+    expect(WINDOW_DAYS).toBe(7);
+    // window 1 (7d): only Msg 0 + Msg 1
     expect(screen.getByText("Msg 0")).toBeInTheDocument();
-    expect(screen.getByText(`Msg ${DEFAULT_VISIBLE - 1}`)).toBeInTheDocument();
-    expect(screen.queryByText(`Msg ${DEFAULT_VISIBLE}`)).not.toBeInTheDocument();
-    const toggle = screen.getByRole("button", { name: new RegExp(`Show ${8 - DEFAULT_VISIBLE} older`, "i") });
-    fireEvent.click(toggle);
-    expect(screen.getByText("Msg 7")).toBeInTheDocument();           // older now visible
-    expect(screen.getByRole("button", { name: /show latest/i })).toBeInTheDocument();
+    expect(screen.getByText("Msg 1")).toBeInTheDocument();
+    expect(screen.queryByText("Msg 2")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /show 7 more days/i })); // 14d → Msg 2 appears
+    expect(screen.getByText("Msg 2")).toBeInTheDocument();
+    expect(screen.queryByText("Msg 3")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: /show 7 more days/i })); // 21d → Msg 3 appears, end
+    expect(screen.getByText("Msg 3")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /more days/i })).not.toBeInTheDocument();
+    expect(screen.getByText(/no older messages/i)).toBeInTheDocument();
   });
 });

@@ -1243,6 +1243,7 @@ h1, h2, h3 { margin: 0; }
 .comms-coverage{font-size:.7rem;color:#8a8a8a;margin-top:.4rem}
 .comms-more{margin-top:.35rem;background:none;border:1px solid var(--border,#2a2a2a);color:var(--text-muted,#9a9a9a);font-size:.72rem;padding:.15rem .6rem;border-radius:6px;cursor:pointer}
 .comms-more:hover{color:var(--text,#1a1a1a);border-color:var(--text-muted,#6a6a6a)}
+.comms-end{font-size:.7rem;color:#8a8a8a;text-align:center;margin:.35rem 0 0;letter-spacing:.02em}
 
 /* cross-item attention badges (queue/list) */
 .attn-badge{font-size:.7rem;font-weight:600;padding:.05rem .4rem;border-radius:999px;margin-left:.4rem}

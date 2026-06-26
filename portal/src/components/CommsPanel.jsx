@@ -64,14 +64,29 @@ function MessageRow({ m }) {
   );
 }
 
-// How many of the latest messages to show before the thread is collapsed.
-export const DEFAULT_VISIBLE = 5;
+// The thread opens on the most recent WINDOW_DAYS of the conversation; "show more"
+// extends the window by another WINDOW_DAYS each click.
+export const WINDOW_DAYS = 7;
+const DAY_MS = 86400000;
+
+// Messages within `days` of the newest message (the window is anchored on the latest
+// message, not "now", so a long-silent vendor still shows its latest mail by default).
+export function withinWindow(msgs, days) {
+  if (!msgs.length) return [];
+  const newest = Date.parse(msgs[0].receivedAt);
+  if (Number.isNaN(newest)) return msgs;
+  const cutoff = newest - days * DAY_MS;
+  return msgs.filter((m) => {
+    const t = Date.parse(m.receivedAt);
+    return Number.isNaN(t) ? true : t >= cutoff; // keep undated messages rather than hide them
+  });
+}
 
 export default function CommsPanel({ vendor }) {
   const msgs = vendor.messages || [];           // already newest-first from the API
-  const [showAll, setShowAll] = useState(false);
-  const visible = showAll ? msgs : msgs.slice(0, DEFAULT_VISIBLE);
-  const hidden = msgs.length - visible.length;
+  const [days, setDays] = useState(WINDOW_DAYS);
+  const visible = withinWindow(msgs, days);
+  const allShown = visible.length >= msgs.length;
   return (
     <div className="comms-panel">
       <div className={"comms-attn comms-attn--" + (vendor.attentionState || "none")}>
@@ -86,11 +101,13 @@ export default function CommsPanel({ vendor }) {
               <MessageRow key={m.id || m.webLink} m={m} />
             ))}
           </ul>
-          {msgs.length > DEFAULT_VISIBLE && (
-            <button type="button" className="comms-more" onClick={() => setShowAll((s) => !s)}>
-              {showAll ? `Show latest ${DEFAULT_VISIBLE}` : `Show ${hidden} older`}
+          {!allShown ? (
+            <button type="button" className="comms-more" onClick={() => setDays((d) => d + WINDOW_DAYS)}>
+              Show {WINDOW_DAYS} more days
             </button>
-          )}
+          ) : days > WINDOW_DAYS ? (
+            <p className="comms-end muted">— No older messages —</p>
+          ) : null}
         </>
       )}
       <p className="comms-coverage">Email only — Alibaba chat not shown.</p>
