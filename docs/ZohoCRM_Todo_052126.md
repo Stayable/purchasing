@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 06/26/26
+**Last Updated:** 06/26/26 (procurement modules cleared for real-data load)
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -13,7 +13,14 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 
 ## Top Priorities — Active Sprint (refreshed 05/29/26)
 
-**Done this session (06/26/26) — portal redesign on a preview branch:**
+**Done this session (06/26/26) — ALL DEMO/TEST DATA CLEARED for Jefferson's real load:**
+- ✅ **Three procurement modules emptied — confirmed 0 records in Procurement_Items, Vendor_Quotes, Vendors.** Cleared the last demo/test data (4 Procurement_Items incl. the 2 DEMO sets + TV + TEST Comms Item; 9 Vendor_Quotes; 16 Vendors incl. 10 demo vendors, 3 TEST_*_DELETE, 2 TEST Comms, Guangzhou Lighting Fair). Process: Claude stamped every record `DELETE_062626` via MCP (Name prefix on Items/Vendors; `Risk_Notes` on Quotes since Name is a locked auto-number) → Kyle select-all-deleted in each Zoho UI list view (no MCP delete op). Verified empty via COQL.
+- ✅ **Confirmed the procurement process = exactly 3 modules: Procurement_Items + Vendors + Vendor_Quotes.** Accounts/Contacts are NOT part of the flow (vendors live in the custom Vendors module post-05/27 pivot). The 21 legacy Procurement-tagged Alibaba Accounts + ~20 Contacts were **left untouched** (Kyle's call) — pre-pivot leftovers, and Accounts also holds Kate's 43 Non-Profit Sales partners which must not be deleted.
+- 🔄 **DIRECTION CHANGE (Kyle, 06/27/26): rebuild the 3 modules IN the portal (Neon-backed), retire Zoho.** Instead of loading Jefferson's data back into Zoho, recreate Procurement_Items/Vendors/Vendor_Quotes as Neon tables in the app, with Excel/CSV import + manual entry + relationships. Timing is ideal — modules are empty, so migration cost = 0. Rationale: one system (no Zoho↔portal split), portal is already the system of record (Rob, 06/25), and seats cost real money. **Design spec written:** `docs/superpowers/specs/2026-06-27-portal-data-layer-design.md` (DRAFT — awaiting Kyle review → then writing-plans → build). Recommended cutover: **Neon primary, Zoho cold backup**. **Build scheduled: this weekend (Claude builds Phase A autonomously).** Still a Rob-level operating-model change (Jefferson moves out of Zoho) — flag for his sign-off.
+  - **Next session:** Kyle reviews the spec (4 open questions in §13: cutover, Duty_Tariff rate-vs-amount, Phase A scope, display ids) → approve → `writing-plans` → Phase A build (schema, repoint `/api/procurement` to Neon, import, manual CRUD, computed landed cost).
+  - Jefferson's real-data source files still apply (they feed the import): `jefferson/ItemStaging_Procurement_052926.xlsx` (35 items), `jefferson/IntlVendorContacts_RISE8_052926.md` (vendors).
+
+**Done earlier (06/26/26) — portal redesign on a preview branch:**
 - ✅ **Visual redesign applied + deployed to a Vercel preview (NOT merged).** Sent Claude (design) a brief (`design-procurement.md`, committed on the branch) → got a handoff bundle (`Stayable Procurement Portal redesign/` — untracked, kept local). Direction: **"institutional light, navy chrome."** It's a **drop-in stylesheet replacement** keyed to existing class names → fixes the one real problem (the light data-views vs **dark** Home/Tracker/comms/content pages split) by unifying everything to one light system. Also: navy KPI band, green primary buttons, Stayable logo in the sidebar, `StageBadge` → intent classes (token-driven, not inline hex).
   - Applied to `portal/src/styles.css` + `StageBadge.jsx` + `Sidebar.jsx` (logo); rebuilt `review/`. **21/21 portal tests green**, build clean. Committed on branch **`portal-redesign-0626`** (`5ffe793`), pushed. **Preview:** `https://purchasing-git-portal-redesign-0626-stayable-admins-projects.vercel.app` (live API + Zoho data; may hit the Vercel SSO wall first). `main`/production untouched.
   - ⚠️ **Honest read:** it's a **re-skin, not a re-layout** — keeps every class/layout. Because it unifies *to light* and the most-used views (Queue/Items/Board/Decisions/Spend) were **already** the light slate/blue system, those screens barely change; the visible delta is the KPI band + the formerly-dark pages going light. Kyle's reaction: "nothing much changed" — accurate and expected.
