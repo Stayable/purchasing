@@ -64,8 +64,14 @@ function MessageRow({ m }) {
   );
 }
 
+// How many of the latest messages to show before the thread is collapsed.
+export const DEFAULT_VISIBLE = 5;
+
 export default function CommsPanel({ vendor }) {
-  const msgs = vendor.messages || [];
+  const msgs = vendor.messages || [];           // already newest-first from the API
+  const [showAll, setShowAll] = useState(false);
+  const visible = showAll ? msgs : msgs.slice(0, DEFAULT_VISIBLE);
+  const hidden = msgs.length - visible.length;
   return (
     <div className="comms-panel">
       <div className={"comms-attn comms-attn--" + (vendor.attentionState || "none")}>
@@ -74,11 +80,18 @@ export default function CommsPanel({ vendor }) {
       {msgs.length === 0 ? (
         <p className="muted comms-empty">No email found for this vendor — they may be communicating via Alibaba chat.</p>
       ) : (
-        <ul className="comms-thread">
-          {msgs.map((m) => (
-            <MessageRow key={m.id || m.webLink} m={m} />
-          ))}
-        </ul>
+        <>
+          <ul className="comms-thread">
+            {visible.map((m) => (
+              <MessageRow key={m.id || m.webLink} m={m} />
+            ))}
+          </ul>
+          {msgs.length > DEFAULT_VISIBLE && (
+            <button type="button" className="comms-more" onClick={() => setShowAll((s) => !s)}>
+              {showAll ? `Show latest ${DEFAULT_VISIBLE}` : `Show ${hidden} older`}
+            </button>
+          )}
+        </>
       )}
       <p className="comms-coverage">Email only — Alibaba chat not shown.</p>
     </div>

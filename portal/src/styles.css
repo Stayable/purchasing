@@ -1241,6 +1241,8 @@ h1, h2, h3 { margin: 0; }
 .comms-body{width:100%;min-height:180px;max-height:420px;border:1px solid var(--border,#2a2a2a);border-radius:6px;background:#fff;margin:.25rem 0}
 .comms-body-status{padding-left:1.4rem;font-size:.75rem}
 .comms-coverage{font-size:.7rem;color:#8a8a8a;margin-top:.4rem}
+.comms-more{margin-top:.35rem;background:none;border:1px solid var(--border,#2a2a2a);color:var(--text-muted,#9a9a9a);font-size:.72rem;padding:.15rem .6rem;border-radius:6px;cursor:pointer}
+.comms-more:hover{color:var(--text,#1a1a1a);border-color:var(--text-muted,#6a6a6a)}
 
 /* cross-item attention badges (queue/list) */
 .attn-badge{font-size:.7rem;font-weight:600;padding:.05rem .4rem;border-radius:999px;margin-left:.4rem}

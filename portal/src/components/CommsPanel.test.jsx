@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
-import CommsPanel, { attentionLabel, buildEmailSrcdoc } from "./CommsPanel.jsx";
+import { render, screen, fireEvent } from "@testing-library/react";
+import CommsPanel, { attentionLabel, buildEmailSrcdoc, DEFAULT_VISIBLE } from "./CommsPanel.jsx";
 
 describe("attentionLabel", () => {
   it("maps states to human text", () => {
@@ -37,5 +37,26 @@ describe("CommsPanel", () => {
   it("renders empty state with Alibaba hint when no messages", () => {
     render(<CommsPanel vendor={{ vendorName: "Mesa", attentionState: "none", messageCount: 0, messages: [] }} />);
     expect(screen.getByText(/communicating via Alibaba chat/i)).toBeInTheDocument();
+  });
+  it("shows no limit control when messages fit within the default window", () => {
+    render(<CommsPanel vendor={vendor} />);
+    expect(screen.queryByRole("button", { name: /older|show latest/i })).not.toBeInTheDocument();
+  });
+  it("collapses to the latest N and toggles to show older", () => {
+    const many = Array.from({ length: 8 }, (_, i) => ({
+      direction: i % 2 ? "inbound" : "outbound",
+      subject: `Msg ${i}`, preview: "p",
+      receivedAt: `2026-06-${String(20 - i).padStart(2, "0")}T00:00:00Z`,
+      webLink: `https://o${i}`,
+    }));
+    render(<CommsPanel vendor={{ vendorName: "Walrus", attentionState: "ok", messageCount: 8, messages: many }} />);
+    // only the latest DEFAULT_VISIBLE render initially (newest-first → Msg 0..4)
+    expect(screen.getByText("Msg 0")).toBeInTheDocument();
+    expect(screen.getByText(`Msg ${DEFAULT_VISIBLE - 1}`)).toBeInTheDocument();
+    expect(screen.queryByText(`Msg ${DEFAULT_VISIBLE}`)).not.toBeInTheDocument();
+    const toggle = screen.getByRole("button", { name: new RegExp(`Show ${8 - DEFAULT_VISIBLE} older`, "i") });
+    fireEvent.click(toggle);
+    expect(screen.getByText("Msg 7")).toBeInTheDocument();           // older now visible
+    expect(screen.getByRole("button", { name: /show latest/i })).toBeInTheDocument();
   });
 });
