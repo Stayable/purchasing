@@ -60,6 +60,9 @@ export default function QuoteTable({ quotes, selectedQuoteId, onSelect, vendorBy
                       <span className="quote-recommended-tag">Recommended</span>
                     )}
                   </div>
+                  {q.quoteName && (
+                    <div className="quote-name">{q.quoteName}</div>
+                  )}
                   {q.incoterm && (
                     <div className="quote-incoterm">{q.incoterm} · {q.currency || "USD"}</div>
                   )}

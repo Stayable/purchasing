@@ -98,7 +98,7 @@ module.exports = async (req, res) => {
         "FROM Procurement_Items WHERE Stage is not null ORDER BY Estimated_Item_Level_Spend desc LIMIT 200"
       ),
       coql(
-        "SELECT Name, Unit_Price, Order_Quantity, Freight_Cost, Duty_Tariff, Landed_Cost_Unit, " +
+        "SELECT Name, Quote_Name, Unit_Price, Order_Quantity, Freight_Cost, Duty_Tariff, Landed_Cost_Unit, " +
         "Total_Landed_Cost, Incoterm, Lead_Time_days, Spec_Match, Quote_Status, Date_Received, " +
         "Currency1, Vendor.Vendor_Name, Procurement_Item.id, id " +
         "FROM Vendor_Quotes WHERE Procurement_Item is not null LIMIT 200"
@@ -113,6 +113,7 @@ module.exports = async (req, res) => {
       return {
         id: q.id,
         name: q.Name,
+        quoteName: q.Quote_Name || null,
         itemId: q["Procurement_Item.id"] || null,
         vendorName: vn,
         unitPrice: num(q.Unit_Price),

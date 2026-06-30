@@ -1,7 +1,7 @@
 # Portal Data Layer — Rebuild the 3 Procurement Modules In-App on Neon (Retire Zoho)
 
 **Date:** 2026-06-27
-**Status:** DRAFT — awaiting Kyle's review, then `writing-plans`
+**Status:** DRAFT — **DEFERRED 07/01/26 (Kyle): staying on Zoho for now.** This remains the documented future target (and the quote Number/Name split below is now also live in Zoho), but no Neon migration work proceeds until this is reactivated + Rob signs off on the operating-model change.
 **Owner:** Kyle (spearhead). **Approver:** Rob (operating-model change — Jefferson moves out of Zoho into the portal).
 **Companion:** `docs/ZohoCRM_Rollout_052126.md` (decision log), `docs/ZohoCRM_Todo_052126.md` (tasks)
 
@@ -88,7 +88,9 @@ CREATE TABLE IF NOT EXISTS items (
 );
 
 CREATE TABLE IF NOT EXISTS quotes (
-  id            text PRIMARY KEY,           -- e.g. 'q_' || nanoid  (display name 'QT-0001' optional)
+  id            text PRIMARY KEY,           -- internal opaque id, e.g. 'q_' || nanoid (FK target; never shown)
+  quote_number  text UNIQUE,                -- 'Vendor Quotes Number' — system-generated sequential label 'QT-0001' (was Zoho's locked auto-number "Name")
+  quote_name    text,                       -- 'Vendor Quotes Name' — free-text descriptive label (user-entered), e.g. 'Queen Mattress — Foshan Textiles'
   item_id       text NOT NULL REFERENCES items(id)   ON DELETE CASCADE,
   vendor_id     text NOT NULL REFERENCES vendors(id) ON DELETE RESTRICT,
   unit_price    numeric,
@@ -130,7 +132,13 @@ Replace the two Zoho COQL calls with two Neon queries, then build the **exact sa
 | `items[].awardedVendorName` | join `items.awarded_quote_id` → `quotes` → `vendors.name` |
 | `quotes[].landedUnit / totalLanded` | `quotes.landed_unit / total_landed` (computed) |
 | `quotes[].vendorName` | `vendors.name` via `quotes.vendor_id` |
+| `quotes[].quoteNumber` | `quotes.quote_number` ('QT-0001' display label) |
+| `quotes[].quoteName` | `quotes.quote_name` (free-text descriptive name) |
 | ... | (remaining fields map directly by name) |
+
+**Quote identifier split (resolves Q#4):** the old Zoho `Vendor_Quotes.Name` was a single **locked auto-number** (`QT-0001`). It is split into two fields in Neon:
+- **`quote_number`** — *Vendor Quotes Number*: system-generated sequential label (`QT-0001`), `UNIQUE`, not user-editable. Generate at insert (e.g. `'QT-' || lpad(nextval('quote_seq')::text, 4, '0')` via a dedicated sequence, or compute from `max(quote_number)` in the insert path — the plan picks one). This replaces the human-facing label the UI shows today.
+- **`quote_name`** — *Vendor Quotes Name*: optional free-text descriptive label entered by the user on add/edit. The internal `id` (`q_…`) stays the FK target and is never shown.
 
 `Cache-Control: private, no-store` + `Vary: Cookie` headers stay (the data-leak fix from 06/16 — must not change).
 

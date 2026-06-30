@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 06/27/26 (comms 7-day window; in-app rebuild spec drafted)
+**Last Updated:** 07/01/26 (staying on Zoho — Neon rebuild deferred; Vendor_Quotes name/number field split done in live Zoho)
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -12,6 +12,13 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 ---
 
 ## Top Priorities — Active Sprint (refreshed 05/29/26)
+
+**Done this session (07/01/26) — staying on Zoho + Vendor_Quotes field split:**
+- 🔄 **DIRECTION (Kyle): staying on Zoho for now — the 06/27 Neon in-app rebuild is DEFERRED.** Zoho stays the live procurement store; the portal keeps reading Zoho via `/api/procurement`. The rebuild spec (`docs/superpowers/specs/2026-06-27-portal-data-layer-design.md`) remains the documented future target (DRAFT, still needs Rob sign-off) — no Neon migration work proceeds for now.
+- ✅ **`Vendor_Quotes` record-name field split done in live Zoho (Kyle, UI).** The primary auto-number field relabeled **"Vendor Quote Name" → "Vendor Quote Number"**; **API name kept `Name`** so the portal proxy (`SELECT Name … FROM Vendor_Quotes`) is unaffected — no code change/risk. New **single-line text field "Vendor Quote Name" (API name `Quote_Name`)** created for a free-text quote label. Confirmed selectable via COQL (`null` on existing records).
+  - 🔲 **Wire `Quote_Name` into the portal (pending Kyle's go-ahead):** add `Quote_Name` to the proxy COQL → `quotes[].quoteName`, render in the quote-comparison table; **needs a build + push/deploy** (production is Rob-facing). Decide whether/where to show it before wiring.
+  - ⚠️ **Drift flag:** `Vendor_Quotes` is no longer empty — a record `QT-0034` (id …1637015) was present when the field was confirmed (Todo had it at 0 after the 06/26 clear). Likely a setup/test record; confirm + clean up if so.
+- 📋 Spec already updated for this split (resolves Neon-spec open Q#4: `quote_number` vs `quote_name`).
 
 **Done this session (06/27/26) — comms thread filter + in-app rebuild spec:**
 - ✅ **Comms panel: rolling 7-day thread window** (`ab1b44c`, supersedes `646119e`). `CommsPanel` opens on the most recent **7 days** of each vendor conversation (window anchored on the **newest message, not "now"** — so a long-silent vendor still shows its latest mail by default). **"Show 7 more days"** extends the window +7 per click; **"— No older messages —"** end marker when exhausted; no control when the thread already fits in 7 days. Client-side only, no Graph fetch-window change. `withinWindow()` + `WINDOW_DAYS` exported. **23/23 portal tests green**, `review/` rebuilt.
