@@ -22,6 +22,14 @@
 
 const auth = require("./_auth.js");
 const dbm = require("./_db.js");
+const events = require("./_events.js");
+
+// decision action -> (activity verb, human label for the notification)
+const DECISION_META = {
+  approve: { verb: "awarded", label: "approved & awarded" },
+  approve_conditions: { verb: "approved", label: "approved with conditions" },
+  decline: { verb: "declined", label: "declined" },
+};
 
 const ACCOUNTS = process.env.ZOHO_ACCOUNTS_DOMAIN || "https://accounts.zoho.com";
 const API = process.env.ZOHO_API_DOMAIN || "https://www.zohoapis.com";
@@ -125,6 +133,15 @@ const handler = async (req, res) => {
     }
     console.log(JSON.stringify({ evt: "portal_decision", action, stage: stage || null, itemId, by: viewer, ts: new Date().toISOString() }));
     await dbm.audit("portal_decision", viewer, { itemId: String(itemId), action, stage: stage || null, quoteId: quoteId ? String(quoteId) : null, note: note || null });
+    // Fire the workflow event on real decisions (not note-only): log activity + notify Jefferson.
+    const meta = DECISION_META[action];
+    if (meta) {
+      await events.emit({
+        type: "decision_made", action: meta.verb, actor: viewer, actorLabel: viewer,
+        itemId: String(itemId), extra: meta.label,
+        detail: { action, stage: stage || null, quoteId: quoteId ? String(quoteId) : null, note: note || null },
+      });
+    }
     return res.status(200).json({ ok: true, itemId, stage: stage || null, by: viewer });
   } catch (err) {
     const msg = String(err.message || err);

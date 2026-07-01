@@ -9,6 +9,7 @@
 const auth = require("./_auth.js");
 const zw = require("./_zohoWrite.js");
 const dbm = require("./_db.js");
+const events = require("./_events.js");
 
 // Only these users may create procurement items (Rob + Kyle-admin override).
 const CREATORS = ["rb@rise8companies.com", "admin@rentstayable.com"];
@@ -56,6 +57,8 @@ const handler = async (req, res) => {
     const { id } = await zw.createRecord("Procurement_Items", record);
     console.log(JSON.stringify({ evt: "item_created", itemId: String(id), by: viewer, ts: new Date().toISOString() }));
     await dbm.audit("item_created", viewer, { itemId: String(id), name: record.Name });
+    // Fire the workflow event: log activity + notify Jefferson (bell + email). Best-effort.
+    await events.emit({ type: "item_created", action: "item_created", actor: viewer, actorLabel: viewer, itemId: id, itemName: record.Name });
     return res.status(201).json({ ok: true, id });
   } catch (err) {
     const msg = String(err.message || err);

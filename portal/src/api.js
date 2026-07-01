@@ -17,5 +17,12 @@ export async function getMessageBody(messageId, mailbox) {
 }
 export async function postAward(args) { return (await http.post("/api/award", buildAwardBody(args))).data; }
 export async function createItem(payload) { return (await http.post("/api/items", payload)).data; }
+export async function getNotifications() { return (await http.get("/api/notifications")).data; }
+export async function markNotificationsRead(body) { return (await http.post("/api/notifications", body)).data; }
+export async function getActivity(params = {}) { return (await http.get("/api/activity", { params })).data; }
+export async function getVendors() { return (await http.get("/api/vendors")).data; }
+export async function createVendor(payload) { return (await http.post("/api/vendors", payload)).data; }
+export async function createQuote(payload) { return (await http.post("/api/quotes", payload)).data; }
+export async function markItemReady(payload) { return (await http.post("/api/items/ready", payload)).data; }
 export async function login(email, password) { return (await http.post("/api/auth/login", { email, password })).data; }
 export async function logout() { return (await http.post("/api/auth/logout")).data; }

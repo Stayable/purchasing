@@ -9,6 +9,7 @@ const NAV = [
   { to: "/tracker",   label: "Tracker",   icon: "↻" },
   { to: "/decisions", label: "Decisions", icon: "✓" },
   { to: "/spend",     label: "Spend",     icon: "$" },
+  { to: "/activity",  label: "Activity",  icon: "≋" },
 ];
 const NAV_ABOUT = [
   { to: "/how-it-works", label: "How it works", icon: "◷" },

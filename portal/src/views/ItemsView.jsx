@@ -53,7 +53,7 @@ export default function ItemsView({ data, reload }) {
           />
         </div>
         <div className="two-pane-detail">
-          <ItemDetail item={selectedItem} quotes={itemQuotes} reload={reload} />
+          <ItemDetail item={selectedItem} quotes={itemQuotes} reload={reload} viewer={data?.viewer} entryEnabled={data?.entryEnabled} />
         </div>
       </div>
       {showNew && (

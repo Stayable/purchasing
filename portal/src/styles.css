@@ -1162,6 +1162,61 @@ h1, h2, h3 { margin: 0; }
 /* Right-aligned action button in a pane header */
 .pane-header-action { margin-left: auto; }
 
+/* ---------- Notification bell + top bar ---------- */
+.main-topbar { display: flex; justify-content: flex-end; padding: 10px 20px 0; }
+.notif { position: relative; }
+.notif-bell {
+  position: relative; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+  width: 38px; height: 38px; cursor: pointer; font-size: 16px; line-height: 1;
+}
+.notif-bell:hover { background: #f8fafc; }
+.notif-badge {
+  position: absolute; top: -6px; right: -6px; background: #dc2626; color: #fff;
+  font-size: 11px; font-weight: 700; border-radius: 10px; padding: 1px 6px; min-width: 18px; text-align: center;
+}
+.notif-backdrop { position: fixed; inset: 0; z-index: 40; }
+.notif-panel {
+  position: absolute; right: 0; top: 46px; width: 340px; max-width: 90vw; z-index: 50;
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 12px 40px rgba(15,23,42,0.18);
+  overflow: hidden;
+}
+.notif-panel-head { padding: 12px 16px; font-weight: 700; font-size: 13px; border-bottom: 1px solid #e2e8f0; background: #f8fafc; }
+.notif-empty { padding: 24px 16px; color: #94a3b8; font-size: 14px; text-align: center; }
+.notif-list { list-style: none; margin: 0; padding: 0; max-height: 420px; overflow-y: auto; }
+.notif-item { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; cursor: pointer; }
+.notif-item:hover { background: #f8fafc; }
+.notif-item--unread { background: #eff6ff; }
+.notif-item--unread:hover { background: #dbeafe; }
+.notif-item-title { font-size: 13px; font-weight: 600; color: #0f172a; }
+.notif-item-body { font-size: 12px; color: #475569; margin-top: 2px; line-height: 1.4; }
+.notif-item-time { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+
+/* ---------- Activity timeline + feed ---------- */
+.item-detail-activity { margin-top: 20px; }
+.timeline { list-style: none; margin: 8px 0 0; padding: 0; }
+.timeline-row { display: flex; align-items: baseline; gap: 10px; padding: 7px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+.timeline-icon { color: #2563eb; width: 18px; flex-shrink: 0; text-align: center; }
+.timeline-text { flex: 1; color: #334155; }
+.timeline-time { color: #94a3b8; font-size: 12px; white-space: nowrap; }
+.timeline-item { color: #64748b; }
+.timeline--feed { padding: 4px 20px 20px; }
+.activity-filters { margin-left: auto; display: flex; gap: 8px; }
+.activity-filter { width: auto; min-width: 150px; }
+
+/* ---------- Entry actions (Phase 4) ---------- */
+.item-detail-entry { display: flex; gap: 10px; margin-top: 14px; padding-top: 14px; border-top: 1px dashed #e2e8f0; }
+
+/* ---------- Wide modal + quote grid ---------- */
+.modal--wide { max-width: 720px; width: 92vw; }
+.modal-backdrop--stacked { z-index: 60; background: rgba(15,23,42,0.35); }
+.quote-vendor-row { display: flex; gap: 8px; align-items: center; }
+.quote-vendor-row .modal-input { flex: 1; }
+.btn-sm { padding: 8px 12px; font-size: 13px; white-space: nowrap; }
+.quote-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px 16px; margin-top: 6px; }
+.quote-grid label { margin-top: 8px; }
+.muted-note { font-size: 12px; color: #94a3b8; margin: 10px 0 0; }
+@media (max-width: 560px) { .quote-grid { grid-template-columns: 1fr; } }
+
 /* Solid decline variant for the confirm button */
 .btn-danger--solid {
   background: #dc2626;

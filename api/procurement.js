@@ -182,6 +182,7 @@ module.exports = async (req, res) => {
       generatedAt: new Date().toISOString(),
       live: true,
       viewer,
+      entryEnabled: !!process.env.PORTAL_ENTRY_ENABLED, // Phase 4 portal-entry flip (default off)
       counts,
       queue,
       items,

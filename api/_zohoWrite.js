@@ -37,4 +37,34 @@ async function createRecord(module, record) {
   return { id: row.details && row.details.id };
 }
 
-module.exports = { getWriteToken, createRecord };
+// Update one record (must include id). Returns { id } on success; throws on failure.
+async function updateRecord(module, record) {
+  const token = await getWriteToken();
+  const r = await fetch(`${API}/crm/v8/${module}`, {
+    method: "PUT",
+    headers: { Authorization: `Zoho-oauthtoken ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ data: [record] }),
+  });
+  const j = await r.json().catch(() => ({}));
+  const row = j && j.data && j.data[0];
+  if (!r.ok || !row || row.code !== "SUCCESS") {
+    throw new Error("zoho_write_failed:" + JSON.stringify(row || j));
+  }
+  return { id: row.details && row.details.id };
+}
+
+// COQL read using the write token (scope ZohoCRM.modules.ALL covers reads).
+async function coql(query) {
+  const token = await getWriteToken();
+  const r = await fetch(`${API}/crm/v8/coql`, {
+    method: "POST",
+    headers: { Authorization: `Zoho-oauthtoken ${token}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ select_query: query }),
+  });
+  if (r.status === 204) return [];
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(`coql_failed:${r.status}:` + JSON.stringify(j));
+  return j.data || [];
+}
+
+module.exports = { getWriteToken, createRecord, updateRecord, coql };

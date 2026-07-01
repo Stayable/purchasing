@@ -2,10 +2,14 @@ import { useState } from "react";
 import StageBadge from "./StageBadge.jsx";
 import QuoteTable from "./QuoteTable.jsx";
 import DecisionModal from "./DecisionModal.jsx";
+import QuoteFormModal from "./QuoteFormModal.jsx";
+import ActivityTimeline from "./ActivityTimeline.jsx";
 import { formatUSD } from "../money.js";
 import { daysSince } from "../days.js";
 import { useCommunications } from "../useCommunications.js";
 import { attentionLabel } from "./CommsPanel.jsx";
+import { canEnterData } from "../roles.js";
+import { markItemReady } from "../api.js";
 
 const TERMINAL_STAGES = new Set(["Approved", "Approved-with-Conditions", "Declined"]);
 
@@ -16,9 +20,10 @@ function lowestLandedId(quotes) {
   ).id;
 }
 
-export default function ItemDetail({ item, quotes, reload }) {
+export default function ItemDetail({ item, quotes, reload, viewer, entryEnabled }) {
   const isSubmitted = (item?.stage || "").toLowerCase() === "submitted";
   const isTerminal = TERMINAL_STAGES.has(item?.stage);
+  const canEnter = !!entryEnabled && canEnterData(viewer);
 
   const daysAwaiting = isSubmitted ? daysSince(item?.modifiedAt) : null;
   const approvalAgeLine = (() => {
@@ -34,6 +39,14 @@ export default function ItemDetail({ item, quotes, reload }) {
   const defaultQuoteId = lowestLandedId(quotes);
   const [selectedQuoteId, setSelectedQuoteId] = useState(defaultQuoteId);
   const [modal, setModal] = useState(null); // { action, quote } or null
+  const [showQuoteForm, setShowQuoteForm] = useState(false);
+  const [readyBusy, setReadyBusy] = useState(false);
+
+  async function markReady() {
+    setReadyBusy(true);
+    try { await markItemReady({ itemId: item.id, itemName: item.name }); reload(); }
+    catch { setReadyBusy(false); }
+  }
 
   const { data: comms } = useCommunications(item?.id);
   const vendorByQuote = {};
@@ -139,6 +152,17 @@ export default function ItemDetail({ item, quotes, reload }) {
             />
           </div>
 
+          {canEnter && (
+            <div className="item-detail-entry">
+              <button className="btn-ghost" onClick={() => setShowQuoteForm(true)}>+ Add quote</button>
+              {!isSubmitted && (quotes?.length ?? 0) > 0 && (
+                <button className="btn-primary" onClick={markReady} disabled={readyBusy}>
+                  {readyBusy ? "Marking…" : "Mark quotes ready"}
+                </button>
+              )}
+            </div>
+          )}
+
           <div className="item-detail-actions">
             <button
               className="btn-primary"
@@ -163,6 +187,8 @@ export default function ItemDetail({ item, quotes, reload }) {
         </>
       )}
 
+      <ActivityTimeline itemId={item.id} />
+
       {modal && (
         <DecisionModal
           item={item}
@@ -170,6 +196,14 @@ export default function ItemDetail({ item, quotes, reload }) {
           quote={modal.quote}
           onClose={() => setModal(null)}
           onDone={() => { setModal(null); reload(); }}
+        />
+      )}
+
+      {showQuoteForm && (
+        <QuoteFormModal
+          item={item}
+          onClose={() => setShowQuoteForm(false)}
+          onCreated={() => { setShowQuoteForm(false); reload(); }}
         />
       )}
     </div>
