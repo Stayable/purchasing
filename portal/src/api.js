@@ -16,5 +16,6 @@ export async function getMessageBody(messageId, mailbox) {
   return (await http.get("/api/communications", { params: { messageId, mailbox } })).data;
 }
 export async function postAward(args) { return (await http.post("/api/award", buildAwardBody(args))).data; }
+export async function createItem(payload) { return (await http.post("/api/items", payload)).data; }
 export async function login(email, password) { return (await http.post("/api/auth/login", { email, password })).data; }
 export async function logout() { return (await http.post("/api/auth/logout")).data; }

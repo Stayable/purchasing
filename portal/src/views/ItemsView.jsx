@@ -1,6 +1,8 @@
 import { useState, useMemo } from "react";
 import ItemList from "../components/ItemList.jsx";
 import ItemDetail from "../components/ItemDetail.jsx";
+import NewItemModal from "../components/NewItemModal.jsx";
+import { canCreateItems } from "../roles.js";
 
 const STAGE_ORDER = [
   "Spec", "Bid", "Level", "FL-Validate", "Recommend",
@@ -26,6 +28,8 @@ export default function ItemsView({ data, reload }) {
   );
 
   const [selectedId, setSelectedId] = useState(() => sorted[0]?.id ?? null);
+  const [showNew, setShowNew] = useState(false);
+  const canCreate = canCreateItems(data?.viewer);
 
   const selectedItem = items.find((i) => i.id === selectedId) ?? null;
   const itemQuotes = quotes.filter((q) => q.itemId === selectedId);
@@ -37,6 +41,9 @@ export default function ItemsView({ data, reload }) {
           <div className="pane-header">
             <h2 className="view-title">Items</h2>
             <span className="pane-count">{sorted.length} item{sorted.length !== 1 ? "s" : ""}</span>
+            {canCreate && (
+              <button className="btn-primary pane-header-action" onClick={() => setShowNew(true)}>+ New item</button>
+            )}
           </div>
           <ItemList
             items={sorted}
@@ -49,6 +56,12 @@ export default function ItemsView({ data, reload }) {
           <ItemDetail item={selectedItem} quotes={itemQuotes} reload={reload} />
         </div>
       </div>
+      {showNew && (
+        <NewItemModal
+          onClose={() => setShowNew(false)}
+          onCreated={() => { setShowNew(false); reload(); }}
+        />
+      )}
     </section>
   );
 }

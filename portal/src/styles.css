@@ -1133,6 +1133,35 @@ h1, h2, h3 { margin: 0; }
 
 .modal-textarea::placeholder { color: #94a3b8; }
 
+/* Modal single-line inputs + selects (create-item form) */
+.modal-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #0f172a;
+  background: #fff;
+  transition: border-color 0.12s, box-shadow 0.12s;
+  outline: none;
+  line-height: 1.5;
+}
+.modal-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+}
+/* Spacing between stacked field groups in a modal body */
+.modal-body .req,
+.modal-body label { margin-top: 14px; }
+.modal-body > .req:first-child,
+.modal-body > label:first-child { margin-top: 0; }
+.modal-body .modal-input,
+.modal-body .modal-textarea { margin-top: 5px; }
+
+/* Right-aligned action button in a pane header */
+.pane-header-action { margin-left: auto; }
+
 /* Solid decline variant for the confirm button */
 .btn-danger--solid {
   background: #dc2626;
