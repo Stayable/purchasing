@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 07/01/26 (staying on Zoho — Neon rebuild deferred; Vendor_Quotes name/number field split done in live Zoho)
+**Last Updated:** 07/02/26 (end-to-end portal workflow designed + approved; Phase 1 create-item built + committed locally, not pushed)
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -12,6 +12,12 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 ---
 
 ## Top Priorities — Active Sprint (refreshed 05/29/26)
+
+**Done this session (07/02/26) — end-to-end workflow designed + Phase 1 (create-item) built:**
+- ✅ **Full portal procurement workflow designed + approved (Kyle, "go, no need review — easier to review what can be seen").** Loop: Rob creates item in portal → notify Jefferson → **Jefferson stays in Zoho** (his preference) adding vendors/quotes → he sets Stage=Submitted in Zoho → **Zoho workflow-rule webhook** notifies Rob → Rob reviews quotes+comms → approves/awards → notify Jefferson. Spec: `docs/superpowers/specs/2026-07-01-portal-procurement-workflow-design.md` (rev 07/02). Decisions: email via **Resend**; inline vendor-add = **modal**; activity log **per-item + global**; roles **Rob creates+approves / Jefferson enters / Kyle admin-override only**; portal vendor/quote entry **built but hidden behind `PORTAL_ENTRY_ENABLED`** (future flip if UI/process prove out → Rob sign-off).
+- ✅ **PHASE 1 BUILT + committed locally (`568c285`), NOT pushed.** `POST /api/items` (session+role-gated to rb@/admin@) creates a `Procurement_Items` at Stage=Spec via new shared `api/_zohoWrite.js`; logs `item_created` audit row. Portal: `canCreateItems` role helper, `createItem` client, `NewItemModal` form (exact live Category/Property picklists), gated **+ New item** button in Items view. **3 api + 27 portal tests green**, `review/` rebuilt. Field API names verified live via getFields (Name/Category/Property_Scope/Target_Quantity/Target_Decision_Date/Description/US_Baseline_Cost_Unit/Stage).
+  - 🔲 **PUSH DECISION (Kyle):** pushing `main` auto-deploys to production (Rob-facing). Endpoint is safe-inert without session+role+write token (all already configured, so it WILL be live for Rob on push). Verify after: rb@ sees + New item / jefferson@ doesn't; create a `TEST_DELETE_070226` item → 201 + Stage=Spec in Zoho; anon POST /api/items → 401; delete the test item.
+  - 📋 **Next phases (plans as prereqs land):** Phase 0 prereqs (Resend domain+key, Zoho Stage→Submitted webhook rule + `ZOHO_WEBHOOK_SECRET`, unique portal passwords) → Phase 2 (notifications + activity spine + `/api/hooks/zoho`) → Phase 3 (award decision → notify Jefferson) → Phase 4 (hidden portal entry for Jefferson) → Phase 5 (optional stale-item cron). Plan doc: `docs/superpowers/plans/2026-07-02-portal-workflow-phase1-create-item.md`.
 
 **Done this session (07/01/26) — staying on Zoho + Vendor_Quotes field split:**
 - 🔄 **DIRECTION (Kyle): staying on Zoho for now — the 06/27 Neon in-app rebuild is DEFERRED.** Zoho stays the live procurement store; the portal keeps reading Zoho via `/api/procurement`. The rebuild spec (`docs/superpowers/specs/2026-06-27-portal-data-layer-design.md`) remains the documented future target (DRAFT, still needs Rob sign-off) — no Neon migration work proceeds for now.
