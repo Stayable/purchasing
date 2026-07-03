@@ -4,7 +4,7 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 07/02/26 (Phase 1 create-item PUSHED live; Phases 2–4 built + committed locally [notifications, activity log, Zoho webhook, hidden vendor/quote entry], inert until activation)
+**Last Updated:** 07/03/26 (Phases 1–4 built; Phase 1 live; Phases 2–4 pushed + inert; ACTIVE step = Kyle applying Neon schema via `db/migrate_notifications_activity_070326.sql` to turn on notifications/activity)
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -23,7 +23,7 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
   - **Phase 4 (HIDDEN behind `PORTAL_ENTRY_ENABLED`, default off → 404):** `api/vendors.js` (GET/POST), `api/quotes.js`, `api/items/ready.js`; `procurement.js` exposes `entryEnabled`; `canEnterData` helper; `VendorFormModal` + `QuoteFormModal` (inline vendor-add preserves the quote draft), wired into `ItemDetail` (gated). Jefferson stays in Zoho until this flag is flipped.
   - **32 api + 31 portal tests green**, `review/` rebuilt. Spec: `docs/superpowers/specs/2026-07-01-portal-procurement-workflow-design.md`.
   - 🔲 **ACTIVATION (Kyle) — each independent, all safe-inert until done:**
-    1. **Apply the new Neon schema** (`npm run db:setup` with `DATABASE_URL`, or run the 3 new `CREATE TABLE`s in the Neon SQL editor) — until then activity/notifications silently no-op (swallowed), bell shows empty. **This is the one step that turns Phase 2/3 ON** (DB already configured in prod).
+    1. ⏳ **Apply the new Neon schema — ACTIVE (Kyle, in progress 07/03).** Chose **Option A** (paste SQL in Neon Query, not `db:setup` — no local `DATABASE_URL` in this session). Ready-to-run file committed: **`db/migrate_notifications_activity_070326.sql`** (idempotent; run in **Vercel → Storage → Neon DB → Query**, default/production branch). Until run, activity/notifications silently no-op (swallowed), bell shows empty. **This is the one step that turns Phase 2/3 ON** (DB already configured in prod). Verify after: `rb@` create `TEST_DELETE_070326` → `jefferson@` bell shows 1 + Activity lists it → delete test item.
     2. **Resend:** verify a sending domain (DNS) + set `RESEND_API_KEY` (+ optional `RESEND_FROM`) in Vercel → emails start; without it, webapp bell still works.
     3. **Zoho webhook:** set `ZOHO_WEBHOOK_SECRET` in Vercel + build a Zoho workflow rule on Procurement_Items (Stage→Submitted → POST `/api/hooks/zoho` with `secret`, `itemId=${Procurement_Items.Id}`, `itemName`, `stage`). Until then, "quotes ready → notify Rob" won't fire from Zoho (interim: Rob still sees Submitted items in Queue).
     4. **Phase 4 flip (later, Rob sign-off):** set `PORTAL_ENTRY_ENABLED=1` to reveal Jefferson's portal vendor/quote entry.
