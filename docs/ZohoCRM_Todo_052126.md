@@ -4,7 +4,22 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 07/31/26 (webhook leg **root-caused by live probing + handler HARDENED** — accepts every body encoding Zoho can send, rejects unresolved merge fields, logs rejects to Neon. Built + tested, **NOT pushed**.)
+**Last Updated:** 07/31/26 (webhook leg **ROOT-CAUSED** — Zoho's `Body Type: None` transmits nothing, so the handler 401s on a missing secret. Fix = set Body Type to `Form-Data`. Handler also hardened. **4 commits unpushed.**)
+
+> **ACTIVE STEP (next session):** Kyle sets `Body → Type` = `Form-Data` on the Zoho webhook + restores the `secret` Custom Parameter value → then re-fire `TEST_WEBHOOK_073126` (`6342912000001764001`) via MCP (Stage→Submitted, `trigger:[workflow]`) and confirm a `quotes_ready` row lands in Neon. Push `27619cb` first if you want it settled in one round. **Open decision: OK to push 4 commits to `main` (auto-deploys to production, Rob-facing)?**
+
+**Verified state of the full loop (07/31) — do not assume "creation works" means the rest does:**
+
+| Leg | Status |
+|---|---|
+| Rob creates item in portal → lands in Zoho at Spec | ✅ proven live (ROG laptop `…1678001`, 07/08) |
+| Jefferson gets portal bell | ✅ proven live (`read_at` set — he saw it) |
+| Jefferson gets **email** | ⚠️ UNPROVEN — Resend domain unverified + send outcome not persisted |
+| Jefferson adds vendors/quotes in Zoho | ✅ manual, no automation to break |
+| Jefferson sets Submitted → **Rob notified** | ❌ broken — this session's root cause, fix pending |
+| Rob approves/awards → Jefferson notified (`decision_made`) | ⚠️ BUILT, NEVER EXERCISED — zero `decision_made` rows ever |
+
+📋 **Neon holds exactly ONE activity row in its entire history** (the 07/08 `item_created`) — a useful reminder of how little of this loop has actually run end-to-end.
 
 Status legend: 🔲 not started · ⏳ in progress · ✅ done · ⚠️ blocked
 Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in same phase · **[P3]** defer-able / nice-to-have
@@ -33,8 +48,10 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
   - **Controlled re-fire (Kyle approved):** created `TEST_WEBHOOK_073126` (id `6342912000001764001`, Description `DELETE_073126`) at Spec → updated Stage→Submitted with `trigger:[workflow]`. Rule `last_executed_time` advanced to 2026-07-30T13:16:55-04:00. **Neon still received nothing.**
   - **Vercel runtime logs settled it:** `POST /api/hooks/zoho 401` at **17:16:56Z — 1 second after the rule fired** — plus a **Zoho auto-retry 401 at 17:17:42Z**. So the request *does* arrive and *does* reach our function; it fails the secret check.
   - **Discriminating probes against production** (all `stage=Spec`, zero side effects): secret exactly as configured in Zoho → **200**; module params present but **secret absent → 401** (byte-identical to Zoho's real failure); secret sent as **`X-Webhook-Secret` header → 200**.
-  - **Conclusion:** with `Body Type: None`, Zoho transmits the three **Module** Parameters on the query string but does **not** send the **Custom** Parameter (`secret`) at all. Handler sees `itemId`/`itemName`/`stage`, no secret → 401 before any DB write → zero trace. This is why 07/08 left nothing and why it reproduced exactly on 07/31.
-  - 🔲 **FIX (Kyle, 1 min) — option A (recommended):** in the webhook's **Header** section add `X-Webhook-Secret` = the 64-hex secret, and remove the `secret` Custom Parameter. Handler already accepts the header (verified 200). **Option B:** set `Body → Type` = `x-www-form-urlencoded` so custom params are actually transmitted (also verified 200). A is preferred — immune to Zoho's param/body routing, which is exactly what failed.
+  - **Conclusion (corrected 07/31 by the Edit-Webhook screenshot):** with `Body Type: None`, Zoho sends **nothing at all** — not the Custom Parameter *and not the Module Parameters either*. Proof: the **Preview URL** at the bottom of the edit screen renders bare (`https://procurement.rentstayable.com/api/hooks/zoho`, no `?itemId=…`). The handler therefore receives an empty request, fails the secret check, and returns 401 before any DB write → zero trace. This is why 07/08 left nothing and why it reproduced exactly on 07/31. *(Supersedes the first reading of this block, which guessed module params rode the query string while only the custom `secret` was dropped — the Preview URL disproves that.)*
+  - ⚠️ **Header route (`X-Webhook-Secret`) is NOT AVAILABLE.** The handler accepts it (verified 200), but under `Authorization Type: General` this Zoho edition renders **`Header` as a bare label with no input fields and no ⊕ control** — nothing can be added there. Do not pursue it.
+  - 🔲 **FIX (Kyle) — the `Body → Type` dropdown offers only `None` / `Form-Data` / `Raw`. Take `Form-Data`,** and paste the `secret` value back into the Custom Parameters row (Kyle blanked it 07/31 while inspecting). Avoid `Raw` — it works but means hand-writing a JSON body with merge-field tokens instead of using the three already-correct Module Parameters.
+    - **Caveat:** if Zoho's "Form-Data" means `multipart/form-data`, it returns **401 against the currently deployed code** (verified — probe C) and requires **`27619cb` pushed** (that commit adds the multipart parser). If it means `x-www-form-urlencoded`, it works as-is (probe B → 200). Label is ambiguous; **`27619cb` covers both**, so pushing before the re-test settles it in one round instead of two.
   - 📋 **Zoho retries once (~46s).** The 10-minute dedupe in `hooks/zoho.js` is therefore load-bearing — without it a working webhook would double-notify Rob on every submit.
   - 🔲 **Cleanup (Kyle, UI — no MCP delete op):** delete `TEST_WEBHOOK_070926` (`…1681001`) and `TEST_WEBHOOK_073126` (`…1764001`).
 - 🔲 **SUPERSEDED by the root cause above — was: URL + params on the action.** Setup → Automation → Actions → Webhooks → "Notify Rob on Submit". Verify URL is exactly `https://procurement.rentstayable.com/api/hooks/zoho`, and that `secret` / `itemId` / `itemName` / `stage` are all present with `itemId` bound to the record-id merge field (not blank). Read that action's execution log for the **07/08 13:46 response code** — `404` = URL wrong (only remaining cause code can't absorb); `401` = secret value mismatch; `400` = `itemId` unbound. After the hardening deploys, 401/400 also leave a `webhook_rejected` row in Neon.
