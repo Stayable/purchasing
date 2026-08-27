@@ -4,9 +4,9 @@
 **Approver:** Rob Beyer (procurement decisions, architectural shifts)
 **Operator:** Jefferson Gomez (day-to-day Zoho use)
 **Companion doc:** `ZohoCRM_Rollout_052126.md`
-**Last Updated:** 07/31/26 (webhook leg **ROOT-CAUSED** — Zoho's `Body Type: None` transmits nothing, so the handler 401s on a missing secret. Fix = set Body Type to `Form-Data`. Handler also hardened. **4 commits unpushed.**)
+**Last Updated:** 08/27/26 (hardened webhook handler **PUSHED + VERIFIED LIVE IN PRODUCTION** — every Zoho body encoding now returns 200. Remaining blocker is one Zoho UI change: `Body → Type` = `Form-Data` + re-paste the `secret`. Nothing else moved in Zoho or Neon since 07/30.)
 
-> **ACTIVE STEP (next session):** Kyle sets `Body → Type` = `Form-Data` on the Zoho webhook + restores the `secret` Custom Parameter value → then re-fire `TEST_WEBHOOK_073126` (`6342912000001764001`) via MCP (Stage→Submitted, `trigger:[workflow]`) and confirm a `quotes_ready` row lands in Neon. Push `27619cb` first if you want it settled in one round. **Open decision: OK to push 4 commits to `main` (auto-deploys to production, Rob-facing)?**
+> **ACTIVE STEP:** **Kyle, in the Zoho UI — the only thing left blocking the loop.** Setup → Automation → Actions → Webhooks → "Notify Rob on Submit": set `Body → Type` = **`Form-Data`** and paste the `secret` Custom Parameter value back in (blanked 07/31 while inspecting). Confirm the **Preview URL** at the bottom is no longer bare. Then say so and Claude re-fires `TEST_WEBHOOK_073126` (`6342912000001764001`) via MCP (Stage→Submitted, `trigger:[workflow]`) and checks Neon for the `quotes_ready` row. ✅ **The push gate is CLOSED — 5 commits pushed 08/27 and the hardened handler is verified live, so the `Form-Data` ambiguity no longer matters.**
 
 **Verified state of the full loop (07/31) — do not assume "creation works" means the rest does:**
 
@@ -27,6 +27,23 @@ Priority legend: **[P1]** critical / blocker · **[P2]** important, after P1s in
 ---
 
 ## Top Priorities — Active Sprint (refreshed 05/29/26)
+
+**Done this session (08/27/26) — hardened handler PUSHED + deploy verified; live systems re-audited (no code changes):**
+- ✅ **Push gate cleared (Kyle: "do what is needed"). 5 commits pushed to `main`** (`15a1698..ca1fc78`) → auto-deployed to production. Pre-push evidence: **41/41 api tests** (`node --test "api/*.test.js"`) and **31/31 portal tests** (`npm --prefix portal run test`) green.
+- ✅ **Hardening VERIFIED LIVE against production** — both body shapes that used to 401 now return **200**. Probed with `stage=Spec`, which returns at the stage check *before* the dedupe/emit path, so **zero side effects** (no Neon row, no notification to Rob):
+
+  | What Zoho sends | Before (07/31) | Now (08/27) |
+  |---|---|---|
+  | POST `multipart/form-data` | 401 `bad_secret` ❌ | **200 `{ok:true, ignored:"stage_not_submitted"}`** ✅ |
+  | POST with no `Content-Type` | 401 `bad_secret` ❌ | **200 `{ok:true, ignored:"stage_not_submitted"}`** ✅ |
+
+  ✅ **This settles the `Form-Data` label ambiguity from 07/31.** Whether Zoho's "Form-Data" means `multipart/form-data` or `x-www-form-urlencoded`, the deployed handler now accepts it — no second round needed.
+- 📋 **Live systems re-audited — NOTHING has changed since 07/30. The `Body Type: None` setting has not been flipped yet.**
+  - **Zoho `Procurement_Items` = 4 records** (COQL, 08/27): `TEST_WEBHOOK_073126` (`…1764001`, **still Submitted, still undeleted**), `TEST_WEBHOOK_070926` (`…1681001`, **still Submitted, still undeleted**), `ROG Zephyrus G16 (2026) Laptop` (`…1678001`, Spec), `LED Exit Sign Double Side` (`…1637006`, Spec). Jefferson's 35-item load still has not happened.
+  - **Zoho rule `notify_rob_submit` (`…1680004`)** unchanged: active, criteria `Stage equal "Submitted"`, instant action = webhook `…1680001`, `last_executed_time` still **2026-07-30T13:16:55-04:00** (the 07/31 re-fire) — it has not fired again.
+  - **Neon unchanged: still exactly 1 `portal_activity` row and 1 `portal_notifications` row**, both the 07/08 `item_created` for the ROG laptop (notification `read_at` = 2026-07-08T17:31:59Z). **Zero `webhook_rejected` rows** — expected, since that logging only went live with this push and the webhook has not fired since.
+- 📋 **Working tree clean** apart from two long-standing, deliberately-untracked local items: `Screenshot 2026-06-24 210158.png` and `Stayable Procurement Portal redesign/` (the 06/26 design handoff bundle). No new inputs were dropped into the repo.
+- 📋 Still open and untouched: **email-send outcome not persisted** (`_email.js` result dropped by `_events.js`), **Resend domain verification unproven**, **shared portal password `StayableProcess`**, and **deletion of the 2 `TEST_WEBHOOK_*` items** (Zoho UI — no MCP delete op).
 
 **Done this session (07/31/26) — webhook leg root-caused + handler hardened:**
 - ✅ **Zoho rule re-verified clean via MCP** (`getWorkflowRuleById` on `6342912000001680004`): active, `execute_when.type=field_update`, criteria `Stage equal "Submitted"`, instant action = webhook `…1680001`, `last_executed_time` 2026-07-08T13:46:41-04:00, created/modified by **Rob Beyer**. Nothing wrong on the rule side — the break is in the webhook *action*, as suspected 07/28.
